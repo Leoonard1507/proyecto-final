@@ -43,12 +43,10 @@ export default function LoginPage() {
       <img src="/film2.jpg" alt="Login" className="login-image" />
       
       <div className="login-form">
-        <p className="init-text">¡Nos vemos en el otro lado!</p>
-        <p className="init-text">Crea tu cuenta</p>
+        <p className="init-text">¡Siempre es un placer verte por aquí!</p>
+        <p className="init-text">Iniciar Sesión</p>
         
         <form onSubmit={handleSubmit}>
-          <p className="user-name">Elige tu nombre de usuario:</p>
-          <input type="text" placeholder="Nombre de usuario"/>
           <p className="mail">Correo</p>
           <input type="text" placeholder="Tu correo" value={usermail} onChange={(e) => setUsermail(e.target.value)}/>
           <p className="pass">Contraseña</p>
@@ -56,7 +54,7 @@ export default function LoginPage() {
           <button type="submit">ACCEDER</button>
           
         </form>
-        <p className="register">¿Ya tienes una cuenta? <Link href="/">Iniciar sesión</Link></p>
+        <p className="register">¿No tienes cuenta? <Link href="/register">Regístrate</Link></p>
       </div>
     </div>
   );

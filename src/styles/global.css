@@ -6,12 +6,16 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box; /*Evita que los márgenes y padding sumen al tamaño total*/
+    
+}
+body{
+    background-color: #060613;
 }
 
 .login-container{
     display: flex;
-    background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
     height: 100vh; /*Hace que el contenedor ocupe toda la pantalla*/
+    background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
 }
 
 /*Dar formato al formulario*/
@@ -23,6 +27,7 @@
     width: 40%; /*Anchura del formulario*/
 
 }
+
 form{
     margin-top: 70px;
 }
@@ -39,6 +44,11 @@ form{
     font-size: 20px;
 }
 
+.birthdate{
+    color: #22ec8a; /*Color de la letra*/
+    font-size: 20px;
+}
+
 /*Dar estilo al texto /*Correo mágico*/
 .mail{
     color: #22ec8a; /*Color de la letra*/
@@ -48,7 +58,6 @@ form{
 /*Dar estilo al texto "Palabra mágica"*/
 .pass{
     color: #22ec8a; /*Color de la letra*/
-   
     font-size: 20px; /*Tamaño de la letra*/
     
 }
@@ -115,6 +124,7 @@ button:hover{
 }
 
 @media (max-width: 1200px) {
+   
     .login-container {
         flex-direction: column; /*Cambiar a diseño en columna*/
     }
@@ -132,6 +142,7 @@ button:hover{
 
 /*Cuando la pantalla es más pequeña*/
 @media (max-width: 1000px) {
+    
     .login-container {
         flex-direction: column; /*Cambiar a diseño en columna*/
     }
