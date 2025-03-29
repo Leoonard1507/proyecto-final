@@ -1,0 +1,130 @@
+  /*Estilos del perfil*/
+
+.login-container{
+    display: flex;
+    height: 100vh; /*Hace que el contenedor ocupe toda la pantalla*/
+    background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
+}
+
+/*Dar formato al formulario*/
+.login-form{
+    display: flex;
+    flex-direction: column; /*Posicionar los elementos en columna*/
+    justify-content: center; /*Centrar horizontalmente los elementos*/
+    padding: 0 10vw 0 5vw; /* Ajusta el padding de acuerdo con el ancho de la pantalla */
+    width: 40%; /*Anchura del formulario*/
+}
+
+form{
+    margin-top: 8vh;
+}
+
+/*Dar formato al texto "Iniciar sesión"*/
+.init-text{
+    font-size: 3em; /*Tamaño de la letra*/
+    color: #ffffff; /*Color de la letra*/
+    font-weight: bold;
+}
+
+/* Estilo para los textos con el color y tamaño de letra */
+.mail,
+.pass {
+    color: #22ec8a; /* Color de la letra */
+    font-size: 1.25rem; /* Tamaño de letra relativo para una mejor adaptabilidad */
+}
+
+/*Dar estilo a los dos imputs ya que son iguales*/
+input{
+    width: 100%; /* Anchura máxima del contenedor */
+    height: 3.5rem; /* Altura flexible con rem */
+    border-radius: 0.5rem; /* Bordes redondeados adaptables */
+    margin: 1rem 0; /* Margen superior e inferior */
+    margin-bottom: 2rem; /* Margen inferior más grande */
+    border-color: #777777; /* Color del borde */
+    background-color: #030208; /* Fondo oscuro */
+    padding-left: 2rem; /* Padding izquierdo adaptado */
+    font-size: 1rem; /* Tamaño de letra relativo con rem */
+    color: #ffffff; /* Color de la letra */
+    border: 2px solid #777777; /* Borde del input */
+    outline: none; /* Sin borde al hacer focus */
+    
+}
+input:focus {
+    border-color: #22ec8a; /* Color rojo similar al de Filmin */
+}
+
+/*Dar estilo al botón*/
+button{
+    display: block; /* Para que ocupe todo el ancho disponible */
+    background-color: #22ec8a; /* Color de fondo */
+    color: rgb(0, 0, 0); /* Color del texto */
+    height: 3.5rem; /* Altura */
+    width: 45%; /* Ancho relativo */
+    border: none; /* Sin borde */
+    border-radius: 10px; /* Bordes redondeados */
+    font-size: 1.25rem; /* Tamaño del texto */
+    cursor: pointer; /* Cursor tipo puntero */
+    margin: 1rem auto; /* Espaciado y centrado */
+    font-weight: bold; /* Texto en negrita */
+}
+
+button:hover{
+    opacity: 0.7;
+}
+
+/*Dar formato al texto de registrarse y al link utilizando elementos de los estilos anteriores*/
+.register{
+    color: #22ec8a;
+    margin: 0 auto;
+    font-size: 1.25rem;
+}
+
+.register a {
+    text-decoration: none; /*Quitar la línea inferior(subrayado)*/
+    color: inherit; /*Heredar el color del texto padre*/
+}
+.register a:hover {
+    opacity: 0.7;
+}
+
+/* Tocar la imagen */
+.login-image {
+    width: 40%;  /* Ocupa la mitad de la pantalla */
+    height: 100vh; /* Toma el alto total de la pantalla */
+    object-fit: cover; /* Ajusta la imagen sin deformarla */
+}
+
+@media (max-width: 1200px) {
+   
+    .login-container {
+        flex-direction: column; /*Cambiar a diseño en columna*/
+    }
+
+    .login-image {
+        width: 100%; /*La imagen ocupa el 100% del ancho*/
+        height: 40vh; /*La imagen ocupa menos alto en móviles*/
+    }
+
+    .login-form {
+        width: 100%; /*El formulario ocupa todo el ancho*/
+        padding: 2rem; /*Reducir padding en móviles*/
+    }
+}
+
+/*Cuando la pantalla es más pequeña*/
+@media (max-width: 1000px) {
+    
+    .login-container {
+        flex-direction: column; /*Cambiar a diseño en columna*/
+    }
+
+    .login-image {
+        width: 100%; /*La imagen ocupa el 100% del ancho*/
+        height: 40vh; /*La imagen ocupa menos alto en móviles*/
+    }
+
+    .login-form {
+        width: 100%; /*El formulario ocupa todo el ancho*/
+        padding: 2rem; /*Reducir padding en móviles*/
+    }
+}

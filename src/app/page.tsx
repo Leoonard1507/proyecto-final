@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import "../styles/login.css";
 
 export default function LoginPage() {
   const router = useRouter(); // Inicializa el router
@@ -47,9 +48,9 @@ export default function LoginPage() {
         <p className="init-text">Iniciar Sesión</p>
         
         <form onSubmit={handleSubmit}>
-          <p className="mail">Correo</p>
+          <p className="mail">Correo:</p>
           <input type="text" placeholder="Tu correo" value={usermail} onChange={(e) => setUsermail(e.target.value)}/>
-          <p className="pass">Contraseña</p>
+          <p className="pass">Contraseña:</p>
           <input type="password" placeholder="Introduce tu contraseña" value={password} onChange={(e) => setPassword(e.target.value)}/>
           <button type="submit">ACCEDER</button>
           
