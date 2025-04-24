@@ -2,7 +2,7 @@
 
 .login-container{
     display: flex;
-    height: 100vh; /*Hace que el contenedor ocupe toda la pantalla*/
+    height: 100%; /*Hace que el contenedor ocupe toda la pantalla*/
     background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
 }
 
@@ -16,12 +16,12 @@
 }
 
 form{
-    margin-top: 8vh;
+    margin-top: 3vw;
 }
 
 /*Dar formato al texto "Iniciar sesión"*/
 .init-text{
-    font-size: 3em; /*Tamaño de la letra*/
+    font-size: 2.5vw; /*Tamaño de la letra*/
     color: #ffffff; /*Color de la letra*/
     font-weight: bold;
 }
@@ -30,20 +30,20 @@ form{
 .mail,
 .pass {
     color: #22ec8a; /* Color de la letra */
-    font-size: 1.25rem; /* Tamaño de letra relativo para una mejor adaptabilidad */
+    font-size: 1.20vw; /* Tamaño de letra relativo para una mejor adaptabilidad */
 }
 
 /*Dar estilo a los dos imputs ya que son iguales*/
 input{
     width: 100%; /* Anchura máxima del contenedor */
-    height: 3.5rem; /* Altura flexible con rem */
-    border-radius: 0.5rem; /* Bordes redondeados adaptables */
-    margin: 1rem 0; /* Margen superior e inferior */
-    margin-bottom: 2rem; /* Margen inferior más grande */
+    height: 3vw; /* Altura flexible con rem */
+    border-radius: 0.3vw; /* Bordes redondeados adaptables */
+    margin: 1vw 0; /* Margen superior e inferior */
+    margin-bottom: 2vw; /* Margen inferior más grande */
     border-color: #777777; /* Color del borde */
     background-color: #030208; /* Fondo oscuro */
-    padding-left: 2rem; /* Padding izquierdo adaptado */
-    font-size: 1rem; /* Tamaño de letra relativo con rem */
+    padding-left: 2vw; /* Padding izquierdo adaptado */
+    font-size: 1vw; /* Tamaño de letra relativo con rem */
     color: #ffffff; /* Color de la letra */
     border: 2px solid #777777; /* Borde del input */
     outline: none; /* Sin borde al hacer focus */
@@ -58,13 +58,13 @@ button{
     display: block; /* Para que ocupe todo el ancho disponible */
     background-color: #22ec8a; /* Color de fondo */
     color: rgb(0, 0, 0); /* Color del texto */
-    height: 3.5rem; /* Altura */
+    height: 3.2vw; /* Altura */
     width: 45%; /* Ancho relativo */
     border: none; /* Sin borde */
     border-radius: 10px; /* Bordes redondeados */
-    font-size: 1.25rem; /* Tamaño del texto */
+    font-size: 1vw; /* Tamaño del texto */
     cursor: pointer; /* Cursor tipo puntero */
-    margin: 1rem auto; /* Espaciado y centrado */
+    margin: 1vw auto; /* Espaciado y centrado */
     font-weight: bold; /* Texto en negrita */
 }
 
@@ -76,7 +76,7 @@ button:hover{
 .register{
     color: #22ec8a;
     margin: 0 auto;
-    font-size: 1.25rem;
+    font-size: 1.20vw;
 }
 
 .register a {
@@ -94,37 +94,50 @@ button:hover{
     object-fit: cover; /* Ajusta la imagen sin deformarla */
 }
 
+/* Media Query para pantallas más pequeñas (1200px) */
 @media (max-width: 1200px) {
-   
     .login-container {
-        flex-direction: column; /*Cambiar a diseño en columna*/
+        flex-direction: column;
     }
 
     .login-image {
-        width: 100%; /*La imagen ocupa el 100% del ancho*/
-        height: 40vh; /*La imagen ocupa menos alto en móviles*/
+        width: 100%;
+        height: 40vh;
     }
 
     .login-form {
-        width: 100%; /*El formulario ocupa todo el ancho*/
-        padding: 2rem; /*Reducir padding en móviles*/
+        width: 100%; /* El formulario ocupa el 80% */
+        padding: 1.5rem;
     }
-}
 
-/*Cuando la pantalla es más pequeña*/
-@media (max-width: 1000px) {
+    .init-text{
+        font-size: 3em; /*Tamaño de la letra*/
+        color: #ffffff; /*Color de la letra*/
+        font-weight: bold;
+    }
     
-    .login-container {
-        flex-direction: column; /*Cambiar a diseño en columna*/
+    .user-name, .mail, .pass{
+        font-size: 20px;
+    }
+    
+    /* Ajuste de solo el ancho de los inputs */
+    input {
+        width: 100%; /* Se reduce el ancho de los inputs */
+        height: 60px;
+        font-size: 17px;
     }
 
-    .login-image {
-        width: 100%; /*La imagen ocupa el 100% del ancho*/
-        height: 40vh; /*La imagen ocupa menos alto en móviles*/
+    button {
+        height: 50px; /*Altura*/
+        width:45%; /*Anchura*/
+        font-size: 20px; /*Tamaño de la letra*/
+        margin: 35px auto; /*Dar un pading superior, inferior y centrarlo*/
     }
-
-    .login-form {
-        width: 100%; /*El formulario ocupa todo el ancho*/
-        padding: 2rem; /*Reducir padding en móviles*/
+    .register{
+        color: #22ec8a;
+        margin: 0 auto;
+        font-size: 20px;
     }
 }
+
+

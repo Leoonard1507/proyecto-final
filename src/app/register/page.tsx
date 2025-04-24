@@ -52,7 +52,7 @@ export default function RegisterPage() {
             <button type="submit">ACCEDER</button>
             
           </form>
-          <p className="register">¿Ya tienes una cuenta? <Link href="/">Iniciar sesión</Link></p>
+          <p className="register">¿Ya tienes una cuenta? <Link href="/login">Iniciar sesión</Link></p>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es"> 
       <head>
-        <title>PornHub</title>
+        <title>Filmogram</title>
         <link rel="icon" href="/icono.svg" type="image/svg+xml" />
       </head>
     
