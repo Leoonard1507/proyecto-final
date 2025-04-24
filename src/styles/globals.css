@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
+}
+
+* {
+  box-sizing: inherit;
+}
+  
+@layer utilities {
+  .mask-fade {
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+  

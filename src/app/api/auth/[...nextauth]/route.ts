@@ -1,7 +1,7 @@
 // nextauth.js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { connectDB } from "@/libs/mysql";
+import { connectDB } from "../../../../libs/mysql";
 import { compare } from "bcryptjs";
 
 const handler = NextAuth({
@@ -22,28 +22,29 @@ const handler = NextAuth({
 
         try {
           const [users]: any = await db.query(
-            "SELECT * FROM usuarios WHERE correo = ?",
+            "SELECT * FROM user WHERE email = ?", 
             [credentials.email]
           );
-
+          
           if (!users.length) {
-            throw new Error("Credenciales incorrectas");
+            throw new Error("Credenciales incorrectas (usuario no encontrado)");
           }
-
+          
           const user = users[0];
-
-          const isValidPassword = await compare(credentials.password, user.contrasena);
+          
+          const isValidPassword = await compare(credentials.password, user.password);
+          
           if (!isValidPassword) {
-            throw new Error("Credenciales incorrectas");
+            throw new Error("Credenciales incorrectas (contraseña)");
           }
-
-          // Retornar el usuario con su rol
+          
           return {
             id: user.id,
-            name: user.nombre,
-            email: user.correo,
-            role: user.rol,
-          };
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            description: user.description,
+          };          
 
         } finally {
           await db.end();
@@ -68,8 +69,8 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.name = user.name; 
-        token.email = user.email; 
+        token.name = user.name as string; 
+        token.email = user.email as string; 
         token.role = user.role;
       }
       return token;
