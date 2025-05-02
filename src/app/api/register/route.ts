@@ -9,10 +9,10 @@ export async function POST(req: Request) {
     const db = await connectDB();
 
     // Obtiene los datos del cuerpo de la solicitud
-    const { username, usermail, password} = await req.json();
+    const { username, nickname, birthdate, usermail, password} = await req.json();
 
     // Verifica que los campos obligatorios estén presentes
-    if (!username || !usermail || !password) {
+    if (!username || !nickname || !birthdate || !usermail || !password) {
       return NextResponse.json({ error: "Todos los campos son obligatorios" }, { status: 400 });
     }
 
@@ -24,8 +24,8 @@ export async function POST(req: Request) {
 
     // Insertar el nuevo usuario en la base de datos, usando el 'role' con valor por defecto
     await db.execute(
-      "INSERT INTO user (name, email, role, password) VALUES (?, ?, ?, ?)",
-      [username, usermail, userRole, hashedPassword] // Aquí pasamos `userRole` que tiene el valor por defecto
+      "INSERT INTO user (nickname, name, birthdate, email, role, password) VALUES (?, ?, ?, ?, ?, ?)",
+      [nickname, username, birthdate, usermail, userRole, hashedPassword]
     );
 
     // Responder con éxito

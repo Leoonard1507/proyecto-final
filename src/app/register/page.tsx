@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
+  const [nickname, setNickname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [usermail, setUsermail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +17,7 @@ export default function RegisterPage() {
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, usermail, password, birthdate}),
+      body: JSON.stringify({ username, nickname, usermail, password, birthdate}),
     });
   
     const data = await response.json();
@@ -48,6 +49,17 @@ export default function RegisterPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="max-w-md">
+          <p className="text-[#22ec8a] text-lg">
+            Apodo:
+          </p>
+          <input
+            type="text"
+            placeholder="Introduce tu apodo"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            className="w-full h-14 bg-[#030208] text-white border-2 border-[#777] rounded-lg px-6 mb-3 focus:outline-none focus:border-[#22ec8a] "
+          />
+
           <p className="text-[#22ec8a] text-lg">
             Nombre de usuario:
           </p>
