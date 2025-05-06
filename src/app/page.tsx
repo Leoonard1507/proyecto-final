@@ -32,7 +32,7 @@ export default function LoginPage() {
     if (session?.user?.role === "administrator") {
       router.push(`/search`);
     } else if (session?.user?.role === "client") {
-      router.push(`/search`);
+      router.push(`/administrator/profile`);
       console.log(session.user.id);
     } else {
       alert("No tienes acceso a ninguna de las secciones.");

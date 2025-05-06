@@ -40,7 +40,6 @@ const authOptions: NextAuthOptions = {
             throw new Error("Credenciales incorrectas (contraseña)");
           }
 
-          // Devuelve sólo los datos necesarios para la sesión
           return {
             id: user.id,
             nickname: user.nickname,
@@ -59,7 +58,7 @@ const authOptions: NextAuthOptions = {
   ],
 
   pages: {
-    signIn: '/', // Página de login personalizada
+    signIn: '/',
   },
 
   callbacks: {
@@ -73,6 +72,7 @@ const authOptions: NextAuthOptions = {
         session.user.description = token.description as string;
         session.user.birthdate = token.birthdate as string;
       }
+
       return session;
     },
 

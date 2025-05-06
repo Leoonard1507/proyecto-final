@@ -17,21 +17,31 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    if (session?.user) {
-      setName(session.user.name || "");
-      setUsermail(session.user.email || "");
-      setRole(session.user.role || "");
-      setBirthdate(session.user.birthdate || "");
-      setNickname(session.user.nickname || "");
-      setDescription(session.user.description || "");
-      console.log("Datos de sesión:", session.user); // 👈 Aquí ves todo lo que trae
-
+    if (session?.user?.id) {
+      fetchUserData(session.user.id);
     }
   }, [session]);
-
+  
+  const fetchUserData = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/user/${userId}`);
+      if (!res.ok) throw new Error("No se pudo obtener el usuario");
+      const user = await res.json();
+  
+      setName(user.name || "");
+      setUsermail(user.email || "");
+      setRole(user.role || "");
+      setBirthdate(user.birthdate || "");
+      setNickname(user.nickName || "");
+      setDescription(user.description || "");
+    } catch (error) {
+      console.error("Error al cargar datos del usuario:", error);
+    }
+  };
+  
   const updateUserProfile = async () => {
     setLoading(true);
-    const dataToSend = { nickname, name, email: usermail, role, birthdate };
+    const dataToSend = { nickname, name, email: usermail, role, description, birthdate };
 
     const response = await fetch("/api/user/update", {
       method: "POST",
@@ -46,6 +56,8 @@ export default function ProfilePage() {
     }
 
     alert("Perfil actualizado con éxito!");
+    setIsModalOpen(false);
+    await fetchUserData(usermail); // Recargar datos después de guardar
     setLoading(false);
   };
 
@@ -53,7 +65,6 @@ export default function ProfilePage() {
     e.preventDefault();
     updateUserProfile();
   };
-
   return (
     <div className="flex flex-col m-5">
       {/* Navbar con título y opciones de navegación */}
@@ -138,7 +149,7 @@ export default function ProfilePage() {
            
             { /* Modal editar perfil */}
             {isModalOpen && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
                 <div className="p-8 rounded-lg max-w-md w-full relative border border-green-500">
                   <button
                     onClick={() => setIsModalOpen(false)}
