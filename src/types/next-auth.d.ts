@@ -16,5 +16,6 @@ declare module "next-auth/jwt" {
     nickname: string;
     birthdate: string;
     description: string;
+    avatar: string;
   }
 }

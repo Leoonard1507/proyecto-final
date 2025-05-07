@@ -15,9 +15,12 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     if (session?.user?.id) {
+      setUserId(session.user.id);
       fetchUserData(session.user.id);
     }
   }, [session]);
@@ -34,6 +37,7 @@ export default function ProfilePage() {
       setBirthdate(user.birthdate || "");
       setNickname(user.nickName || "");
       setDescription(user.description || "");
+      setAvatar(user.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.id}`);
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error);
     }
@@ -41,7 +45,7 @@ export default function ProfilePage() {
   
   const updateUserProfile = async () => {
     setLoading(true);
-    const dataToSend = { nickname, name, email: usermail, role, description, birthdate };
+    const dataToSend = { nickname, name, email: usermail, role, description, birthdate, avatar };
 
     const response = await fetch("/api/user/update", {
       method: "POST",
@@ -57,7 +61,7 @@ export default function ProfilePage() {
 
     alert("Perfil actualizado con éxito!");
     setIsModalOpen(false);
-    await fetchUserData(usermail); // Recargar datos después de guardar
+    await fetchUserData(userId);
     setLoading(false);
   };
 
@@ -85,10 +89,10 @@ export default function ProfilePage() {
       {/* Imágen del usuario */}
       <div className="relative w-30 h-30">
         <Image
-          src="/film2.jpg"
-          alt="Imagen de perfil"
-          fill
-          className="object-cover"
+          src={`https://api.dicebear.com/7.x/bottts/png?seed=${userId}`}
+          alt="Avatar"
+          width={100}
+          height={100}
         />
       </div>
 
@@ -161,6 +165,26 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-bold text-black mb-4">Editar Perfil</h2>
 
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium">Avatar</label>
+                      <div className="flex space-x-2 mt-2">
+                        {["cat", "robot", "alien", "monster", "Sawyer"].map((type) => {
+                          const url = `https://api.dicebear.com/7.x/bottts/png?seed=${type}`;
+                          return (
+                            <Image
+                              key={type}
+                              src={url}
+                              alt="avatar option"
+                              width={60}
+                              height={60}
+                              onClick={() => setAvatar(url)}
+                              className={`cursor-pointer rounded-full border ${avatar === url ? 'border-blue-500' : 'border-transparent'}`}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     <div>
                       <label className="block text-sm font-medium">Nombre</label>
                       <input

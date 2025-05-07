@@ -8,4 +8,5 @@ export interface User {
   role: string;
   birthdate: string;
   description?: string;
+  avatar?: string;
 }
