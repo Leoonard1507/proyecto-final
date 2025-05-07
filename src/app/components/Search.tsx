@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import axiosInstance from '@/libs/axios';
 
-type SearchType = 'movie' | 'person';
+type SearchType = 'movie' | 'person' | 'user';
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,18 +19,19 @@ export default function Search() {
       let response;
       if (searchType === 'movie') {
         response = await axiosInstance.get(`/search/movie?query=${searchTerm}`);
-        const filteredMovies = response.data.results.filter((movie: any) => !movie.adult);
+        const filteredMovies = response.data.results
+          .filter((movie: any) => !movie.adult) // Filtra películas para no incluir contenido para adultos
+          .sort((a: any, b: any) => b.popularity - a.popularity); // Ordena por popularidad en orden descendente
         setResults(filteredMovies);
-      } else {
+      }
+      else {
         let allPeople: any[] = [];
 
-        // Buscar en varias páginas para mejorar resultados
         for (let page = 1; page <= 10; page++) {
           const response = await axiosInstance.get(`/search/person?query=${searchTerm}&page=${page}`);
           allPeople = allPeople.concat(response.data.results);
         }
 
-        // Filtrar y ordenar resultados
         const filtered = allPeople.filter((person) =>
           person.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -54,77 +55,89 @@ export default function Search() {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Buscar..."
-      />
+    <div className="w-full flex flex-col items-center py-5">
+      {/* Barra de búsqueda y filtros */}
+      <div className="w-full max-w-2xl p-6 mb-10">
+        <div className="flex gap-2 mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar película o persona..."
+            className="w-full px-4 py-2 border-2 border-[#777] rounded focus:outline-none focus:border-[#22ec8a] text-white"
+          />
+          <button
+            onClick={handleSearch}
+            disabled={loading}
+            className="bg-[#22ec8a] text-black font-bold px-4 py-2 rounded hover:opacity-70 transition-opacity"
+          >
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </div>
 
-      <div style={{ margin: '10px 0' }}>
-        <label>
-          <input
-            type="radio"
-            value="movie"
-            checked={searchType === 'movie'}
-            onChange={() => {
-              setSearchType('movie');
-              setResults([]);
-            }}
-          />
-          Película
-        </label>
-        <label style={{ marginLeft: '10px' }}>
-          <input
-            type="radio"
-            value="person"
-            checked={searchType === 'person'}
-            onChange={() => {
-              setSearchType('person');
-              setResults([]);
-            }}
-          />
-          Persona
-        </label>
+        <div className="flex items-center justify-center gap-6 text-white">
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              value="movie"
+              checked={searchType === 'movie'}
+              onChange={() => {
+                setSearchType('movie');
+                setResults([]);
+              }}
+            />
+            <span>Film</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              value="person"
+              checked={searchType === 'person'}
+              onChange={() => {
+                setSearchType('person');
+                setResults([]);
+              }}
+            />
+            <span>Actor/Director</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              value="user"
+              checked={searchType === 'user'}
+              onChange={() => {
+                setSearchType('person');
+                setResults([]);
+              }}
+            />
+            <span>User</span>
+          </label>
+        </div>
       </div>
 
-      <button onClick={handleSearch} disabled={loading}>
-        {loading ? 'Buscando...' : 'Buscar'}
-      </button>
-
+      {/* Resultados */}
       {results.length > 0 && (
-        <ul style={{ marginTop: '20px' }}>
-          {searchType === 'movie'
-            ? results.map((movie) => (
-                <li key={movie.id}>
-                  <Link href={`/movie-details/${movie.id}`}>
-                    <h3>{movie.title}</h3>
-                  </Link>
-                  {movie.poster_path && (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                      alt={movie.title}
-                      style={{ width: '200px', borderRadius: '8px' }}
-                    />
-                  )}
-                </li>
-              ))
-            : results.map((person) => (
-                <li key={person.id}>
-                  <Link href={`/person-movies/${person.id}`}>
-                    <h3>{person.name}</h3>
-                  </Link>
-                  {person.profile_path && (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w200${person.profile_path}`}
-                      alt={person.name}
-                      style={{ width: '100px', borderRadius: '50%' }}
-                    />
-                  )}
-                </li>
-              ))}
-        </ul>
+        <div className="w-full max-w-2xl">
+          <ul className="space-y-4">
+            {results.map((item) => (
+              <li key={item.id} className="flex items-center space-x-4 p-4 bg-gray-700 rounded-lg">
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${item.poster_path || item.profile_path}`}
+                  className="w-24 h-36 object-cover rounded-lg"
+                />
+                <div className="text-white flex-1">
+                  <h3 className="font-bold">{item.title || item.name}</h3>
+                  <p className='font-white opacity-0.7'>{item.release_date}</p>
+                </div>
+                <Link href={searchType === 'movie' ? `/movie-details/${item.id}` : `/person-movies/${item.id}`}>
+                  <button className="px-4 py-2 bg-gray-600 text-white rounded hover:opacity-70 transition">
+                    More
+                  </button>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

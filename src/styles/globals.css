@@ -1,21 +1,36 @@
 @import "tailwindcss";
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
 }
 
 * {
   box-sizing: inherit;
 }
-  
+
+/* Fondo radial aplicado sólo a una clase */
+.bg-radial-pattern {
+  background: radial-gradient(circle at 49% 0, #2d2f3d, #070714 51%, #060613 52%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 @layer utilities {
   .mask-fade {
     -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
     mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
   }
 }
-  
+
+/* Para movie-details */
+.fade-mask-movie-details {
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0));
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
