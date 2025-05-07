@@ -18,12 +18,6 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
 
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-
-
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
@@ -111,7 +105,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={loading}
-            onClick={() => setIsPasswordModalOpen(true)}
+            onClick={() => setIsModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
           >
             Cambiar Contraseña
@@ -127,65 +121,6 @@ export default function ProfilePage() {
           <ProfileField label="Rol" value={role} />
         </div>
       </div>
-
-      {/* Modal cambiar contraseña */}
-      {isPasswordModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
-            <button
-              onClick={() => setIsPasswordModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-            >
-              ✖
-            </button>
-
-            <h2 className="text-2xl font-bold mb-5">Cambiar Contraseña</h2>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (newPassword !== repeatPassword) {
-                  alert("Las contraseñas nuevas no coinciden.");
-                  return;
-                }
-
-                // Aquí se agregaría la lógica de backend
-                alert("Contraseña cambiada exitosamente.");
-                setIsPasswordModalOpen(false);
-              }}
-              className="space-y-4"
-            >
-              <Input
-                label="Contraseña actual"
-                value={currentPassword}
-                onChange={setCurrentPassword}
-                type="password"
-              />
-              <Input
-                label="Nueva contraseña"
-                value={newPassword}
-                onChange={setNewPassword}
-                type="password"
-              />
-              <Input
-                label="Repetir nueva contraseña"
-                value={repeatPassword}
-                onChange={setRepeatPassword}
-                type="password"
-              />
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Guardar Nueva Contraseña
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-
 
       {/* Modal editar perfil */}
       {isModalOpen && (
@@ -253,22 +188,12 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 }
 
 // Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (val: string) => void }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-gray-300 p-2 rounded"
@@ -276,4 +201,3 @@ function Input({
     </div>
   );
 }
-
