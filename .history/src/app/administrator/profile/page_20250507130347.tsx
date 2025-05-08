@@ -18,12 +18,6 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
 
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-
-
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
@@ -89,103 +83,40 @@ export default function ProfilePage() {
       </nav>
 
       {/* Contenedor de perfil */}
-      <div className="max-w-3xl mx-auto bg-gray-800 rounded-xl shadow-md p-8">
-        <h2 className="text-3xl font-semibold mb-6">Mi perfil</h2>
+      <div className="max-w-5xl mx-auto bg-gray-800/60 rounded-2xl shadow-lg p-10">
+        <h2 className="text-3xl font-semibold mb-8 border-b border-gray-700 pb-4">Mi perfil</h2>
 
-        <div className="flex items-center space-x-6 mb-8">
-          <Image
-            src={`https://api.dicebear.com/7.x/bottts/png?seed=${userId}`}
-            alt="Avatar"
-            width={100}
-            height={100}
-            className="rounded-full border border-gray-500"
-          />
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center space-x-6">
+            <Image
+              src={`https://api.dicebear.com/7.x/bottts/png?seed=${userId}`}
+              alt="Avatar"
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
+            <div>
+              <p className="text-lg font-medium">{nickname}</p>
+              <p className="text-sm text-gray-400">{usermail}</p>
+            </div>
+          </div>
           <button
             type="submit"
             disabled={loading}
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 text-sm"
           >
             Editar Perfil
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            onClick={() => setIsPasswordModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
-          >
-            Cambiar Contraseña
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ProfileField label="Nickname" value={nickname} />
           <ProfileField label="Nombre" value={name} />
-          <ProfileField label="Correo electrónico" value={usermail} />
           <ProfileField label="Fecha nacimiento" value={birthdate} />
           <ProfileField label="Descripción" value={description} />
           <ProfileField label="Rol" value={role} />
         </div>
       </div>
-
-      {/* Modal cambiar contraseña */}
-      {isPasswordModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
-            <button
-              onClick={() => setIsPasswordModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-            >
-              ✖
-            </button>
-
-            <h2 className="text-2xl font-bold mb-5">Cambiar Contraseña</h2>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (newPassword !== repeatPassword) {
-                  alert("Las contraseñas nuevas no coinciden.");
-                  return;
-                }
-
-                // Aquí se agregaría la lógica de backend
-                alert("Contraseña cambiada exitosamente.");
-                setIsPasswordModalOpen(false);
-              }}
-              className="space-y-4"
-            >
-              <Input
-                label="Contraseña actual"
-                value={currentPassword}
-                onChange={setCurrentPassword}
-                type="password"
-              />
-              <Input
-                label="Nueva contraseña"
-                value={newPassword}
-                onChange={setNewPassword}
-                type="password"
-              />
-              <Input
-                label="Repetir nueva contraseña"
-                value={repeatPassword}
-                onChange={setRepeatPassword}
-                type="password"
-              />
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Guardar Nueva Contraseña
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-
 
       {/* Modal editar perfil */}
       {isModalOpen && (
@@ -253,22 +184,12 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 }
 
 // Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (val: string) => void }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-gray-300 p-2 rounded"
@@ -276,4 +197,3 @@ function Input({
     </div>
   );
 }
-

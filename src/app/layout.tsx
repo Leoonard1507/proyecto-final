@@ -10,7 +10,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <title>Filmogram</title>
         <meta name="description" content="Gestiona tu perfil en El Santuario." />
-        <link rel="icon" href="/icono.svg" type="image/svg+xml" />
       </head>
       <body className="flex flex-col text-white antialiased">
         {/* Fondo con contenedor dedicado */}

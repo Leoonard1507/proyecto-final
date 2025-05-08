@@ -253,22 +253,12 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 }
 
 // Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (val: string) => void }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-gray-300 p-2 rounded"
@@ -276,4 +266,3 @@ function Input({
     </div>
   );
 }
-

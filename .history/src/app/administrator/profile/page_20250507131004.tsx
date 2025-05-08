@@ -129,11 +129,11 @@ export default function ProfilePage() {
       </div>
 
       {/* Modal cambiar contraseña */}
-      {isPasswordModalOpen && (
+      {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
             <button
-              onClick={() => setIsPasswordModalOpen(false)}
+              onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
             >
               ✖
@@ -141,51 +141,44 @@ export default function ProfilePage() {
 
             <h2 className="text-2xl font-bold mb-5">Cambiar Contraseña</h2>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (newPassword !== repeatPassword) {
-                  alert("Las contraseñas nuevas no coinciden.");
-                  return;
-                }
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Avatar</label>
+                <div className="flex space-x-3 mt-1">
+                  {["cat", "robot", "alien", "monster", "Sawyer"].map((type) => {
+                    const url = `https://api.dicebear.com/7.x/bottts/png?seed=${type}`;
+                    return (
+                      <Image
+                        key={type}
+                        src={url}
+                        alt="avatar option"
+                        width={60}
+                        height={60}
+                        onClick={() => setAvatar(url)}
+                        className={`cursor-pointer rounded-full border ${
+                          avatar === url ? "border-blue-500" : "border-transparent"
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
 
-                // Aquí se agregaría la lógica de backend
-                alert("Contraseña cambiada exitosamente.");
-                setIsPasswordModalOpen(false);
-              }}
-              className="space-y-4"
-            >
-              <Input
-                label="Contraseña actual"
-                value={currentPassword}
-                onChange={setCurrentPassword}
-                type="password"
-              />
-              <Input
-                label="Nueva contraseña"
-                value={newPassword}
-                onChange={setNewPassword}
-                type="password"
-              />
-              <Input
-                label="Repetir nueva contraseña"
-                value={repeatPassword}
-                onChange={setRepeatPassword}
-                type="password"
-              />
+              <Input label="Nombre" value={name} onChange={setName} />
+              <Input label="Apodo" value={nickname} onChange={setNickname} />
+              <Input label="Fecha de nacimiento" value={birthdate} onChange={setBirthdate} />
+              <Input label="Descripción" value={description} onChange={setDescription} />
 
               <button
                 type="submit"
                 className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
               >
-                Guardar Nueva Contraseña
+                {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
             </form>
           </div>
         </div>
       )}
-
-
 
       {/* Modal editar perfil */}
       {isModalOpen && (
@@ -253,22 +246,12 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 }
 
 // Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (val: string) => void }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-gray-300 p-2 rounded"
@@ -276,4 +259,3 @@ function Input({
     </div>
   );
 }
-

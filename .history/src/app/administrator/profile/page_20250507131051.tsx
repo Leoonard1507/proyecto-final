@@ -149,8 +149,8 @@ export default function ProfilePage() {
                   return;
                 }
 
-                // Aquí se agregaría la lógica de backend
-                alert("Contraseña cambiada exitosamente.");
+                // Aquí podrías hacer una llamada al backend para cambiar la contraseña
+                alert("Contraseña cambiada (ficticiamente).");
                 setIsPasswordModalOpen(false);
               }}
               className="space-y-4"
@@ -184,7 +184,6 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
-
 
 
       {/* Modal editar perfil */}
@@ -253,22 +252,12 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 }
 
 // Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (val: string) => void }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-gray-300 p-2 rounded"
@@ -276,4 +265,3 @@ function Input({
     </div>
   );
 }
-
