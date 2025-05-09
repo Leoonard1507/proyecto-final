@@ -6,6 +6,7 @@ import axiosInstance from "@/libs/axios";
 import Link from "next/link";
 
 import Navbar from "@/app/components/Navbar";
+import Image from "next/image";
 
 interface Movie {
     id: number;
@@ -67,7 +68,7 @@ const PersonMoviesPage = () => {
                     <div className="flex flex-col md:flex-row items-start gap-15 mb-10 max-w-6xl mx-auto px-4">
                         {/* Foto */}
                         {person.profile_path && (
-                            <img
+                            <Image
                                 src={`https://image.tmdb.org/t/p/w300${person.profile_path}`}
                                 alt={person.name}
                                 className="w-40 h-auto rounded-xl shadow-lg"
@@ -130,7 +131,7 @@ const PersonMoviesPage = () => {
                                     className="w-43 flex flex-col items-center text-center"
                                 >
                                     <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
-                                        <img
+                                        <Image
                                             src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                             alt={movie.title}
                                             className="w-full h-[250px] object-cover"
@@ -158,7 +159,7 @@ const PersonMoviesPage = () => {
                                     className="w-43 flex flex-col items-center text-center"
                                 >
                                     <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
-                                        <img
+                                        <Image
                                             src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                             alt={movie.title}
                                             className="w-full h-[250px] object-cover"

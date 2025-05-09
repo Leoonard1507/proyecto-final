@@ -14,7 +14,7 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-50 bg-gray-950 text-white px-6 py-4 flex justify-between items-center shadow-md">
+        <nav className="sticky top-0 z-50 text-white px-10 py-4 flex justify-between items-center shadow-md bg-white/8 backdrop-blur-md">
             <div className="text-2xl font-bold">
                 <Link href="/home-page">🎥 Home</Link>
             </div>
@@ -28,7 +28,7 @@ export default function Navbar() {
 
                 </li>
                 <li>
-                    <Link href="/profile" className="hover:text-red-400 transition">👤</Link>
+                    <Link href="/administrator/profile" className="hover:text-red-400 transition text-2xl">👤</Link>
                 </li>
                 <li>
                     <button
