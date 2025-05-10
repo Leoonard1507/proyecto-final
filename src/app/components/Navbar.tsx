@@ -20,12 +20,7 @@ export default function Navbar() {
             </div>
             <ul className="flex space-x-6 items-center text-lg">
                 <li>
-                    <Link href="/search">
-                        <button className="text-white hover:text-red-500 transition">
-                            🔍
-                        </button>
-                    </Link>
-
+                    <Link href="/search" className="hover:text-red-400 transition text-2xl">🔍</Link>
                 </li>
                 <li>
                     <Link href="/administrator/profile" className="hover:text-red-400 transition text-2xl">👤</Link>

@@ -30,9 +30,9 @@ export default function LoginPage() {
 
     // Lógica para redirigir
     if (session?.user?.role === "administrator") {
-      router.push(`/search`);
+      router.push(`/home-page`);
     } else if (session?.user?.role === "client") {
-      router.push(`/administrator/profile`);
+      router.push(`/home-page`);
       console.log(session.user.id);
     } else {
       alert("No tienes acceso a ninguna de las secciones.");
