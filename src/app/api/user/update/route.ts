@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   } = await req.json();
   
   if (!email) {
-    return NextResponse.json({ error: "El correo es obligatorio" }, { status: 400 });
+    return NextResponse.json({ error: "Email is mandatory" }, { status: 400 });
   }
 
   // Actualizar perfil (siempre se actualiza el resto)
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     [nickname, name, description, avatar, email]
   );
 
-  message = "Perfil actualizado correctamente";
+  message = "Profile updated successfully";
 
   // Si se proporciona cambio de contraseña, se procede a validarlo y actualizarlo
   if (currentPassword && newPassword) {
@@ -37,20 +37,20 @@ export async function POST(req: Request) {
 
     if (!rows.length) {
       await db.end();
-      return NextResponse.json({ message: "Usuario no encontrado" }, { status: 404 });
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const passwordMatch = await bcrypt.compare(currentPassword, rows[0].password);
 
     if (!passwordMatch) {
       await db.end();
-      return NextResponse.json({ message: "La contraseña actual es incorrecta" }, { status: 401 });
+      return NextResponse.json({ message: "The current password is incorrect" }, { status: 401 });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await db.query("UPDATE user SET password = ? WHERE email = ?", [hashedPassword, email]);
 
-    message = "Contraseña actualizada correctamente";
+    message = "Password updated successfully";
   }
 
   await db.end();

@@ -23,7 +23,7 @@ export default function Navbar() {
                     <Link href="/search" className="hover:text-red-400 transition text-2xl">🔍</Link>
                 </li>
                 <li>
-                    <Link href="/administrator/profile" className="hover:text-red-400 transition text-2xl">👤</Link>
+                    <Link href="/administrator-profile" className="hover:text-red-400 transition text-2xl">👤</Link>
                 </li>
                 <li>
                     <button

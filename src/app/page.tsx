@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from 'next/image';
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      alert("Usuario o contraseña incorrectos");
+      toast.error("Incorrect username or password");
       return;
     }
 
@@ -33,9 +34,8 @@ export default function LoginPage() {
       router.push(`/home-page`);
     } else if (session?.user?.role === "client") {
       router.push(`/home-page`);
-      console.log(session.user.id);
     } else {
-      alert("No tienes acceso a ninguna de las secciones.");
+      toast.error("You do not have access to any of the sections.");
     }    
   };
 
@@ -56,33 +56,33 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center w-full md:w-3/5 px-8 md:px-20 py-8">
         
         <p className="text-4xl md:text-4xl font-bold text-white">
-          ¡Siempre es un placer verte por aquí!
+          It&apos;s always a pleasure to see you here!
         </p>
         
         <p className="text-2xl md:text-3xl font-bold text-white mt-20 mb-5">
-          Iniciar Sesión
+          Login
         </p>
 
         <form onSubmit={handleSubmit} className="max-w-md">
           <p className="text-[#22ec8a] text-lg">
-            Correo:
+            Email:
           </p>
           
           <input
             type="text"
-            placeholder="Tu correo"
+            placeholder="Enter your email"
             value={usermail}
             onChange={(e) => setUsermail(e.target.value)}
             className="w-full h-14 bg-[#030208] text-white border-2 border-[#777] rounded-lg px-6 mb-6 focus:outline-none focus:border-[#22ec8a]"
           />
 
           <p className="text-[#22ec8a] text-lg">
-            Contraseña:
+            Password:
           </p>
 
           <input
             type="password"
-            placeholder="Introduce tu contraseña"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full h-14 bg-[#030208] text-white border-2 border-[#777] rounded-lg px-6 mb-6 focus:outline-none focus:border-[#22ec8a] "
@@ -91,17 +91,16 @@ export default function LoginPage() {
           <button
             type="submit"
             className="bg-[#22ec8a] text-black font-bold text-lg h-14 w-1/2 mx-auto block rounded-lg hover:opacity-70 transition-opacity">
-            ACCEDER
+            ACCESS
           </button>
 
           <p className="text-[#22ec8a] text-lg text-center mt-2">
-            ¿No tienes cuenta?{" "}
+            It&apos;s have an account?{" "}
             <Link href="/register" className="hover:opacity-70">
-              Regístrate
+              Sign up
             </Link>
           </p>
         </form>
-
       </div>
     </div>
   );

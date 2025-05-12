@@ -3,6 +3,9 @@
 
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen w-full bg-radial-pattern">
           <SessionProvider>{children}</SessionProvider>
         </div>
+        <ToastContainer />
       </body>
     </html>
   );

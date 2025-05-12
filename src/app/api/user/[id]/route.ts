@@ -28,9 +28,15 @@ export async function GET(req: NextRequest) {
     // Devuelve el usuario encontrado
     const user = rows[0];
 
+    // Formatea la fecha en formato dd/mm/yyyy si existe
+    if (user.birthdate) {
+      const date = new Date(user.birthdate);
+      user.birthdate = date.toLocaleDateString('es-ES'); // Formato europeo: dd/mm/yyyy
+    }
+
     return NextResponse.json(user);
   } catch (error) {
-    console.error("❌ Error al conectar con la BBDD o al consultar:", error);
+    console.error("Error al conectar con la BBDD o al consultar:", error);
     return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
   }
 }
