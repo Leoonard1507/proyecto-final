@@ -43,18 +43,20 @@ html, body {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
+  height: 20px; /* Ajusta la altura de la barra de desplazamiento */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #222; 
+  background: #222; /* Fondo de la pista de desplazamiento */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #333; 
+  background: #333; /* Color del "pulgar" de la barra de desplazamiento */
   border-radius: 10px;
+  transition: background-color 0.3s ease; /* Añadimos una transición al cambio de color */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b; 
+  background: #6b6b6b; /* Color del pulgar cuando está en hover */
 }
+

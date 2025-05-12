@@ -28,7 +28,7 @@ export default function MovieCarouselSection({ title, endpoint }: Props) {
   return (
     <section>
       <h2 className="text-xl font-bold mb-2">{title}</h2>
-      <div className="flex overflow-x-auto space-x-4 pb-2 custom-scrollbar">
+      <div className="flex overflow-x-auto space-x-4 scrollbar-hide pb-2">
         {movies.map((movie) => (
           <Link
             key={movie.id}
@@ -40,6 +40,7 @@ export default function MovieCarouselSection({ title, endpoint }: Props) {
               alt={movie.title}
               className="w-60 rounded-xl shadow-md hover:scale-105 transition-transform duration-200"
             />
+            
           </Link>
         ))}
       </div>

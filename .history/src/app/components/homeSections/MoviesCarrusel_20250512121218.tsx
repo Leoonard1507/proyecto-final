@@ -43,6 +43,31 @@ export default function MovieCarouselSection({ title, endpoint }: Props) {
           </Link>
         ))}
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar {
+          scrollbar-width: thick; /* Para Firefox, la barra será más gruesa */
+          scrollbar-color: #333 #222; /* Color oscuro para el thumb y el track */
+        }
+
+        /* WebKit (Chrome, Safari, Edge) */
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 12px; /* Aumenta el tamaño a 12px para hacerlo más ancho */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #222; /* Fondo oscuro como el track de Netflix */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #333; /* Color gris oscuro para el thumb */
+          border-radius: 10px; /* Bordes redondeados como en Netflix */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #e50914; /* Rojo Netflix cuando el thumb es hover */
+        }
+      `}</style>
     </section>
   );
 }

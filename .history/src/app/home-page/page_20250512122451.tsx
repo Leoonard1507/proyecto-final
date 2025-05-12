@@ -1,6 +1,5 @@
 'use client';
 
-import '../../styles/globals.css';
 import MovieCarouselSection from '@/app/components/homeSections/MoviesCarrusel';
 import FeaturedMovieBanner from '../components/homeSections/BannerMovie';
 import Navbar from '../components/Navbar';

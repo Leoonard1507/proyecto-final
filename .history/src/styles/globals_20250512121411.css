@@ -36,18 +36,17 @@ html, body {
 }
 
 .custom-scrollbar {
-  scrollbar-width: thick; 
-  scrollbar-color: #333 #222; 
-  overflow-x: auto; /* Para el desplazamiento horizontal */
-  overflow-y: auto;
+  scrollbar-width: thick; /* Para Firefox, la barra será más gruesa */
+  scrollbar-color: #333 #222; /* Color oscuro para el thumb y el track */
 }
 
+/* WebKit (Chrome, Safari, Edge) */
 .custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
+  height: 12px; /* Aumenta el tamaño a 12px para hacerlo más ancho */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #222; 
+  background: #222; /* Fondo oscuro como el track de Netflix */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -56,5 +55,5 @@ html, body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b; 
+  background: #e50914; 
 }
