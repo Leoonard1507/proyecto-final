@@ -1,5 +1,6 @@
 'use client';
 
+import '../../styles/globals.css';
 import { useEffect, useState } from 'react';
 import axiosInstance from '@/libs/axios';
 import Link from 'next/link';

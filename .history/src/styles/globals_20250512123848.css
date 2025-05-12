@@ -35,26 +35,33 @@ html, body {
   mask-repeat: no-repeat;
 }
 
+/* Estilo global para el contenedor con barra de desplazamiento personalizada */
 .custom-scrollbar {
-  scrollbar-width: thick; 
-  scrollbar-color: #333 #222; 
-  overflow-x: auto; /* Para el desplazamiento horizontal */
-  overflow-y: auto;
+  scrollbar-width: thin;  /* Definir el tamaño de la barra de desplazamiento */
+  scrollbar-color: #333 #222;  /* Color del pulgar y el track (para Firefox) */
+  overflow-x: auto;  /* Para el desplazamiento horizontal */
+  overflow-y: auto;  /* Para el desplazamiento vertical */
+  max-height: 200px;  /* Asegúrate de que el contenedor tenga un tamaño para que aparezca la barra */
 }
 
+/* Webkit: Estilo para la barra de desplazamiento */
 .custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
+  height: 12px;  /* Altura de la barra de desplazamiento */
+  width: 12px;  /* Ancho de la barra de desplazamiento en el eje horizontal */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #222; 
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #333; 
+  background: #222;  /* Color del track */
   border-radius: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b; 
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #333;  /* Color inicial del pulgar */
+  border-radius: 10px;
+  transition: background-color 0.3s ease;  /* Transición suave para el cambio de color */
 }
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;  /* Color del pulgar cuando está en hover */
+}
+

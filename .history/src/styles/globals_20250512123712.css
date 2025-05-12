@@ -36,25 +36,28 @@ html, body {
 }
 
 .custom-scrollbar {
-  scrollbar-width: thick; 
-  scrollbar-color: #333 #222; 
-  overflow-x: auto; /* Para el desplazamiento horizontal */
+  scrollbar-width: thin;  /* Definir el tamaño de la barra de desplazamiento */
+  scrollbar-color: #333 #222;  /* Color del pulgar y el track (para Firefox) */
+  overflow-x: auto;  /* Para el desplazamiento horizontal */
   overflow-y: auto;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
+  height: 100px;  /* Definir la altura de la barra de desplazamiento */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #222; 
+  background: #222;  /* Color del track (fondo de la barra de desplazamiento) */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #333; 
+  background: #333;  /* Color inicial del pulgar */
   border-radius: 10px;
+  transition: background-color 0.3s ease;  /* Aplicar transición al color */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b; 
+  background: #6b6b6b;  /* Color del pulgar cuando está en hover */
 }
+
+

@@ -38,12 +38,10 @@ html, body {
 .custom-scrollbar {
   scrollbar-width: thick; 
   scrollbar-color: #333 #222; 
-  overflow-x: auto; /* Para el desplazamiento horizontal */
-  overflow-y: auto;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
+  height: 40px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

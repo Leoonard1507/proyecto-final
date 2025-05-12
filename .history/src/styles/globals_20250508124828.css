@@ -34,27 +34,3 @@ html, body {
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
-
-.custom-scrollbar {
-  scrollbar-width: thick; 
-  scrollbar-color: #333 #222; 
-  overflow-x: auto; /* Para el desplazamiento horizontal */
-  overflow-y: auto;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  height: 20px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #222; 
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #333; 
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b; 
-}

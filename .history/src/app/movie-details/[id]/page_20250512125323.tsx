@@ -14,10 +14,10 @@ interface Movie {
 }
 
 interface Comment {
-  id: string; // Comment ID (if supported by the API)
-  userName: string; // Username who leaves the comment
-  text: string; // Comment text
-  date: string; // Date when the comment was made
+  id: string; // ID del comentario (si la API lo soporta)
+  userName: string; // Usuario que deja el comentario
+  text: string; // El texto del comentario
+  date: string; // Fecha en que se hizo el comentario
 }
 
 const MovieDetailPage = ({ params }: { params: { id: string } }) => {
@@ -25,8 +25,8 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState<string>(''); // New comment
-  const [userName, setUserName] = useState<string>(''); // Username
+  const [newComment, setNewComment] = useState<string>(''); // Nuevo comentario
+  const [userName, setUserName] = useState<string>(''); // Nombre de usuario
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -42,7 +42,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
     const fetchComments = async () => {
       try {
-        // Assuming you have an API for fetching comments
+        // Asumimos que tienes una API para obtener comentarios
         const response = await axiosInstance.get(`/comments/${id}`);
         setComments(response.data);
       } catch (error) {
@@ -55,7 +55,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   }, [id]);
 
   const handleCommentSubmit = async () => {
-    if (!newComment.trim()) return; // Validation: do not submit if the comment is empty
+    if (!newComment.trim()) return; // Validación: no enviar si el comentario está vacío
     const comment = {
       userName,
       text: newComment,
@@ -63,23 +63,23 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
     };
 
     try {
-      // Call to submit the comment to the server
+      // Llamada para enviar el comentario al servidor
       await axiosInstance.post(`/comments/${id}`, comment);
       setComments([...comments, comment]);
-      setNewComment(''); // Clear the text field after submitting
+      setNewComment(''); // Limpiar el campo de texto después de enviar
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
   };
 
-  if (loading) return <div className="text-center text-white py-20">Loading...</div>;
-  if (!movie) return <div className="text-center text-white py-20">Movie not found.</div>;
+  if (loading) return <div className="text-center text-white py-20">Cargando...</div>;
+  if (!movie) return <div className="text-center text-white py-20">Película no encontrada.</div>;
 
   return (
     <>
       <Navbar />
 
-      {/* Background like Filmin */}
+      {/* Fondo tipo Filmin */}
       <div className="w-full h-[50vh]">
         {movie.backdrop_path && (
           <img
@@ -90,7 +90,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
         )}
       </div>
 
-      {/* Main Content */}
+      {/* Contenido principal */}
       <div className="text-white px-6 py-10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
           {/* Poster */}
@@ -102,26 +102,26 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             />
           </div>
 
-          {/* Movie Info */}
+          {/* Info */}
           <div className="flex-1">
             <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
-            <p className="text-gray-300 mb-2"><strong>Release Date:</strong> {movie.release_date}</p>
-            <p className="text-gray-300 mb-2"><strong>Rating:</strong> ⭐ {movie.vote_average.toFixed(1)}</p>
-            <h2 className="text-xl font-semibold mt-6 mb-2">Synopsis</h2>
+            <p className="text-gray-300 mb-2"><strong>Fecha de estreno:</strong> {movie.release_date}</p>
+            <p className="text-gray-300 mb-2"><strong>Valoración:</strong> ⭐ {movie.vote_average.toFixed(1)}</p>
+            <h2 className="text-xl font-semibold mt-6 mb-2">Sinopsis</h2>
             <p className="text-gray-300 leading-relaxed whitespace-pre-line">{movie.overview}</p>
           </div>
         </div>
       </div>
 
-      {/* Comments Section */}
+      {/* Sección de Comentarios */}
       <div className="max-w-6xl mx-auto mt-10">
-        <h2 className="text-2xl font-semibold text-white mb-4">Comments</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Comentarios</h2>
 
-        {/* Form to add a comment */}
+        {/* Formulario para agregar un comentario */}
         <div className="mb-6">
           <textarea
             className="w-full p-3 mt-4 rounded-md bg-gray-800 text-white"
-            placeholder="Leave your comment..."
+            placeholder="Deja tu comentario..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
@@ -129,14 +129,14 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             onClick={handleCommentSubmit}
             className="mt-4 px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
           >
-            Submit Comment
+            Subir Comentario
           </button>
         </div>
 
-        {/* Display comments */}
+        {/* Mostrar comentarios */}
         <div>
           {comments.length === 0 ? (
-            <p className="text-gray-300">No comments yet.</p>
+            <p className="text-gray-300">No hay comentarios aún.</p>
           ) : (
             comments.map((comment, index) => (
               <div key={index} className="border-b border-gray-700 py-4">

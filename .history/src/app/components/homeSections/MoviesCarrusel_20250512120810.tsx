@@ -43,6 +43,33 @@ export default function MovieCarouselSection({ title, endpoint }: Props) {
           </Link>
         ))}
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #e5e5e5;
+          border-radius: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 8px;
+          border: 2px solid #e5e5e5;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+
+        /* Para Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #888 #e5e5e5;
+        }
+      `}</style>
     </section>
   );
 }
