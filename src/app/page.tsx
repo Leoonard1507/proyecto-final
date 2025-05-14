@@ -95,7 +95,7 @@ export default function LoginPage() {
           </button>
 
           <p className="text-[#22ec8a] text-lg text-center mt-2">
-            It&apos;s have an account?{" "}
+            Already have an account?{" "}
             <Link href="/register" className="hover:opacity-70">
               Sign up
             </Link>

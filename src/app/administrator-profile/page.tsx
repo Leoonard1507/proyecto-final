@@ -6,6 +6,8 @@ import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 
+import Watchlist from "../components/profileSections/userWatchlist";
+
 export default function ProfilePage() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -65,7 +67,7 @@ export default function ProfilePage() {
     }
 
     const responseData = await response.json();
-    toast(responseData.message); 
+    toast(responseData.message);
 
     setIsModalOpen(false);
     await fetchUserData(userId);
@@ -120,6 +122,7 @@ export default function ProfilePage() {
           <ProfileField label="Role" value={role} />
         </div>
       </div>
+
 
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
@@ -216,9 +219,8 @@ export default function ProfilePage() {
                           setAvatar(url);
                           console.log('Avatar updated to:', url);
                         }}
-                        className={`cursor-pointer rounded-full border ${
-                          avatar === url ? "border-blue-500" : "border-transparent"
-                        }`}
+                        className={`cursor-pointer rounded-full border ${avatar === url ? "border-blue-500" : "border-transparent"
+                          }`}
                       />
                     );
                   })}
@@ -238,6 +240,9 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
+
+      {userId && <Watchlist userId={userId} />}
+
     </div>
   );
 }
