@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
+import { toast } from "react-toastify";
+
+import Watchlist from "../components/profileSections/userWatchlist";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -64,7 +67,7 @@ export default function ProfilePage() {
     }
 
     const responseData = await response.json();
-    alert(responseData.message); // Guarda el mensaje en el estado
+    toast(responseData.message);
 
     setIsModalOpen(false);
     await fetchUserData(userId);
@@ -86,11 +89,11 @@ export default function ProfilePage() {
         <h2 className="text-3xl font-semibold mb-6">Mi perfil</h2>
         <div className="flex items-center space-x-6 mb-8">
           <Image
-            src={`https://api.dicebear.com/7.x/bottts/png?seed=${userId}`}
+            src={avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=default'}
             alt="Avatar"
             width={100}
             height={100}
-            className="rounded-full border border-gray-500"
+            className="rounded-full border"
           />
           <button
             type="submit"
@@ -98,7 +101,7 @@ export default function ProfilePage() {
             onClick={() => setIsModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
           >
-            Editar Perfil
+            Edit Proile
           </button>
           <button
             type="submit"
@@ -106,19 +109,20 @@ export default function ProfilePage() {
             onClick={() => setIsPasswordModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
           >
-            Cambiar Contraseña
+            Change Password
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ProfileField label="Nickname" value={nickname} />
-          <ProfileField label="Nombre" value={name} />
-          <ProfileField label="Correo electrónico" value={usermail} />
-          <ProfileField label="Fecha nacimiento" value={birthdate} />
-          <ProfileField label="Descripción" value={description} />
-          <ProfileField label="Rol" value={role} />
+          <ProfileField label="Name" value={name} />
+          <ProfileField label="Email" value={usermail} />
+          <ProfileField label="Date of birth" value={birthdate} />
+          <ProfileField label="Description" value={description} />
+          <ProfileField label="Role" value={role} />
         </div>
       </div>
+
 
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
@@ -131,7 +135,7 @@ export default function ProfilePage() {
               ✖
             </button>
 
-            <h2 className="text-2xl font-bold mb-5">Cambiar Contraseña</h2>
+            <h2 className="text-2xl font-bold mb-5">Change Password</h2>
 
             <form
               onSubmit={async (e) => {
@@ -155,19 +159,19 @@ export default function ProfilePage() {
               className="space-y-4"
             >
               <Input
-                label="Contraseña actual"
+                label="Current password"
                 value={currentPassword}
                 onChange={setCurrentPassword}
                 type="password"
               />
               <Input
-                label="Nueva contraseña"
+                label="New password"
                 value={newPassword}
                 onChange={setNewPassword}
                 type="password"
               />
               <Input
-                label="Repetir nueva contraseña"
+                label="Repeat new password"
                 value={repeatPassword}
                 onChange={setRepeatPassword}
                 type="password"
@@ -177,7 +181,7 @@ export default function ProfilePage() {
                 type="submit"
                 className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
               >
-                Guardar Nueva Contraseña
+                Save New Password
               </button>
             </form>
           </div>
@@ -196,7 +200,7 @@ export default function ProfilePage() {
               ✖
             </button>
 
-            <h2 className="text-2xl font-bold mb-5">Editar Perfil</h2>
+            <h2 className="text-2xl font-bold mb-5">Edit Profile</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -211,29 +215,34 @@ export default function ProfilePage() {
                         alt="avatar option"
                         width={60}
                         height={60}
-                        onClick={() => setAvatar(url)}
-                        className={`cursor-pointer rounded-full border ${
-                          avatar === url ? "border-blue-500" : "border-transparent"
-                        }`}
+                        onClick={() => {
+                          setAvatar(url);
+                          console.log('Avatar updated to:', url);
+                        }}
+                        className={`cursor-pointer rounded-full border ${avatar === url ? "border-blue-500" : "border-transparent"
+                          }`}
                       />
                     );
                   })}
                 </div>
               </div>
-              <Input label="Nombre" value={name} onChange={setName} />
-              <Input label="Apodo" value={nickname} onChange={setNickname} />
-              <Input label="Fecha de nacimiento" value={birthdate} onChange={setBirthdate} />
-              <Input label="Descripción" value={description} onChange={setDescription} />
+              <Input label="Name" value={name} onChange={setName} />
+              <Input label="Nickname" value={nickname} onChange={setNickname} />
+              <Input label="Date of birth" value={birthdate} onChange={setBirthdate} />
+              <Input label="Description" value={description} onChange={setDescription} />
               <button
                 type="submit"
                 className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
               >
-                {loading ? "Guardando..." : "Guardar Cambios"}
+                {loading ? "Saving..." : "Save Changes"}
               </button>
             </form>
           </div>
         </div>
       )}
+
+      {userId && <Watchlist userId={userId} />}
+
     </div>
   );
 }
@@ -242,7 +251,7 @@ export default function ProfilePage() {
 function ProfileField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-400 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-[#22ec8a] mb-1">{label}</label>
       <p className="text-white border border-gray-700 rounded p-2">{value || "—"}</p>
     </div>
   );

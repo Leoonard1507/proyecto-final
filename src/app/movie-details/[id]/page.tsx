@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -91,6 +92,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
       {/* Background */}
       <div className="w-full h-[50vh]">
         {movie.backdrop_path && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
             alt={movie.title}
