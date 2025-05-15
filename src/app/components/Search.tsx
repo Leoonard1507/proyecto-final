@@ -6,6 +6,12 @@ import axiosInstance from '@/libs/axios';
 
 type SearchType = 'movie' | 'person' | 'user';
 
+type UserType = {
+  id: string;
+  nickName: string;
+  avatar: string;
+};
+
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<SearchType>('movie');
@@ -16,36 +22,33 @@ export default function Search() {
     if (!searchTerm) return;
     setLoading(true);
     try {
-      let response;
       if (searchType === 'movie') {
-        response = await axiosInstance.get(`/search/movie?query=${searchTerm}`);
+        const response = await axiosInstance.get(`/search/movie?query=${searchTerm}`);
         const filteredMovies = response.data.results
-          .filter((movie: any) => !movie.adult) // Filtra películas para no incluir contenido para adultos
-          .sort((a: any, b: any) => b.popularity - a.popularity); // Ordena por popularidad en orden descendente
+          .filter((movie: any) => !movie.adult)
+          .sort((a: any, b: any) => b.popularity - a.popularity);
         setResults(filteredMovies);
-      }
-      else {
+      } else if (searchType === 'person') {
         let allPeople: any[] = [];
-
         for (let page = 1; page <= 10; page++) {
           const response = await axiosInstance.get(`/search/person?query=${searchTerm}&page=${page}`);
           allPeople = allPeople.concat(response.data.results);
         }
-
         const filtered = allPeople.filter((person) =>
           person.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
         const actorsAndDirectors = filtered.filter((person) =>
           ['Acting', 'Directing'].includes(person.known_for_department)
         );
-
         actorsAndDirectors.sort((a, b) => b.popularity - a.popularity);
-
         const withPhoto = actorsAndDirectors.filter(p => p.profile_path);
         const withoutPhoto = actorsAndDirectors.filter(p => !p.profile_path);
-
         setResults([...withPhoto, ...withoutPhoto]);
+      } else if (searchType === 'user') {
+        // Aquí llamamos a tu API personalizada de usuarios para buscar por nickname
+        const response = await fetch(`/api/user/searchUser?nickname=${searchTerm}`);
+        const data = await response.json();
+        setResults(data);
       }
     } catch (error) {
       console.error('Error al buscar:', error);
@@ -63,7 +66,7 @@ export default function Search() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar película o persona..."
+            placeholder="Buscar película, persona o usuario..."
             className="w-full px-4 py-2 border-2 border-[#777] rounded focus:outline-none focus:border-[#22ec8a] text-white"
           />
           <button
@@ -106,7 +109,7 @@ export default function Search() {
               value="user"
               checked={searchType === 'user'}
               onChange={() => {
-                setSearchType('person');
+                setSearchType('user');
                 setResults([]);
               }}
             />
@@ -119,23 +122,44 @@ export default function Search() {
       {results.length > 0 && (
         <div className="w-full max-w-2xl">
           <ul className="space-y-4">
-            {results.map((item) => (
-              <li key={item.id} className="flex items-center space-x-4 p-4 bg-gray-700 rounded-lg">
-                <img
-                  src={`https://image.tmdb.org/t/p/w200${item.poster_path || item.profile_path}`}
-                  className="w-24 h-36 object-cover rounded-lg"
-                />
-                <div className="text-white flex-1">
-                  <h3 className="font-bold">{item.title || item.name}</h3>
-                  <p className='font-white opacity-0.7'>{item.release_date}</p>
-                </div>
-                <Link href={searchType === 'movie' ? `/movie-details/${item.id}` : `/person-movies/${item.id}`}>
-                  <button className="px-4 py-2 bg-gray-600 text-white rounded hover:opacity-70 transition">
-                    More
-                  </button>
-                </Link>
-              </li>
-            ))}
+            {searchType === 'user' ? (
+              results.map((user: UserType) => (
+                <li key={user.id} className="flex items-center space-x-4 p-4 bg-gray-700 rounded-lg">
+                  <img
+                    src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
+                    alt={user.nickName}
+                    className="w-24 h-24 object-cover rounded-full"
+                  />
+                  <div className="text-white flex-1">
+                    <h3 className="font-bold">{user.nickName}</h3>
+                  </div>
+                  <Link href={`/client-profile/${user.id}`}>
+                    <button className="px-4 py-2 bg-gray-600 text-white rounded hover:opacity-70 transition">
+                      View Profile
+                    </button>
+                  </Link>
+                </li>
+              ))
+            ) : (
+              results.map((item) => (
+                <li key={item.id} className="flex items-center space-x-4 p-4 bg-gray-700 rounded-lg">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${item.poster_path || item.profile_path}`}
+                    className="w-24 h-36 object-cover rounded-lg"
+                    alt={item.title || item.name}
+                  />
+                  <div className="text-white flex-1">
+                    <h3 className="font-bold">{item.title || item.name}</h3>
+                    <p className="opacity-70">{item.release_date}</p>
+                  </div>
+                  <Link href={searchType === 'movie' ? `/movie-details/${item.id}` : `/person-movies/${item.id}`}>
+                    <button className="px-4 py-2 bg-gray-600 text-white rounded hover:opacity-70 transition">
+                      More
+                    </button>
+                  </Link>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       )}
