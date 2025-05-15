@@ -1,17 +1,20 @@
 import Watchlist from "@/app/components/profileSections/userWatchlist";
 import { connectDB } from "@/libs/mysql";
 import { notFound } from "next/navigation";
+import FollowButton from "@/app/components/profileSections/followButton";
 
 export default async function PublicProfilePage({ params }: { params: { id: string } }) {
   const db = await connectDB();
   const [rows] = await db.query("SELECT id, nickName, avatar FROM user WHERE id = ?", [params.id]);
   const user = rows[0];
+  const userId = params.id;
 
   if (!user) return notFound();
 
   return (
     <div className="min-h-screen p-6 text-white">
       <div className="max-w-xl mx-auto border rounded-xl shadow-md p-6 text-center">
+      <FollowButton targetUserId={userId} />
         <img
           src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
           alt="Avatar"
