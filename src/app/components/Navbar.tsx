@@ -16,7 +16,7 @@ export default function Navbar() {
     return (
         <nav className="sticky top-0 z-50 text-white px-10 py-4 flex justify-between items-center shadow-md bg-white/8 backdrop-blur-md">
             <div className="text-2xl font-bold">
-                <Link href="/home-page">🎥 Home</Link>
+                <Link href="/home-page">🎥 Filmogram</Link>
             </div>
             <ul className="flex space-x-6 items-center text-lg">
                 <li>

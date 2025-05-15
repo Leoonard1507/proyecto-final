@@ -32,7 +32,6 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const [newComment, setNewComment] = useState<string>(''); // New comment
   const [userName, setUserName] = useState<string>(''); // Username
 
-  const [watchlist, setWatchlist] = useState<Movie[]>([]); // Estado para guardar la watchlist
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -55,21 +54,12 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
         console.error("Error fetching comments:", error);
       }
     };
-    const fetchWatchlist = async () => {
-      if (!session?.user?.id) return;
-      try {
-        const response = await axiosInstance.get(`/watchlist/${session.user.id}`);
-        setWatchlist(response.data);
-      } catch (error) {
-        console.error("Error fetching watchlist:", error);
-      }
-    };
 
     fetchMovieDetails();
     fetchComments();
-    fetchWatchlist();
+   
 
-  }, [id]);
+  }, [id, session?.user?.id]);
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
@@ -94,13 +84,11 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;
   if (!movie) return <div className="text-center text-white py-20">Movie not found.</div>;
 
-  const isInWatchlist = watchlist.some(movie => movie.id === parseInt(id)); // Verificamos si el movieId de la película actual está en la watchlist
-
   return (
     <>
       <Navbar />
 
-      {/* Background like Filmin */}
+      {/* Background */}
       <div className="w-full h-[50vh]">
         {movie.backdrop_path && (
           <img
@@ -135,7 +123,6 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             movieId={movie.id}
             movieTitle={movie.title}
             posterPath={movie.poster_path}
-            isInWatchlist={isInWatchlist}
           />
         </div>
       </div>

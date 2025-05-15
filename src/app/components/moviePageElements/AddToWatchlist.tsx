@@ -1,70 +1,96 @@
-// Componente que contienen el boton mediante el cual se pasan los datos de la pelicula 
-// para insertarla en la watchlist con api/watchlist
-
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface Props {
-    movieId: number;
-    movieTitle: string;
-    posterPath: string;
-    isInWatchlist: boolean;
+interface AddToWatchlistProps {
+  movieId: number;
+  movieTitle: string;
+  posterPath: string;
 }
 
-export default function AddToWatchlistButton({ movieId, movieTitle, posterPath }: Props) {
-    const { data: session } = useSession();
-    const [added, setAdded] = useState(false);
-    const [loading, setLoading] = useState(false);
+export default function AddToWatchlist({
+  movieId,
+  movieTitle,
+  posterPath,
+}: AddToWatchlistProps) {
+  const { data: session } = useSession();
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
-    const handleAdd = async () => {
-        if (!session) {
-            alert("Debes iniciar sesión para añadir a la watchlist.");
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            const res = await fetch("/api/watchlist", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    movieId,
-                    movieTitle,
-                    posterPath,
-                }),
-                credentials: "include", // <- Aquí añadimos esta línea
-            });
-
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                alert("Error: " + data.error);
-            } else {
-                setAdded(true);
-            }
-        } catch (error) {
-            console.error("Error en la solicitud:", error);
-        } finally {
-            setLoading(false);
-        }
+  useEffect(() => {
+    const fetchWatchlist = async () => {
+      if (!session?.user?.id) return;
+      try {
+        const res = await fetch(`/api/watchlist/${session.user.id}`);
+        if (!res.ok) throw new Error("Error al obtener la watchlist");
+        const data = await res.json();
+        const inList = data.some((movie: any) => movie.movie_id === movieId);
+        setIsInWatchlist(inList);
+      } catch (err) {
+        console.error("Error al cargar la watchlist:", err);
+      }
     };
 
-    return (
+    fetchWatchlist();
+  }, [session, movieId]);
+
+  const handleAddToWatchlist = async () => {
+    try {
+      const res = await fetch("/api/watchlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieId,
+          movieTitle,
+          posterPath,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Error al añadir a la watchlist");
+
+      setIsInWatchlist(true);
+    } catch (err) {
+      console.error("Error al añadir a la watchlist:", err);
+    }
+  };
+
+  const handleRemoveFromWatchlist = async () => {
+    try {
+      const res = await fetch("/api/watchlist/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ movieId }),
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar de la watchlist");
+
+      setIsInWatchlist(false);
+    } catch (err) {
+      console.error("Error al eliminar de la watchlist:", err);
+    }
+  };
+
+  return (
+    <div>
+      {isInWatchlist ? (
         <button
-            onClick={handleAdd}
-            disabled={added || loading}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold ${added
-                    ? "bg-gray-500 cursor-not-allowed text-white"
-                    : "bg-[#22ec8a] hover:opacity-70 text-black"
-                }`}
+          onClick={handleRemoveFromWatchlist}
+          className="bg-red-800 text-white px-4 py-2 rounded hover:opacity-70 cursor-pointer"
         >
-            {loading ? "Añadiendo..." : added ? "In Watchlist" : "Add to Watchlist"}
+          Remove from Watchlist
         </button>
-    );
+      ) : (
+        <button
+          onClick={handleAddToWatchlist}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:opacity-70 cursor-pointer"
+        >
+          Add to Watchlist
+        </button>
+      )}
+    </div>
+  );
 }
