@@ -7,6 +7,7 @@ import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 
 import Watchlist from "../components/profileSections/userWatchlist";
+import Comments from "../components/profileSections/userComments";
 import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal";
 
 export default function ProfilePage() {
@@ -275,6 +276,7 @@ export default function ProfilePage() {
 
 
       {userId && <Watchlist userId={userId} />}
+      {userId && <Comments userId={userId} />}
 
     </div>
   );
