@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/libs/axios';
 import { useSession } from 'next-auth/react';
@@ -47,15 +47,15 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
     }
 
     // Validaciones previas
-  if (!session?.user?.id) {
-    alert("You must be logged in to comment.");
-    return;
-  }
+    if (!session?.user?.id) {
+      alert("You must be logged in to comment.");
+      return;
+    }
 
-  if (!movie) {
-    alert("Movie data is not available.");
-    return;
-  }
+    if (!movie) {
+      alert("Movie data is not available.");
+      return;
+    }
 
     const commentToSend = {
       user_id: session?.user?.id,       // ID del usuario desde la sesión (asegúrate que exista)
@@ -67,7 +67,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
 
     try {
-      await axiosInstance.post(`/api/comment`, commentToSend);
+      await axios.post('/api/comment', commentToSend);
       setNewComment("");
       alert("Comment submitted successfully");
     } catch (error: any) {
