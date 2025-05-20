@@ -67,20 +67,13 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
 
     try {
-      await axiosInstance.post(`/api/comment`, commentToSend);
-      setNewComment("");
+      await axiosInstance.post(`/comment/`, commentToSend);
+      setNewComment(""); // limpiar textarea después de enviar
       alert("Comment submitted successfully");
-    } catch (error: any) {
-      if (error.isAxiosError) {
-        console.error("Axios error response:", error.response);
-        alert(`Failed to submit comment: ${error.response?.data?.error || error.message}`);
-      } else {
-        console.error("Non-Axios error:", error);
-        alert("Failed to submit comment");
-      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      alert("Failed to submit comment");
     }
-
-
   };
 
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;

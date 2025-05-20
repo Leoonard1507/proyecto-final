@@ -8,14 +8,3 @@ CREATE TABLE favorite_movies (
   UNIQUE KEY unique_user_movie (user_id, movie_id),
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
-
-CREATE TABLE comments (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  movie_id INT NOT NULL,
-  movie_title VARCHAR(255) NOT NULL,
-  poster_path VARCHAR(500),
-  comentario TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES user(id)
-);

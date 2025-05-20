@@ -67,7 +67,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
 
     try {
-      await axiosInstance.post(`/api/comment`, commentToSend);
+      await axiosInstance.post(`/comment`, commentToSend);
       setNewComment("");
       alert("Comment submitted successfully");
     } catch (error: any) {

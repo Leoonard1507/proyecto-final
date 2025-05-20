@@ -67,19 +67,21 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
 
     try {
-      await axiosInstance.post(`/api/comment`, commentToSend);
+      await axiosInstance.post(`/comment/${movie.id}`, commentToSend);
       setNewComment("");
       alert("Comment submitted successfully");
     } catch (error: any) {
-      if (error.isAxiosError) {
-        console.error("Axios error response:", error.response);
-        alert(`Failed to submit comment: ${error.response?.data?.error || error.message}`);
+      console.error("Error submitting comment:", error);
+
+      // Si es un error Axios, puede tener response con info
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+        alert(`Failed to submit comment: ${error.response.data.error || "Unknown error"}`);
       } else {
-        console.error("Non-Axios error:", error);
         alert("Failed to submit comment");
       }
     }
-
 
   };
 
