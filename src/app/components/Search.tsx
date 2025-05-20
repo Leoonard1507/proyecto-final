@@ -88,6 +88,7 @@ export default function Search() {
                 setSearchType('movie');
                 setResults([]);
               }}
+              className="accent-[#22ec8a]"
             />
             <span>Film</span>
           </label>
@@ -100,6 +101,7 @@ export default function Search() {
                 setSearchType('person');
                 setResults([]);
               }}
+              className="accent-[#22ec8a]"
             />
             <span>Actor/Director</span>
           </label>
@@ -112,6 +114,7 @@ export default function Search() {
                 setSearchType('user');
                 setResults([]);
               }}
+              className="accent-[#22ec8a]"
             />
             <span>User</span>
           </label>

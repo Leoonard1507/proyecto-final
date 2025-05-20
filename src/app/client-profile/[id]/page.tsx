@@ -2,6 +2,7 @@ import Watchlist from "@/app/components/profileSections/userWatchlist";
 import { connectDB } from "@/libs/mysql";
 import { notFound } from "next/navigation";
 import FollowButton from "@/app/components/profileSections/followButton";
+import Navbar from "@/app/components/Navbar";
 
 export default async function PublicProfilePage({ params }: { params: { id: string } }) {
   const db = await connectDB();
@@ -12,19 +13,22 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
   if (!user) return notFound();
 
   return (
-    <div className="min-h-screen p-6 text-white">
-      <div className="max-w-xl mx-auto border rounded-xl shadow-md p-6 text-center">
-      <FollowButton targetUserId={userId} />
-        <img
-          src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
-          alt="Avatar"
-          className="mx-auto w-32 h-32 rounded-full mb-4"
-        />
-        <h1 className="text-2xl font-semibold">{user.nickName}</h1>
-        <p className="text-gray-400 mb-6">🎬 Watchlist:</p>
+    <>
+      <Navbar />
+      <div className="min-h-screen p-6 text-white">
+        <div className="max-w-xl mx-auto border rounded-xl shadow-md p-6 text-center">
+        <FollowButton targetUserId={userId} />
+          <img
+            src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
+            alt="Avatar"
+            className="mx-auto w-32 h-32 rounded-full mb-4"
+          />
+          <h1 className="text-2xl font-semibold">{user.nickName}</h1>
+          <p className="text-gray-400 mb-6">🎬 Watchlist:</p>
 
-        <Watchlist userId={user.id} />
+          <Watchlist userId={user.id} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
