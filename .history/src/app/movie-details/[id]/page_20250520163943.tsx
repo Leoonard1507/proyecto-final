@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import axios from 'axios';
+
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/libs/axios';
 import { useSession } from 'next-auth/react';
@@ -47,15 +47,15 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
     }
 
     // Validaciones previas
-    if (!session?.user?.id) {
-      alert("You must be logged in to comment.");
-      return;
-    }
+  if (!session?.user?.id) {
+    alert("You must be logged in to comment.");
+    return;
+  }
 
-    if (!movie) {
-      alert("Movie data is not available.");
-      return;
-    }
+  if (!movie) {
+    alert("Movie data is not available.");
+    return;
+  }
 
     const commentToSend = {
       user_id: session?.user?.id,       // ID del usuario desde la sesión (asegúrate que exista)
@@ -67,20 +67,18 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
 
     try {
-      await axios.post('/api/comment', commentToSend);
-      setNewComment("");
+      await axiosInstance.post(`/comment/${id}`, commentToSend);
+      setNewComment(""); // limpiar textarea después de enviar
       alert("Comment submitted successfully");
-    } catch (error: any) {
-      if (error.isAxiosError) {
-        console.error("Axios error response:", error.response);
-        alert(`Failed to submit comment: ${error.response?.data?.error || error.message}`);
-      } else {
-        console.error("Non-Axios error:", error);
-        alert("Failed to submit comment");
-      }
+    } catch (error) {
+      console.log(session?.user?.id); 
+      console.log(movie?.id);
+      console.log(movie?.title);
+      console.log(movie?.poster_path);
+      console.log(newComment);
+      //console.error("Error submitting comment:", error);
+      alert("Failed to submit comment");
     }
-
-
   };
 
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;

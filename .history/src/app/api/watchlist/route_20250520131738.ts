@@ -12,13 +12,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const {movie_id, movie_title, poster_path } = await request.json();
+  const { movieId, movieTitle, posterPath } = await request.json();
 
-  if (!movie_id || !movie_title || !poster_path) {
+  if (!movieId || !movieTitle || !posterPath) {
     return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
   }
 
-  const user_id = session.user.id;
+  const userId = session.user.id;
 
   try {
     const db = await connectDB();
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     await db.query(
       `INSERT INTO watchlist (user_id, movie_id, movie_title, poster_path)
        VALUES (?, ?, ?, ?)`,
-      [user_id, movie_id, movie_title, poster_path]
+      [userId, movieId, movieTitle, posterPath]
     );
 
     await db.end();

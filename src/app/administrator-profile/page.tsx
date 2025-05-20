@@ -7,6 +7,7 @@ import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 
 import Watchlist from "../components/profileSections/userWatchlist";
+import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -20,10 +21,16 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
+
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
+
+
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+
+  //const [favoriteMovies, setFavoriteMovies] = useState<any[]>([]);
+
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -45,6 +52,9 @@ export default function ProfilePage() {
       setNickname(user.nickName || "");
       setDescription(user.description || "");
       setAvatar(user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`);
+
+      //setFavoriteMovies(user.favorites || []);
+
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error);
     }
@@ -52,7 +62,18 @@ export default function ProfilePage() {
 
   const updateUserProfile = async () => {
     setLoading(true);
-    const dataToSend = { nickname, name, email: usermail, role, description, birthdate, avatar, currentPassword, newPassword };
+    const dataToSend = {
+      nickname,
+      name,
+      email: usermail,
+      role,
+      description,
+      birthdate,
+      avatar,
+      currentPassword,
+      newPassword,
+      //favorites: favoriteMovies,
+    };
 
     const response = await fetch("/api/user/update", {
       method: "POST",
@@ -83,7 +104,6 @@ export default function ProfilePage() {
     <div className="min-h-screen text-white">
       {/* Navbar */}
       <Navbar />
-
       {/* Contenedor de perfil */}
       <div className="max-w-3xl mx-auto border mt-30 rounded-xl shadow-md p-8">
         <h2 className="text-3xl font-semibold mb-6">Mi perfil</h2>
@@ -192,7 +212,7 @@ export default function ProfilePage() {
       {/* Modal editar perfil */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
+          <div className="bg-white text-black p-6 rounded-lg max-w-xl w-full relative shadow-lg space-y-4">
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
@@ -200,46 +220,59 @@ export default function ProfilePage() {
               ✖
             </button>
 
-            <h2 className="text-2xl font-bold mb-5">Edit Profile</h2>
+            <h2 className="text-2xl font-bold">Editar perfil</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Avatar</label>
-                <div className="flex space-x-3 mt-1">
-                  {["cat", "robot", "alien", "monster", "Sawyer"].map((type) => {
+                <label className="block font-medium mb-1">Avatar</label>
+                <div className="flex space-x-3">
+                  {['cat', 'robot', 'alien', 'monster', 'Sawyer'].map((type) => {
                     const url = `https://api.dicebear.com/7.x/bottts/png?seed=${type}`;
                     return (
                       <Image
                         key={type}
                         src={url}
-                        alt="avatar option"
+                        alt="avatar"
                         width={60}
                         height={60}
-                        onClick={() => {
-                          setAvatar(url);
-                          console.log('Avatar updated to:', url);
-                        }}
-                        className={`cursor-pointer rounded-full border ${avatar === url ? "border-blue-500" : "border-transparent"
+                        onClick={() => setAvatar(url)}
+                        className={`cursor-pointer rounded-full border-2 ${avatar === url ? 'border-blue-600' : 'border-transparent'
                           }`}
                       />
                     );
                   })}
                 </div>
               </div>
-              <Input label="Name" value={name} onChange={setName} />
-              <Input label="Nickname" value={nickname} onChange={setNickname} />
-              <Input label="Date of birth" value={birthdate} onChange={setBirthdate} />
-              <Input label="Description" value={description} onChange={setDescription} />
+
+              <Input label="Nombre" value={name} onChange={setName} />
+              <Input label="Apodo" value={nickname} onChange={setNickname} />
+              <Input label="Fecha de nacimiento" value={birthdate} onChange={setBirthdate} />
+              <Input label="Descripción" value={description} onChange={setDescription} />
+
+
+
+              {/* la sección de películas favoritas */}
+              <div>
+                <h3 className="font-semibold mb-1">Favorite films</h3>
+                {session?.user?.id && (
+                  <FavoriteMoviesSection userId={session.user.id} />
+                )}
+
+              </div>
+
               <button
                 type="submit"
-                className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                disabled={loading}
               >
-                {loading ? "Saving..." : "Save Changes"}
+                {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </form>
           </div>
         </div>
       )}
+
+
 
       {userId && <Watchlist userId={userId} />}
 

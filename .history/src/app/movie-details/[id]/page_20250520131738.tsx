@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import axios from 'axios';
+
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/libs/axios';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/app/components/Navbar';
 import AddToWatchlistButton from '@/app/components/moviePageElements/AddToWatchlist';
-import { title } from 'process';
 
 interface Movie {
   id: number;
@@ -18,69 +17,69 @@ interface Movie {
   backdrop_path: string;
 }
 
+interface Comment {
+  id: string; // Comment ID (if supported by the API)
+  userName: string; // Username who leaves the comment
+  text: string; // Comment text
+  date: string; // Date when the comment was made
+}
+
 const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const { data: session } = useSession();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-  const [newComment, setNewComment] = useState<string>('');
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>(''); // New comment
+  const [userName, setUserName] = useState<string>(''); // Username
+
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
         const response = await axiosInstance.get(`/movie/${id}`);
         setMovie(response.data);
+
       } catch (error) {
         console.error("Error fetching movie details:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchMovieDetails();
-  }, [id]);
-
-  const handleCommentSubmit = async () => {
-    if (!newComment.trim()) {
-      alert("Please write a comment");
-      return;
-    }
-
-    // Validaciones previas
-    if (!session?.user?.id) {
-      alert("You must be logged in to comment.");
-      return;
-    }
-
-    if (!movie) {
-      alert("Movie data is not available.");
-      return;
-    }
-
-    const commentToSend = {
-      user_id: session?.user?.id,       // ID del usuario desde la sesión (asegúrate que exista)
-      movie_id: movie?.id,              // ID de la película
-      movie_title: movie?.title,        // Título de la película
-      poster_path: movie?.poster_path,  // Path del póster (opcional)
-      comentario: newComment            // El texto del comentario
+    const fetchComments = async () => {
+      try {
+        // Assuming you have an API for fetching comments
+        const response = await axiosInstance.get(`/comments/${id}`);
+        setComments(response.data);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
     };
 
+    fetchMovieDetails();
+    fetchComments();
+   
+
+  }, [id, session?.user?.id]);
+
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+
+    const commentToSend = {
+      userName,
+      text: newComment,
+      date: new Date().toISOString(),
+    };
 
     try {
-      await axios.post('/api/comment', commentToSend);
-      setNewComment("");
-      alert("Comment submitted successfully");
-    } catch (error: any) {
-      if (error.isAxiosError) {
-        console.error("Axios error response:", error.response);
-        alert(`Failed to submit comment: ${error.response?.data?.error || error.message}`);
-      } else {
-        console.error("Non-Axios error:", error);
-        alert("Failed to submit comment");
-      }
+      const response = await axiosInstance.post(`/comments/${id}`, commentToSend);
+
+      const savedComment: Comment = response.data; // Aquí viene con su id
+      setComments([...comments, savedComment]); // Añades el comentario válido
+      setNewComment('');
+    } catch (error) {
+      console.error("Error submitting comment:", error);
     }
-
-
   };
 
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;
@@ -122,7 +121,6 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             <h2 className="text-xl font-semibold mt-6 mb-2">Synopsis</h2>
             <p className="text-gray-300 leading-relaxed whitespace-pre-line">{movie.overview}</p>
           </div>
-
           <AddToWatchlistButton
             movieId={movie.id}
             movieTitle={movie.title}
@@ -150,7 +148,24 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             Submit Comment
           </button>
         </div>
+
+        {/* Display comments */}
+        <div>
+          {comments.length === 0 ? (
+            <p className="text-gray-300">No comments yet.</p>
+          ) : (
+            comments.map((comment, index) => (
+              <div key={index} className="border-b border-gray-700 py-4">
+                <p className="text-lg font-semibold text-white">{comment.userName}</p>
+                <p className="text-sm text-gray-400">{new Date(comment.date).toLocaleString()}</p>
+                <p className="mt-2 text-gray-300">{comment.text}</p>
+              </div>
+            ))
+          )}
+        </div>
       </div>
+
+
     </>
   );
 };
