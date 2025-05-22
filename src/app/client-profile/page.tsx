@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
-
 import Watchlist from "../components/profileSections/userWatchlist";
 import Comments from "../components/profileSections/userComments";
 import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal";
@@ -22,14 +21,12 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
-
+  const [showDetails, setShowDetails] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
-
-
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-
+  const [activeTab, setActiveTab] = useState('watchlist');
   //const [favoriteMovies, setFavoriteMovies] = useState<any[]>([]);
 
 
@@ -106,45 +103,83 @@ export default function ProfilePage() {
       {/* Navbar */}
       <Navbar />
       {/* Contenedor de perfil */}
-      <div className="max-w-3xl mx-auto border mt-30 rounded-xl shadow-md p-8">
-        <h2 className="text-3xl font-semibold mb-6">Mi perfil</h2>
-        <div className="flex items-center space-x-6 mb-8">
+       
+    <div className="max-w-4xl mx-auto mt-10 space-y-6">
+      {/* Perfil compacto */}
+      <div className="flex items-center justify-between border rounded-xl shadow-md p-4">
+        <div className="flex items-center space-x-4">
           <Image
             src={avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=default'}
             alt="Avatar"
-            width={100}
-            height={100}
+            width={60}
+            height={60}
             className="rounded-full border"
           />
-          <button
-            type="submit"
-            disabled={loading}
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
-          >
-            Edit Proile
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            onClick={() => setIsPasswordModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
-          >
-            Change Password
-          </button>
+          <span className="text-xl font-semibold">{nickname}</span>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ProfileField label="Nickname" value={nickname} />
-          <ProfileField label="Name" value={name} />
-          <ProfileField label="Email" value={usermail} />
-          <ProfileField label="Date of birth" value={birthdate} />
-          <ProfileField label="Description" value={description} />
-          <ProfileField label="Role" value={role} />
-        </div>
+        <button
+          onClick={() => setShowDetails(prev => !prev)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          {showDetails ? 'Ocultar perfil' : 'Ver perfil'}
+        </button>
       </div>
 
+      {/* Perfil detallado */}
+      {showDetails && (
+        <div className="border rounded-xl shadow-inner p-6 space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <ProfileField label="Nombre completo" value={name} />
+            <ProfileField label="Correo" value={usermail} />
+            <ProfileField label="Fecha de nacimiento" value={birthdate} />
+            <ProfileField label="Rol" value={role} />
+            <div className="sm:col-span-2">
+              <ProfileField label="Descripción" value={description} />
+            </div>
+          </div>
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Editar perfil
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition"
+            >
+              Cambiar contraseña
+            </button>
+          </div>
+        </div>
+      )}
 
+      {/* Tabs para mostrar contenido */}
+      <div className="border rounded-xl shadow-md">
+        <div className="flex border-b">
+          <button
+            onClick={() => setActiveTab('watchlist')}
+            className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+          >
+            📺 Watchlist
+          </button>
+          <button
+            onClick={() => setActiveTab('comments')}
+            className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+          >
+            💬 Comments
+          </button>
+        </div>
+        <div className="p-6">
+          {activeTab === 'watchlist' && userId && <Watchlist userId={userId} />}
+          {activeTab === 'comments' && userId && <Comments userId={userId} />}
+        </div>
+      </div>
+    </div>
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
@@ -272,12 +307,6 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
-
-
-
-      {userId && <Watchlist userId={userId} />}
-      {userId && <Comments userId={userId} />}
-
     </div>
   );
 }
