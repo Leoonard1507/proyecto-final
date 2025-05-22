@@ -42,10 +42,11 @@ export default function AddToWatchlist({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          movieId,
-          movieTitle,
-          posterPath,
+          movie_id: movieId,
+          movie_title: movieTitle,
+          poster_path: posterPath,
         }),
+
       });
 
       if (!res.ok) throw new Error("Error al añadir a la watchlist");

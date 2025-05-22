@@ -7,7 +7,8 @@ import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 import Watchlist from "../components/profileSections/userWatchlist";
 import Comments from "../components/profileSections/userComments";
-import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal";
+import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal"; //para elegir favs
+import FavoriteMoviesList from "../components/profileSections/FavMoviesList"; //para mostrar las favs en el perfil
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -103,83 +104,90 @@ export default function ProfilePage() {
       {/* Navbar */}
       <Navbar />
       {/* Contenedor de perfil */}
-       
-    <div className="max-w-4xl mx-auto mt-10 space-y-6">
-      {/* Perfil compacto */}
-      <div className="flex items-center justify-between border rounded-xl shadow-md p-4">
-        <div className="flex items-center space-x-4">
-          <Image
-            src={avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=default'}
-            alt="Avatar"
-            width={60}
-            height={60}
-            className="rounded-full border"
-          />
-          <span className="text-xl font-semibold">{nickname}</span>
-        </div>
-        <button
-          onClick={() => setShowDetails(prev => !prev)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          {showDetails ? 'Ocultar perfil' : 'Ver perfil'}
-        </button>
-      </div>
 
-      {/* Perfil detallado */}
-      {showDetails && (
-        <div className="border rounded-xl shadow-inner p-6 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <ProfileField label="Nombre completo" value={name} />
-            <ProfileField label="Correo" value={usermail} />
-            <ProfileField label="Fecha de nacimiento" value={birthdate} />
-            <ProfileField label="Rol" value={role} />
-            <div className="sm:col-span-2">
-              <ProfileField label="Descripción" value={description} />
+      <div className="max-w-4xl mx-auto mt-10 space-y-6">
+        {/* Perfil compacto */}
+        <div className="flex items-center justify-between border rounded-xl shadow-md p-4">
+          <div className="flex items-center space-x-4">
+            <Image
+              src={avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=default'}
+              alt="Avatar"
+              width={60}
+              height={60}
+              className="rounded-full border"
+            />
+            <span className="text-xl font-semibold">{nickname}</span>
+          </div>
+          <button
+            onClick={() => setShowDetails(prev => !prev)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            {showDetails ? 'Ocultar perfil' : 'Ver perfil'}
+          </button>
+        </div>
+
+        {/* Perfil detallado */}
+        {showDetails && (
+          <div className="border rounded-xl shadow-inner p-6 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ProfileField label="Nombre completo" value={name} />
+              <ProfileField label="Correo" value={usermail} />
+              <ProfileField label="Fecha de nacimiento" value={birthdate} />
+              <ProfileField label="Rol" value={role} />
+              <div className="sm:col-span-2">
+                <ProfileField label="Descripción" value={description} />
+              </div>
+            </div>
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => setIsModalOpen(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              >
+                Editar perfil
+              </button>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => setIsPasswordModalOpen(true)}
+                className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition"
+              >
+                Cambiar contraseña
+              </button>
             </div>
           </div>
-          <div className="flex space-x-4">
+        )}
+        {/* Mostrar las favoritas */}
+        {userId && (
+          <div className="border rounded-xl shadow-md p-6 mt-6">
+            <FavoriteMoviesList userId={userId} />
+          </div>
+        )}
+
+
+        {/* Tabs para mostrar contenido */}
+        <div className="border rounded-xl shadow-md">
+          <div className="flex border-b">
             <button
-              type="button"
-              disabled={loading}
-              onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              onClick={() => setActiveTab('watchlist')}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
             >
-              Editar perfil
+              📺 Watchlist
             </button>
             <button
-              type="button"
-              disabled={loading}
-              onClick={() => setIsPasswordModalOpen(true)}
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition"
+              onClick={() => setActiveTab('comments')}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
             >
-              Cambiar contraseña
+              💬 Comments
             </button>
           </div>
-        </div>
-      )}
-
-      {/* Tabs para mostrar contenido */}
-      <div className="border rounded-xl shadow-md">
-        <div className="flex border-b">
-          <button
-            onClick={() => setActiveTab('watchlist')}
-            className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
-          >
-            📺 Watchlist
-          </button>
-          <button
-            onClick={() => setActiveTab('comments')}
-            className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
-          >
-            💬 Comments
-          </button>
-        </div>
-        <div className="p-6">
-          {activeTab === 'watchlist' && userId && <Watchlist userId={userId} />}
-          {activeTab === 'comments' && userId && <Comments userId={userId} />}
+          <div className="p-6">
+            {activeTab === 'watchlist' && userId && <Watchlist userId={userId} />}
+            {activeTab === 'comments' && userId && <Comments userId={userId} />}
+          </div>
         </div>
       </div>
-    </div>
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
