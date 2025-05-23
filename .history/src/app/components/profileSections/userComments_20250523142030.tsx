@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 type Comment = {
@@ -24,6 +24,14 @@ export default function Comment({ userId }: { userId: string }) {
       try {
         const res = await fetch(`/api/comment/${userId}`);
         const data = await res.json();
+
+        // Ordenamos por fecha ascendente (menos recientes primero)
+        // Luego invertimos para que queden más recientes primero
+        data.sort((a: Comment, b: Comment) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        data.reverse();
+
         setComments(data);
       } catch (error) {
         console.error("Error al cargar los comentarios:", error);
@@ -33,20 +41,17 @@ export default function Comment({ userId }: { userId: string }) {
     fetchComment();
   }, [userId]);
 
-  // Después de que Comments se actualiza, chequeamos si el comentario excede 3 líneas
   useEffect(() => {
     if (Comments.length === 0) return;
 
-    // Esperamos que el DOM renderice para medir
     setTimeout(() => {
       const newShowReadMore: { [key: number]: boolean } = {};
       Comments.forEach((comment) => {
         const el = document.getElementById(`comment-text-${comment.movie_id}`);
         if (el) {
-          // Medimos altura y línea de texto (aprox 1.2em)
           const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
-          const maxHeight = lineHeight * 3; // 3 líneas
-          newShowReadMore[comment.movie_id] = el.scrollHeight > maxHeight + 1; // pequeño margen
+          const maxHeight = lineHeight * 3;
+          newShowReadMore[comment.movie_id] = el.scrollHeight > maxHeight + 1;
         }
       });
       setShowReadMore(newShowReadMore);
@@ -70,7 +75,7 @@ export default function Comment({ userId }: { userId: string }) {
     <div className="mt-3">
       <h3 className="text-2xl font-bold mb-4">Mis comentarios</h3>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-        {Comments.slice().reverse().map((comment) => (
+        {Comments.map((comment) => (
           <Link
             key={comment.movie_id}
             href={`/movie-details/${comment.movie_id}`}
@@ -84,11 +89,12 @@ export default function Comment({ userId }: { userId: string }) {
               className="rounded"
             />
             <div className="flex flex-col justify-between flex-1 pl-4 min-w-0">
-              <div className="mr-6">
+              <div>
                 <p className="text-xl font-semibold">{comment.movie_title}</p>
                 <p
                   id={`comment-text-${comment.movie_id}`}
                   className="mt-2 text-sm text-gray-300 break-words w-full line-clamp-3"
+                  style={{ marginRight: "0.5rem" }} // margen derecho pequeño
                 >
                   {comment.comentario}
                 </p>
@@ -97,15 +103,14 @@ export default function Comment({ userId }: { userId: string }) {
                 {showReadMore[comment.movie_id] ? (
                   <button
                     onClick={(e) => {
-                      e.preventDefault(); // evita navegación
+                      e.preventDefault();
                       openModal(comment);
                     }}
-                    className="text-xs text-[#22ec8a] hover:underline flex-shrink-0 cursor-pointer"
+                    className="text-xs text-blue-400 hover:underline flex-shrink-0"
                   >
                     Ver más
                   </button>
                 ) : (
-                  // Espacio reservado para que la fecha se quede a la derecha igual
                   <div style={{ width: "48px" }}></div>
                 )}
 
@@ -126,7 +131,6 @@ export default function Comment({ userId }: { userId: string }) {
         ))}
       </div>
 
-       {/* Modal */}
       {modalOpen && selectedComment && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
@@ -137,15 +141,12 @@ export default function Comment({ userId }: { userId: string }) {
             onClick={(e) => e.stopPropagation()}
             style={{ maxHeight: "80vh" }}
           >
-            {/* Imagen del póster */}
             <img
               src={`https://image.tmdb.org/t/p/w300${selectedComment.poster_path}`}
               alt={selectedComment.movie_title}
               className="rounded max-h-full object-contain"
               style={{ flexShrink: 0, width: "200px", height: "auto" }}
             />
-
-            {/* Texto y fecha/hora */}
             <div className="flex flex-col flex-1 overflow-auto">
               <h4 className="text-2xl font-bold mb-4">{selectedComment.movie_title}</h4>
               <p
@@ -166,8 +167,6 @@ export default function Comment({ userId }: { userId: string }) {
                 })}
               </p>
             </div>
-
-            {/* Botón cerrar */}
             <button
               onClick={closeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold"
@@ -178,7 +177,6 @@ export default function Comment({ userId }: { userId: string }) {
           </div>
         </div>
       )}
-
     </div>
   );
 }

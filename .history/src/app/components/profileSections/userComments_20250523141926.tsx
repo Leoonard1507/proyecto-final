@@ -70,7 +70,7 @@ export default function Comment({ userId }: { userId: string }) {
     <div className="mt-3">
       <h3 className="text-2xl font-bold mb-4">Mis comentarios</h3>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-        {Comments.slice().reverse().map((comment) => (
+        {Comments.map((comment) => (
           <Link
             key={comment.movie_id}
             href={`/movie-details/${comment.movie_id}`}
@@ -84,7 +84,7 @@ export default function Comment({ userId }: { userId: string }) {
               className="rounded"
             />
             <div className="flex flex-col justify-between flex-1 pl-4 min-w-0">
-              <div className="mr-6">
+              <div>
                 <p className="text-xl font-semibold">{comment.movie_title}</p>
                 <p
                   id={`comment-text-${comment.movie_id}`}
@@ -100,7 +100,7 @@ export default function Comment({ userId }: { userId: string }) {
                       e.preventDefault(); // evita navegación
                       openModal(comment);
                     }}
-                    className="text-xs text-[#22ec8a] hover:underline flex-shrink-0 cursor-pointer"
+                    className="text-xs text-blue-400 hover:underline flex-shrink-0"
                   >
                     Ver más
                   </button>

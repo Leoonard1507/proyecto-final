@@ -120,7 +120,7 @@ export default function ProfilePage() {
           </div>
           <button
             onClick={() => setShowDetails(prev => !prev)}
-            className="bg-[#22ec8a] text-black px-4 py-2 rounded-lg hover:opacity-70 transition"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
           >
             {showDetails ? 'Ocultar perfil' : 'Ver perfil'}
           </button>
@@ -143,7 +143,7 @@ export default function ProfilePage() {
                 type="button"
                 disabled={loading}
                 onClick={() => setIsModalOpen(true)}
-                className="bg-[#22ec8a] text-black px-4 py-2 rounded-md hover:opacity-70 transition"
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
               >
                 Editar perfil
               </button>
@@ -171,13 +171,13 @@ export default function ProfilePage() {
           <div className="flex border-b">
             <button
               onClick={() => setActiveTab('watchlist')}
-              className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]' : 'text-gray-500 hover:text-[#22ec8a]'}`}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
             >
               📺 Watchlist
             </button>
             <button
               onClick={() => setActiveTab('comments')}
-              className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]' : 'text-gray-500 hover:text-[#22ec8a]'}`}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
             >
               💬 Comments
             </button>

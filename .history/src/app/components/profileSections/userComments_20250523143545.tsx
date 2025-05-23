@@ -100,7 +100,7 @@ export default function Comment({ userId }: { userId: string }) {
                       e.preventDefault(); // evita navegación
                       openModal(comment);
                     }}
-                    className="text-xs text-[#22ec8a] hover:underline flex-shrink-0 cursor-pointer"
+                    className="text-xs text-[#22ec8a] hover:underline flex-shrink-0"
                   >
                     Ver más
                   </button>

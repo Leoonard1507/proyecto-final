@@ -37,27 +37,32 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
             className="mx-auto w-32 h-32 rounded-full mb-4"
           />
           <h1 className="text-2xl font-semibold">{user.nickName}</h1>
+          <p className="text-gray-400 mb-6">🎬 Watchlist:</p>
 
-          {/* Tabs para mostrar contenido */}
-          <div className="border rounded-xl shadow-md">
-            <div className="flex border-b">
-              <button>
-                  📺 Watchlist
-              </button>
+           {/* Tabs para mostrar contenido */}
+                  <div className="border rounded-xl shadow-md">
+                    <div className="flex border-b">
+                      <button
+                        onClick={() => setActiveTab('watchlist')}
+                        className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+                      >
+                        📺 Watchlist
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('comments')}
+                        className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+                      >
+                        💬 Comments
+                      </button>
+                    </div>
+                    <div className="p-6">
+                      {activeTab === 'watchlist' && userId && <Watchlist userId={userId} />}
+                      {activeTab === 'comments' && userId && <Comments userId={userId} />}
+                    </div>
+                  </div>
+                </div>
 
-              <button>
-                  💬 Comments
-              </button>
-            </div>
-            <div className="p-6">
-              <Watchlist userId={userId} />
-              <Comments userId={userId} />
-            </div>
-          </div>
 
-
-
-        </div>
       </div>
     </>
   );

@@ -14,6 +14,7 @@ interface UserPreview extends RowDataPacket {
 import Navbar from "@/app/components/Navbar";
 
 export default async function PublicProfilePage({ params }: { params: { id: string } }) {
+  const [activeTab, setActiveTab] = useState('watchlist');
   const db = await connectDB();
 
   const [rows] = await db.query<UserPreview[]>(
@@ -24,6 +25,7 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
   const userId = params.id;
 
   if (!user) return notFound();
+  
 
   return (
     <>
@@ -37,6 +39,7 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
             className="mx-auto w-32 h-32 rounded-full mb-4"
           />
           <h1 className="text-2xl font-semibold">{user.nickName}</h1>
+          <p className="text-gray-400 mb-6">🎬 Watchlist:</p>
 
           {/* Tabs para mostrar contenido */}
           <div className="border rounded-xl shadow-md">
@@ -54,9 +57,6 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
               <Comments userId={userId} />
             </div>
           </div>
-
-
-
         </div>
       </div>
     </>

@@ -171,13 +171,13 @@ export default function ProfilePage() {
           <div className="flex border-b">
             <button
               onClick={() => setActiveTab('watchlist')}
-              className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]' : 'text-gray-500 hover:text-[#22ec8a]'}`}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'watchlist' ? 'border-b-4 border-#22ec8a text-#22ec8a' : 'text-gray-500 hover:text-blue-600'}`}
             >
               📺 Watchlist
             </button>
             <button
               onClick={() => setActiveTab('comments')}
-              className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]' : 'text-gray-500 hover:text-[#22ec8a]'}`}
+              className={`flex-1 py-3 text-center font-medium ${activeTab === 'comments' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
             >
               💬 Comments
             </button>
