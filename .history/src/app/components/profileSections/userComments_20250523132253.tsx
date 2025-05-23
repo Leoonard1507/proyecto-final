@@ -126,58 +126,41 @@ export default function Comment({ userId }: { userId: string }) {
         ))}
       </div>
 
-       {/* Modal */}
-      {modalOpen && selectedComment && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-gray-900 text-white rounded p-6 max-w-5xl w-full mx-4 relative flex gap-6 flex-col md:flex-row"
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxHeight: "80vh" }}
-          >
-            {/* Imagen del póster */}
-            <img
-              src={`https://image.tmdb.org/t/p/w300${selectedComment.poster_path}`}
-              alt={selectedComment.movie_title}
-              className="rounded max-h-full object-contain"
-              style={{ flexShrink: 0, width: "200px", height: "auto" }}
-            />
+      {/* Modal */}
+{modalOpen && selectedComment && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+    onClick={closeModal}
+  >
+    <div
+      className="bg-gray-900 text-white rounded p-6 max-w-5xl w-full mx-4 relative flex gap-6"
+      onClick={(e) => e.stopPropagation()}
+      style={{ maxHeight: '80vh' }}
+    >
+      {/* Imagen del póster */}
+      <img
+        src={`https://image.tmdb.org/t/p/w300${selectedComment.poster_path}`}
+        alt={selectedComment.movie_title}
+        className="rounded max-h-full object-contain"
+        style={{ flexShrink: 0, width: '200px', height: 'auto' }}
+      />
+      
+      {/* Texto y botón cerrar */}
+      <div className="flex flex-col flex-1 overflow-auto">
+        <h4 className="text-2xl font-bold mb-4">{selectedComment.movie_title}</h4>
+        <p className="whitespace-pre-wrap overflow-auto">{selectedComment.comentario}</p>
+      </div>
 
-            {/* Texto y fecha/hora */}
-            <div className="flex flex-col flex-1 overflow-auto">
-              <h4 className="text-2xl font-bold mb-4">{selectedComment.movie_title}</h4>
-              <p
-                className="whitespace-normal break-words overflow-wrap-anywhere flex-grow"
-                style={{ wordBreak: "break-word" }}
-              >
-                {selectedComment.comentario}
-              </p>
-              <p className="text-xs text-gray-400 mt-4 self-end">
-                {new Date(selectedComment.created_at).toLocaleDateString("es-ES", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}{" "}
-                {new Date(selectedComment.created_at).toLocaleTimeString("es-ES", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-
-            {/* Botón cerrar */}
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold"
-              aria-label="Cerrar modal"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
+      <button
+        onClick={closeModal}
+        className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold"
+        aria-label="Cerrar modal"
+      >
+        &times;
+      </button>
+    </div>
+  </div>
+)}
 
     </div>
   );

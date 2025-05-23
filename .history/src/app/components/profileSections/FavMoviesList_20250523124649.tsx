@@ -38,7 +38,7 @@ export default function FavoriteMoviesList({ userId }: { userId: string }) {
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
-          className="rounded-lg w-full h-auto max-w-[120px] mx-auto"
+          className="rounded-lg w-full h-auto max-w-[100px] mx-auto"
         />
       </div>
     ))}

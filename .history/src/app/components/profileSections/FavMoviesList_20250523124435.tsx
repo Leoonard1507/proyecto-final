@@ -32,18 +32,19 @@ export default function FavoriteMoviesList({ userId }: { userId: string }) {
   return (
     <div>
   <h2 className="text-2xl font-bold mb-4">🎬 My Favourites</h2>
-  <div className="grid grid-cols-5 gap-4">
-    {favorites.slice(0, 5).map((movie) => (
-      <div key={movie.id} className="text-center">
+  <div className="flex gap-4 overflow-x-auto">
+    {favorites.slice(0, 4).map((movie) => (
+      <div key={movie.id} className="text-center flex-shrink-0">
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
-          className="rounded-lg w-full h-auto max-w-[120px] mx-auto"
+          width={200}
+          height={300}
+          className="rounded-lg"
         />
       </div>
     ))}
   </div>
 </div>
-
   );
 }

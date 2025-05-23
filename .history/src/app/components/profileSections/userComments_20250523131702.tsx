@@ -33,24 +33,21 @@ export default function Comment({ userId }: { userId: string }) {
     fetchComment();
   }, [userId]);
 
-  // Después de que Comments se actualiza, chequeamos si el comentario excede 3 líneas
   useEffect(() => {
-    if (Comments.length === 0) return;
+    // Comprobar qué comentarios necesitan "Ver más"
+    const newShowReadMore: { [key: number]: boolean } = {};
 
-    // Esperamos que el DOM renderice para medir
-    setTimeout(() => {
-      const newShowReadMore: { [key: number]: boolean } = {};
-      Comments.forEach((comment) => {
-        const el = document.getElementById(`comment-text-${comment.movie_id}`);
-        if (el) {
-          // Medimos altura y línea de texto (aprox 1.2em)
-          const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
-          const maxHeight = lineHeight * 3; // 3 líneas
-          newShowReadMore[comment.movie_id] = el.scrollHeight > maxHeight + 1; // pequeño margen
-        }
-      });
-      setShowReadMore(newShowReadMore);
-    }, 0);
+    Comments.forEach((comment) => {
+      const el = document.getElementById(`comment-text-${comment.movie_id}`);
+      if (el) {
+        // 3 líneas de texto aprox con line-height ~1.2-1.3 => calculamos altura para 3 líneas
+        const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || 20;
+        const maxHeight = lineHeight * 3;
+        newShowReadMore[comment.movie_id] = el.scrollHeight > maxHeight;
+      }
+    });
+
+    setShowReadMore(newShowReadMore);
   }, [Comments]);
 
   if (!Comments.length)
@@ -67,7 +64,7 @@ export default function Comment({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="mt-3">
+    <div className="mt-10">
       <h3 className="text-2xl font-bold mb-4">Mis comentarios</h3>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         {Comments.map((comment) => (
@@ -79,8 +76,8 @@ export default function Comment({ userId }: { userId: string }) {
             <img
               src={`https://image.tmdb.org/t/p/w200${comment.poster_path}`}
               alt={comment.movie_title}
-              width={85}
-              height={130}
+              width={70}
+              height={120}
               className="rounded"
             />
             <div className="flex flex-col justify-between flex-1 pl-4 min-w-0">
@@ -89,24 +86,23 @@ export default function Comment({ userId }: { userId: string }) {
                 <p
                   id={`comment-text-${comment.movie_id}`}
                   className="mt-2 text-sm text-gray-300 break-words w-full line-clamp-3"
+                  style={{ overflow: "hidden" }}
                 >
                   {comment.comentario}
                 </p>
               </div>
+
               <div className="mt-4 flex justify-between items-center">
-                {showReadMore[comment.movie_id] ? (
+                {showReadMore[comment.movie_id] && (
                   <button
                     onClick={(e) => {
-                      e.preventDefault(); // evita navegación
+                      e.preventDefault();
                       openModal(comment);
                     }}
                     className="text-xs text-blue-400 hover:underline flex-shrink-0"
                   >
                     Ver más
                   </button>
-                ) : (
-                  // Espacio reservado para que la fecha se quede a la derecha igual
-                  <div style={{ width: "48px" }}></div>
                 )}
 
                 <p className="text-xs text-gray-400 text-right min-w-[90px]">
@@ -126,51 +122,21 @@ export default function Comment({ userId }: { userId: string }) {
         ))}
       </div>
 
-       {/* Modal */}
+      {/* Modal */}
       {modalOpen && selectedComment && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
           onClick={closeModal}
         >
           <div
-            className="bg-gray-900 text-white rounded p-6 max-w-5xl w-full mx-4 relative flex gap-6 flex-col md:flex-row"
+            className="bg-gray-900 text-white rounded p-6 max-w-lg w-full mx-4 relative"
             onClick={(e) => e.stopPropagation()}
-            style={{ maxHeight: "80vh" }}
           >
-            {/* Imagen del póster */}
-            <img
-              src={`https://image.tmdb.org/t/p/w300${selectedComment.poster_path}`}
-              alt={selectedComment.movie_title}
-              className="rounded max-h-full object-contain"
-              style={{ flexShrink: 0, width: "200px", height: "auto" }}
-            />
-
-            {/* Texto y fecha/hora */}
-            <div className="flex flex-col flex-1 overflow-auto">
-              <h4 className="text-2xl font-bold mb-4">{selectedComment.movie_title}</h4>
-              <p
-                className="whitespace-normal break-words overflow-wrap-anywhere flex-grow"
-                style={{ wordBreak: "break-word" }}
-              >
-                {selectedComment.comentario}
-              </p>
-              <p className="text-xs text-gray-400 mt-4 self-end">
-                {new Date(selectedComment.created_at).toLocaleDateString("es-ES", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}{" "}
-                {new Date(selectedComment.created_at).toLocaleTimeString("es-ES", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-
-            {/* Botón cerrar */}
+            <h4 className="text-xl font-bold mb-4">{selectedComment.movie_title}</h4>
+            <p className="mb-4 whitespace-pre-wrap">{selectedComment.comentario}</p>
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold"
+              className="absolute top-2 right-2 text-gray-400 hover:text-white text-xl font-bold"
               aria-label="Cerrar modal"
             >
               &times;
@@ -178,7 +144,6 @@ export default function Comment({ userId }: { userId: string }) {
           </div>
         </div>
       )}
-
     </div>
   );
 }
