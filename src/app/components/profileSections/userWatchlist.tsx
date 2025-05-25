@@ -36,18 +36,21 @@ export default function Watchlist({ userId }: { userId: string }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {movies.map((movie) => (
           <Link
+            href={`/movie-details/${movie.movie_id}`}
             key={movie.movie_id}
-            href={`/movie-details/${movie.movie_id}`} // 👈 Esto lleva a la página de detalles
-            className="bg-gray-800 rounded-lg p-2 text-center hover:bg-gray-700 transition"
+            className="w-43 flex flex-col items-center text-center"
           >
-            <img
-              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-              alt={movie.movie_title}
-              width={150}
-              height={225}
-              className="mx-auto rounded"
-            />
-            <p className="mt-2 text-sm">{movie.movie_title}</p>
+            <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
+              <img
+                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                alt={movie.movie_title}
+                className="w-full h-[250px] object-cover"
+              />
+              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-full rounded-b-md">
+                {movie.movie_title}
+              </div>
+            </div>
+
           </Link>
         ))}
       </div>

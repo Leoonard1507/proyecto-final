@@ -10,29 +10,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const { movie_id, movie_title, poster_path, comentario } = await request.json();
+  const { movie_id, movie_title, poster_path, puntuacion } = await request.json();
   const user_id = session.user.id;
 
-  if (!movie_id || !movie_title || !comentario) {
-    return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
+  if (
+    !movie_id ||
+    !movie_title ||
+    typeof puntuacion !== "number" ||
+    puntuacion < 1 ||
+    puntuacion > 10
+  ) {
+    return NextResponse.json({ error: "Campos inválidos" }, { status: 400 });
   }
 
   try {
     const db = await connectDB();
 
-    // Ejecutamos el insert y capturamos el resultado
+    // Insert y resultado para obtener insertId
     const [result]: any = await db.execute(
-      `INSERT INTO comments (user_id, movie_id, movie_title, poster_path, comentario)
+      `INSERT INTO puntuaciones (user_id, movie_id, movie_title, poster_path, puntuacion)
        VALUES (?, ?, ?, ?, ?)`,
-      [user_id, movie_id, movie_title, poster_path || null, comentario]
+      [user_id, movie_id, movie_title, poster_path || null, puntuacion]
     );
 
     await db.end();
 
-    // Devolvemos el insertId para usarlo luego en otras tablas
     return NextResponse.json({ insertId: result.insertId }, { status: 201 });
   } catch (error) {
-    console.error("Error al insertar comentario:", error);
+    console.error("Error al insertar puntuación:", error);
     return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
   }
 }

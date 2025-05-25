@@ -6,9 +6,10 @@ import axiosInstance from '@/libs/axios';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/app/components/Navbar';
 import AddToWatchlistButton from '@/app/components/moviePageElements/AddToWatchlist';
-import { title } from 'process';
+import ViewCommentRatingModal from '@/app/components/moviePageElements/ViewCommentRatingModal';
 
-interface Movie {
+
+export interface Movie {
   id: number;
   title: string;
   overview: string;
@@ -24,6 +25,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState<string>('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -57,6 +59,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
       return;
     }
 
+    /*
     const commentToSend = {
       user_id: session?.user?.id,       // ID del usuario desde la sesión (asegúrate que exista)
       movie_id: movie?.id,              // ID de la película
@@ -79,6 +82,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
         alert("Failed to submit comment");
       }
     }
+    */
 
 
   };
@@ -128,15 +132,29 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             movieTitle={movie.title}
             posterPath={movie.poster_path}
           />
+
+          <button
+            onClick={() => setModalOpen(true)}
+            className="right-8 bg-green-500 text-white rounded w-12 h-12 text-3xl font-bold"
+            title="Añadir puntuación o comentario"
+          >
+            +
+          </button>
+          {modalOpen && movie && (
+            <ViewCommentRatingModal
+              movie={movie}
+              onClose={() => setModalOpen(false)}
+            />
+          )}
         </div>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments Section
       <div className="max-w-6xl mx-auto mt-10">
         <h2 className="text-2xl font-semibold text-white mb-4">Comments</h2>
 
-        {/* Form to add a comment */}
-        <div className="mb-6">
+        
+        <div className="mb-6"> 
           <textarea
             className="w-full p-3 mt-4 rounded-md bg-gray-800 text-white border-2 border-[#777] focus:outline-none focus:border-[#22ec8a]"
             placeholder="Leave your comment..."
@@ -150,7 +168,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
             Submit Comment
           </button>
         </div>
-      </div>
+      </div>*/}
     </>
   );
 };

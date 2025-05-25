@@ -10,29 +10,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const { movie_id, movie_title, poster_path, comentario } = await request.json();
+  const {
+    movie_id,
+    movie_title,
+    poster_path,
+    comment_id = null,
+    puntuacion_id = null
+  } = await request.json();
+
   const user_id = session.user.id;
 
-  if (!movie_id || !movie_title || !comentario) {
+  if (!movie_id || !movie_title) {
     return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
   }
 
   try {
     const db = await connectDB();
 
-    // Ejecutamos el insert y capturamos el resultado
-    const [result]: any = await db.execute(
-      `INSERT INTO comments (user_id, movie_id, movie_title, poster_path, comentario)
-       VALUES (?, ?, ?, ?, ?)`,
-      [user_id, movie_id, movie_title, poster_path || null, comentario]
+    await db.execute(
+      `INSERT INTO peliculas_vistas (user_id, movie_id, movie_title, poster_path, comment_id, puntuacion_id)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [user_id, movie_id, movie_title, poster_path || null, comment_id, puntuacion_id]
     );
 
     await db.end();
 
-    // Devolvemos el insertId para usarlo luego en otras tablas
-    return NextResponse.json({ insertId: result.insertId }, { status: 201 });
+    return NextResponse.json({ message: "Vista registrada correctamente" }, { status: 201 });
   } catch (error) {
-    console.error("Error al insertar comentario:", error);
+    console.error("Error al registrar vista:", error);
     return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
   }
 }

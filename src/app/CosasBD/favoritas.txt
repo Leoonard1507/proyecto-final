@@ -1,16 +1,19 @@
+CREATE DATABASE IF NOT EXISTS project;
+
+
 CREATE TABLE IF NOT EXISTS user (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-	nickName VARCHAR(100) NOT NULL UNIQUE,
-  name VARCHAR(100) NOT NULL,
-	birthdate date NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  role ENUM('administrator', 'client') DEFAULT 'client',
-  password VARCHAR(255) NOT NULL,
-  description TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	avatar VARCHAR(255)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nickName VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    birthdate DATE NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    role ENUM('administrator', 'client') DEFAULT 'client',
+    password VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+USE project;
 CREATE TABLE IF NOT EXISTS watchlist (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -22,14 +25,14 @@ CREATE TABLE IF NOT EXISTS watchlist (
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS follows (
+CREATE TABLE follows (
   follower_id INT NOT NULL,
   followed_id INT NOT NULL,
   PRIMARY KEY (follower_id, followed_id),
   FOREIGN KEY (follower_id) REFERENCES user(id) ON DELETE CASCADE,
   FOREIGN KEY (followed_id) REFERENCES user(id) ON DELETE CASCADE
 );
-
+USE project;
 CREATE TABLE favorite_movies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -51,3 +54,35 @@ CREATE TABLE comments (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
+use project;
+CREATE TABLE puntuaciones (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
+  movie_title VARCHAR(255) NOT NULL,
+  poster_path VARCHAR(500),
+  puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 10),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE peliculas_vistas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
+  movie_title VARCHAR(255) NOT NULL,
+  poster_path VARCHAR(500),
+
+  comment_id INT DEFAULT NULL,
+  puntuacion_id INT DEFAULT NULL,
+
+  viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (comment_id) REFERENCES comments(id),
+  FOREIGN KEY (puntuacion_id) REFERENCES puntuaciones(id)
+);
+
+
+
+

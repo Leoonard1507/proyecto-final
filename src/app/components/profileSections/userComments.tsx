@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 type Comment = {
+  id: number;
   movie_id: number;
   movie_title: string;
   poster_path: string;
@@ -72,7 +73,7 @@ export default function Comment({ userId }: { userId: string }) {
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         {Comments.slice().reverse().map((comment) => (
           <Link
-            key={comment.movie_id}
+            key={comment.id}
             href={`/movie-details/${comment.movie_id}`}
             className="flex bg-gray-800 rounded-lg p-2 hover:bg-gray-700 transition"
           >
@@ -126,7 +127,7 @@ export default function Comment({ userId }: { userId: string }) {
         ))}
       </div>
 
-       {/* Modal */}
+      {/* Modal */}
       {modalOpen && selectedComment && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
