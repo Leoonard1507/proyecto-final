@@ -3,8 +3,10 @@
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
-export async function GET(_req: Request, { params }: { params: { userId: string } }) {
+export async function GET(req: Request, { params }: { params: { userId: string } }) {
   const userIdNum = Number(params.userId);
+  const { searchParams } = new URL(req.url);
+  const movieIdParam = searchParams.get("movieId");
 
   if (isNaN(userIdNum)) {
     return NextResponse.json({ error: "Invalid userId" }, { status: 400 });
@@ -13,26 +15,30 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
   try {
     const db = await connectDB();
 
+    const baseQuery = `
+      SELECT 
+        pv.user_id,
+        u.nickName,
+        u.avatar as avatar,
+        pv.movie_id,
+        pv.movie_title,
+        pv.poster_path,
+        p.puntuacion,
+        c.comentario,
+        pv.viewed_at
+      FROM peliculas_vistas pv
+      JOIN follows f ON f.followed_id = pv.user_id
+      JOIN user u ON u.id = pv.user_id
+      LEFT JOIN puntuaciones p ON pv.puntuacion_id = p.id
+      LEFT JOIN comments c ON pv.comment_id = c.id
+      WHERE f.follower_id = ?
+    `;
+
     const [rows] = await db.execute(
-      `SELECT 
-  pv.user_id,
-  u.nickName,
-  pv.movie_id,
-  pv.movie_title,
-  pv.poster_path,
-  p.puntuacion,
-  c.comentario,
-  pv.viewed_at
-FROM peliculas_vistas pv
-JOIN follows f ON f.followed_id = pv.user_id
-JOIN user u ON u.id = pv.user_id
-LEFT JOIN puntuaciones p ON pv.puntuacion_id = p.id
-LEFT JOIN comments c ON pv.comment_id = c.id
-WHERE f.follower_id = ?
-ORDER BY pv.viewed_at DESC
-LIMIT 20
-`,
-      [userIdNum]
+      movieIdParam
+        ? `${baseQuery} AND pv.movie_id = ? ORDER BY pv.viewed_at DESC LIMIT 20`
+        : `${baseQuery} ORDER BY pv.viewed_at DESC LIMIT 20`,
+      movieIdParam ? [userIdNum, Number(movieIdParam)] : [userIdNum]
     );
 
     return NextResponse.json(rows);

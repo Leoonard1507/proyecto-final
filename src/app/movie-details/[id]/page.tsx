@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/libs/axios';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/app/components/Navbar';
 import AddToWatchlistButton from '@/app/components/moviePageElements/AddToWatchlist';
 import ViewCommentRatingModal from '@/app/components/moviePageElements/ViewCommentRatingModal';
-
+import WatchedByFriends from '@/app/components/moviePageElements/WatchedByFriend';
+import WantsToWatchFriends from '@/app/components/moviePageElements/WantToWatchFriend';
 
 export interface Movie {
   id: number;
@@ -26,6 +26,8 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<'watched' | 'watchlist'>('watched');
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -148,6 +150,38 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
           )}
         </div>
       </div>
+      {/* Activity Tabs */}
+      <div className="mt-10 flex justify-center">
+        <div className="w-full max-w-6xl border rounded-xl shadow-md">
+          <div className="flex border-b">
+            <button
+              onClick={() => setActiveTab('watched')}
+              className={`w-1/2 py-3 text-center font-medium transition-colors duration-200 ${activeTab === 'watched'
+                  ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]'
+                  : 'text-gray-500 hover:text-[#22ec8a]'
+                }`}
+            >
+              👀 Watched by
+            </button>
+            <button
+              onClick={() => setActiveTab('watchlist')}
+              className={`w-1/2 py-3 text-center font-medium transition-colors duration-200 ${activeTab === 'watchlist'
+                  ? 'border-b-4 border-[#22ec8a] text-[#22ec8a]'
+                  : 'text-gray-500 hover:text-[#22ec8a]'
+                }`}
+            >
+              📺 Wants to watch
+            </button>
+          </div>
+          <div className="p-4 bg-gray-900 rounded-b-xl">
+            {activeTab === 'watched' && <WatchedByFriends movieId={movie.id} />}
+            {activeTab === 'watchlist' && <WantsToWatchFriends movieId={movie.id} />}
+          </div>
+        </div>
+      </div>
+
+
+
 
       {/* Comments Section
       <div className="max-w-6xl mx-auto mt-10">
