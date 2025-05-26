@@ -1,0 +1,18 @@
+// app/api/watchlist/[userId]/route.ts
+import { connectDB } from "@/libs/mysql";
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request, { params }: { params: { userId: string } }) {
+  const userId = params.userId;
+
+  try {
+    const db = await connectDB();
+    const [rows] = await db.execute("SELECT COUNT(*) AS following_count FROM follows WHERE follower_id = ?", [userId]);
+    return NextResponse.json(rows);
+  } catch (err) {
+    console.error("Error al obtener el comentario:", err);
+        console.log("User ID recibido:", userId);
+    return NextResponse.json({ error: "Error al obtener el comentario",  userId: userId }, { status: 500 });
+
+  }
+}

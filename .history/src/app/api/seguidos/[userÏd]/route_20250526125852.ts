@@ -1,0 +1,16 @@
+// app/api/watchlist/[userId]/route.ts
+import { connectDB } from "@/libs/mysql";
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request, context: { params: { userId: string } }) {
+  const { userId } = context.params;
+
+  try {
+    const db = await connectDB();
+    const [rows] = await db.execute("SELECT COUNT(*) AS following_count FROM follows WHERE follower_id = ?", [userId]);
+    return NextResponse.json(rows);
+  } catch (err) {
+    console.error("Error al obtener el numero de gente que sigues:", err);
+    return NextResponse.json({ error: "Error al obtener el numero de gente que sigues" }, { status: 500 });
+  }
+}
