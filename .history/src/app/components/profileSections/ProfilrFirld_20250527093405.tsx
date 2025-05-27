@@ -8,7 +8,7 @@ const ProfileField: React.FC<ProfileFieldProps> = ({ label, value }) => {
   return (
     <div>
       <label className="block text-sm font-medium text-[#22ec8a] mb-1">{label}</label>
-      <p className="text-white border border-gray-700 rounded p-2 whitespace-pre-wrap break-words">{value || "—"}</p>
+      <p className="text-white border border-gray-700 rounded p-2">{value || "—"}</p>
     </div>
   );
 }

@@ -131,13 +131,16 @@ export default function ProfilePage() {
           followerCount={followerCount}
           commentsCount={commentsCount}
           diaryCount={diaryCount}
+          reviewsCount={reviewsCount}
         />
 
-        {description && (
-          <ProfileDetailsPanel
-            description={description}
-          />
-        )}
+        <ProfileDetailsPanel
+          name={name}
+          usermail={usermail}
+          birthdate={birthdate}
+          role={role}
+          description={description}
+        />
 
         {userId && (
           <div className="border rounded-xl shadow-md p-6 mt-6">

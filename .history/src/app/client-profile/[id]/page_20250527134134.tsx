@@ -133,11 +133,9 @@ export default function ProfilePage() {
           diaryCount={diaryCount}
         />
 
-        {description && (
-          <ProfileDetailsPanel
-            description={description}
-          />
-        )}
+        <ProfileDetailsPanel
+          description={description}
+        />
 
         {userId && (
           <div className="border rounded-xl shadow-md p-6 mt-6">
