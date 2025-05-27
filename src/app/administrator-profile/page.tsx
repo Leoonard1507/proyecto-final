@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
-
-import Watchlist from "../components/profileSections/userWatchlist";
-import FavoriteMoviesSection from "../components/profileSections/addFavoritesModal";
+import FavoriteMoviesList from "../components/profileSections/FavMoviesList"; // para mostrar las favs en el perfil
+import EditProfileModal from "../components/profileSections/EditProfileModal";
+import ChangePasswordModal from "../components/profileSections/ChangePaswordModal";
+import ProfileTabs from "../components/profileSections/ProfileTabs";
+import ProfileDetailsPanel from "../components/profileSections/ProfileDetailsPanel";
+import ProfileCompactCard from "../components/profileSections/ProfileCompactCard";
+import { editUserSchema } from "../schema/editUserSchema";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -21,28 +25,80 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
-
+  const [showDetails, setShowDetails] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
-
-
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-
-  //const [favoriteMovies, setFavoriteMovies] = useState<any[]>([]);
-
+  const [activeTab, setActiveTab] = useState("watchlist");
+  const [followingCount, setFollowingCount] = useState<number | null>(null);
+  const [followerCount, setFollowerCount] = useState<number | null>(null);
+  const [commentsCount, setCommentsCount] = useState<number | null>(null);
+  const [diaryCount, setDiaryCount] = useState<number | null>(null);
 
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
       fetchUserData(session.user.id);
+      fetchFollowingCount(session.user.id);
+      fetchFollowerCount(session.user.id);
+      fetchCommentsCount(session.user.id);
+      fetchDiaryCount(session.user.id);
     }
   }, [session]);
+
+  const fetchFollowingCount = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/seguidos/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch following count");
+      const data = await res.json();
+      setFollowingCount(data[0]?.following_count ?? 0);
+    } catch (error) {
+      console.error("Error fetching following count:", error);
+      setFollowingCount(0);
+    }
+  };
+
+  const fetchFollowerCount = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/seguidores/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch follower count");
+      const data = await res.json();
+      setFollowerCount(data[0]?.followers_count ?? 0);
+    } catch (error) {
+      console.error("Error fetching follower count:", error);
+      setFollowerCount(0);
+    }
+  };
+
+  const fetchCommentsCount = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/countComments/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch comments count");
+      const data = await res.json();
+      setCommentsCount(data[0]?.comments_count ?? 0);
+    } catch (error) {
+      console.error("Error fetching comments count:", error);
+      setCommentsCount(0);
+    }
+  };
+
+  const fetchDiaryCount = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/countDiary/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch diary count");
+      const data = await res.json();
+      setDiaryCount(data[0]?.diarys_count ?? 0);
+    } catch (error) {
+      console.error("Error fetching diary count:", error);
+      setDiaryCount(0);
+    }
+  };
 
   const fetchUserData = async (userId: string) => {
     try {
       const res = await fetch(`/api/user/${userId}`);
-      if (!res.ok) throw new Error("No se pudo obtener el usuario");
+      if (!res.ok) throw new Error("Could not get user");
       const user = await res.json();
 
       setName(user.name || "");
@@ -52,9 +108,7 @@ export default function ProfilePage() {
       setNickname(user.nickName || "");
       setDescription(user.description || "");
       setAvatar(user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`);
-
-      //setFavoriteMovies(user.favorites || []);
-
+      // setFavoriteMovies(user.favorites || []); // Si decides usar favoritas aquí
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error);
     }
@@ -62,37 +116,61 @@ export default function ProfilePage() {
 
   const updateUserProfile = async () => {
     setLoading(true);
-    const dataToSend = {
-      nickname,
-      name,
-      email: usermail,
-      role,
-      description,
-      birthdate,
-      avatar,
-      currentPassword,
-      newPassword,
-      //favorites: favoriteMovies,
-    };
+    try {
+      // Prepara los datos para validación
+      const dataToValidate = {
+        nickname,
+        username: name,
+        description,
+      };
 
-    const response = await fetch("/api/user/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dataToSend),
-    });
+      // Validar usando Zod
+      const validatedData = editUserSchema.parse(dataToValidate);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error en la respuesta:", errorData);
-      throw new Error("Error al actualizar el perfil");
+      // Construye el objeto final a enviar (puedes añadir más campos si no están en el schema)
+      const dataToSend = {
+        nickname: validatedData.nickname,
+        name: validatedData.username,
+        email: usermail,
+        role,
+        description: validatedData.description,
+        avatar,
+        currentPassword,
+        newPassword,
+      };
+
+      const response = await fetch("/api/user/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error en la respuesta:", errorData);
+        throw new Error(errorData.message || "Error updating profile");
+      }
+
+      const responseData = await response.json();
+      toast.success(responseData.message);
+
+      setIsModalOpen(false);
+      setIsPasswordModalOpen(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setRepeatPassword("");
+      await fetchUserData(userId);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        const messages = error.errors.map((e: any) => e.message).join(", ");
+        toast.error(`Validation error: ${messages}`);
+      } else {
+        toast.error(error.message || "Error updating profile");
+      }
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    const responseData = await response.json();
-    toast(responseData.message);
-
-    setIsModalOpen(false);
-    await fetchUserData(userId);
-    setLoading(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -105,212 +183,81 @@ export default function ProfilePage() {
       {/* Navbar */}
       <Navbar />
       {/* Contenedor de perfil */}
-      <div className="max-w-3xl mx-auto border mt-30 rounded-xl shadow-md p-8">
-        <h2 className="text-3xl font-semibold mb-6">Mi perfil</h2>
-        <div className="flex items-center space-x-6 mb-8">
-          <Image
-            src={avatar || 'https://api.dicebear.com/7.x/bottts/png?seed=default'}
-            alt="Avatar"
-            width={100}
-            height={100}
-            className="rounded-full border"
+      <div className="max-w-4xl mx-auto mt-10 space-y-6">
+        {/* Perfil compacto */}
+        <ProfileCompactCard
+          avatar={avatar}
+          nickname={nickname}
+          followingCount={followingCount}
+          followerCount={followerCount}
+          commentsCount={commentsCount}
+          diaryCount={diaryCount}
+          showDetails={showDetails}
+          toggleDetails={() => setShowDetails((prev) => !prev)}
+        />
+
+        {/* Perfil detallado */}
+        {showDetails && (
+          <ProfileDetailsPanel
+            name={name}
+            usermail={usermail}
+            birthdate={birthdate}
+            role={role}
+            description={description}
+            loading={loading}
+            onEditProfile={() => setIsModalOpen(true)}
+            onChangePassword={() => setIsPasswordModalOpen(true)}
           />
-          <button
-            type="submit"
-            disabled={loading}
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
-          >
-            Edit Proile
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            onClick={() => setIsPasswordModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
-          >
-            Change Password
-          </button>
-        </div>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ProfileField label="Nickname" value={nickname} />
-          <ProfileField label="Name" value={name} />
-          <ProfileField label="Email" value={usermail} />
-          <ProfileField label="Date of birth" value={birthdate} />
-          <ProfileField label="Description" value={description} />
-          <ProfileField label="Role" value={role} />
-        </div>
+        {/* Mostrar las favoritas */}
+        {userId && (
+          <div className="border rounded-xl shadow-md p-6 mt-6">
+            <FavoriteMoviesList userId={userId} />
+          </div>
+        )}
+
+        {/* Tabs para mostrar contenido */}
+        <ProfileTabs
+          userId={userId}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </div>
-
 
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
-            <button
-              onClick={() => setIsPasswordModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-            >
-              ✖
-            </button>
-
-            <h2 className="text-2xl font-bold mb-5">Change Password</h2>
-
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                if (newPassword !== repeatPassword) {
-                  alert("Las contraseñas nuevas no coinciden.");
-                  return;
-                }
-
-                try {
-                  await updateUserProfile();
-                  setIsPasswordModalOpen(false);
-                  setCurrentPassword("");
-                  setNewPassword("");
-                  setRepeatPassword("");
-                } catch (err) {
-                  alert(err);
-                  console.error(err);
-                }
-              }}
-              className="space-y-4"
-            >
-              <Input
-                label="Current password"
-                value={currentPassword}
-                onChange={setCurrentPassword}
-                type="password"
-              />
-              <Input
-                label="New password"
-                value={newPassword}
-                onChange={setNewPassword}
-                type="password"
-              />
-              <Input
-                label="Repeat new password"
-                value={repeatPassword}
-                onChange={setRepeatPassword}
-                type="password"
-              />
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white w-full p-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Save New Password
-              </button>
-            </form>
-          </div>
-        </div>
+        <ChangePasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          currentPassword={currentPassword}
+          setCurrentPassword={setCurrentPassword}
+          newPassword={newPassword}
+          setNewPassword={setNewPassword}
+          repeatPassword={repeatPassword}
+          setRepeatPassword={setRepeatPassword}
+          updateUserProfile={updateUserProfile}
+        />
       )}
-
 
       {/* Modal editar perfil */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white text-black p-6 rounded-lg max-w-xl w-full relative shadow-lg space-y-4">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-            >
-              ✖
-            </button>
-
-            <h2 className="text-2xl font-bold">Editar perfil</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block font-medium mb-1">Avatar</label>
-                <div className="flex space-x-3">
-                  {['cat', 'robot', 'alien', 'monster', 'Sawyer'].map((type) => {
-                    const url = `https://api.dicebear.com/7.x/bottts/png?seed=${type}`;
-                    return (
-                      <Image
-                        key={type}
-                        src={url}
-                        alt="avatar"
-                        width={60}
-                        height={60}
-                        onClick={() => setAvatar(url)}
-                        className={`cursor-pointer rounded-full border-2 ${avatar === url ? 'border-blue-600' : 'border-transparent'
-                          }`}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-
-              <Input label="Nombre" value={name} onChange={setName} />
-              <Input label="Apodo" value={nickname} onChange={setNickname} />
-              <Input label="Fecha de nacimiento" value={birthdate} onChange={setBirthdate} />
-              <Input label="Descripción" value={description} onChange={setDescription} />
-
-
-
-              {/* la sección de películas favoritas */}
-              <div>
-                <h3 className="font-semibold mb-1">Favorite films</h3>
-                {session?.user?.id && (
-                  <FavoriteMoviesSection userId={session.user.id} />
-                )}
-
-              </div>
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-                disabled={loading}
-              >
-                {loading ? 'Saving...' : 'Save Changes'}
-              </button>
-            </form>
-          </div>
-        </div>
+        <EditProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          loading={loading}
+          avatar={avatar}
+          setAvatar={setAvatar}
+          name={name}
+          setName={setName}
+          nickname={nickname}
+          setNickname={setNickname}
+          description={description}
+          setDescription={setDescription}
+          userId={session?.user?.id}
+        />
       )}
-
-
-
-      {userId && <Watchlist userId={userId} />}
-
-    </div>
-  );
-}
-
-// Componente reutilizable para mostrar campos
-function ProfileField({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-[#22ec8a] mb-1">{label}</label>
-      <p className="text-white border border-gray-700 rounded p-2">{value || "—"}</p>
-    </div>
-  );
-}
-
-// Componente reutilizable de inputs
-function Input({
-  label,
-  value,
-  onChange,
-  type = "text", // Valor por defecto
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  type?: string; // Nuevo prop opcional
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium mb-1">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-gray-300 p-2 rounded"
-      />
     </div>
   );
 }

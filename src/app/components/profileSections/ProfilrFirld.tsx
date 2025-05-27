@@ -1,0 +1,16 @@
+interface ProfileFieldProps {
+  label: string;
+  value?: string; // Opcional para que puedas pasar undefined sin error
+}
+
+// Componente reutilizable para mostrar campos
+const ProfileField: React.FC<ProfileFieldProps> = ({ label, value }) => {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-[#22ec8a] mb-1">{label}</label>
+      <p className="text-white border border-gray-700 rounded p-2">{value || "—"}</p>
+    </div>
+  );
+}
+
+export default ProfileField;

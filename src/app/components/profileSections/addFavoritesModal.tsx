@@ -10,7 +10,7 @@ interface Movie {
 }
 
 interface FavoriteMoviesSectionProps {
-  userId: number;
+  userId: string;
 }
 
 export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionProps) {
