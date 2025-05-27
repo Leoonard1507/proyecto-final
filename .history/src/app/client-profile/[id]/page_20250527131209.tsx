@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 import FavoriteMoviesList from "../../components/profileSections/FavMoviesList";
+import EditProfileModal from "../../components/profileSections/EditProfileModal";
+import ChangePasswordModal from "../../components/profileSections/ChangePaswordModal";
 import ProfileTabs from "../../components/profileSections/ProfileTabs";
 import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanelOthers";
 import ProfileCompactCard from "../../components/profileSections/ProfileCompactCard";

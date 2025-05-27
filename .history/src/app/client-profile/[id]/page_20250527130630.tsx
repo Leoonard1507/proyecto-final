@@ -6,8 +6,10 @@ import { useParams } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 import FavoriteMoviesList from "../../components/profileSections/FavMoviesList";
+import EditProfileModal from "../../components/profileSections/EditProfileModal";
+import ChangePasswordModal from "../../components/profileSections/ChangePaswordModal";
 import ProfileTabs from "../../components/profileSections/ProfileTabs";
-import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanelOthers";
+import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanel";
 import ProfileCompactCard from "../../components/profileSections/ProfileCompactCard";
 import { editUserSchema } from "../../schema/editUserSchema";
 
@@ -199,6 +201,7 @@ export default function ProfilePage() {
           followerCount={followerCount}
           commentsCount={commentsCount}
           diaryCount={diaryCount}
+          reviewsCount={reviewsCount}
           showDetails={showDetails}
           toggleDetails={() => setShowDetails((prev) => !prev)}
         />
@@ -210,6 +213,9 @@ export default function ProfilePage() {
             birthdate={birthdate}
             role={role}
             description={description}
+            loading={loading}
+            onEditProfile={() => setIsModalOpen(true)}
+            onChangePassword={() => setIsPasswordModalOpen(true)}
           />
         )}
 
@@ -225,6 +231,38 @@ export default function ProfilePage() {
           setActiveTab={setActiveTab}
         />
       </div>
+
+      {isPasswordModalOpen && (
+        <ChangePasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          currentPassword={currentPassword}
+          setCurrentPassword={setCurrentPassword}
+          newPassword={newPassword}
+          setNewPassword={setNewPassword}
+          repeatPassword={repeatPassword}
+          setRepeatPassword={setRepeatPassword}
+          updateUserProfile={updateUserProfile}
+        />
+      )}
+
+      {isModalOpen && (
+        <EditProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          loading={loading}
+          avatar={avatar}
+          setAvatar={setAvatar}
+          name={name}
+          setName={setName}
+          nickname={nickname}
+          setNickname={setNickname}
+          description={description}
+          setDescription={setDescription}
+          userId={userId}
+        />
+      )}
     </div>
   );
 }

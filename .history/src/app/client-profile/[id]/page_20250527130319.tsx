@@ -2,19 +2,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 import FavoriteMoviesList from "../../components/profileSections/FavMoviesList";
+import EditProfileModal from "../../components/profileSections/EditProfileModal";
+import ChangePasswordModal from "../../components/profileSections/ChangePaswordModal";
 import ProfileTabs from "../../components/profileSections/ProfileTabs";
-import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanelOthers";
+import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanel";
 import ProfileCompactCard from "../../components/profileSections/ProfileCompactCard";
 import { editUserSchema } from "../../schema/editUserSchema";
 
 export default function ProfilePage() {
-  const params = useParams();
-  const userIdFromUrl = params?.id as string;
-
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [usermail, setUsermail] = useState("");
@@ -35,19 +35,19 @@ export default function ProfilePage() {
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);
   const [diaryCount, setDiaryCount] = useState<number | null>(null);
-  const [reviewsCount, setReviewsCount] = useState<number | null>(null);
+  const [reviewsCount, setReviewsCount] = useState<number | null>(null); // Nuevo estado para críticas
 
   useEffect(() => {
-    if (userIdFromUrl) {
-      setUserId(userIdFromUrl);
-      fetchUserData(userIdFromUrl);
-      fetchFollowingCount(userIdFromUrl);
-      fetchFollowerCount(userIdFromUrl);
-      fetchCommentsCount(userIdFromUrl);
-      fetchDiaryCount(userIdFromUrl);
-      fetchReviewsCount(userIdFromUrl);
+    if (session?.user?.id) {
+      setUserId(session.user.id);
+      fetchUserData(session.user.id);
+      fetchFollowingCount(session.user.id);
+      fetchFollowerCount(session.user.id);
+      fetchCommentsCount(session.user.id);
+      fetchDiaryCount(session.user.id);
+      fetchReviewsCount(session.user.id); // Llamada a críticas
     }
-  }, [userIdFromUrl]);
+  }, [session]);
 
   const fetchFollowingCount = async (userId: string) => {
     try {
@@ -201,6 +201,7 @@ export default function ProfilePage() {
           diaryCount={diaryCount}
           showDetails={showDetails}
           toggleDetails={() => setShowDetails((prev) => !prev)}
+          reviewsCount={reviewsCount} // Nuevo prop para mostrar en el card
         />
 
         {showDetails && (
@@ -210,6 +211,9 @@ export default function ProfilePage() {
             birthdate={birthdate}
             role={role}
             description={description}
+            loading={loading}
+            onEditProfile={() => setIsModalOpen(true)}
+            onChangePassword={() => setIsPasswordModalOpen(true)}
           />
         )}
 
@@ -225,6 +229,38 @@ export default function ProfilePage() {
           setActiveTab={setActiveTab}
         />
       </div>
+
+      {isPasswordModalOpen && (
+        <ChangePasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          currentPassword={currentPassword}
+          setCurrentPassword={setCurrentPassword}
+          newPassword={newPassword}
+          setNewPassword={setNewPassword}
+          repeatPassword={repeatPassword}
+          setRepeatPassword={setRepeatPassword}
+          updateUserProfile={updateUserProfile}
+        />
+      )}
+
+      {isModalOpen && (
+        <EditProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          loading={loading}
+          avatar={avatar}
+          setAvatar={setAvatar}
+          name={name}
+          setName={setName}
+          nickname={nickname}
+          setNickname={setNickname}
+          description={description}
+          setDescription={setDescription}
+          userId={session?.user?.id}
+        />
+      )}
     </div>
   );
 }
