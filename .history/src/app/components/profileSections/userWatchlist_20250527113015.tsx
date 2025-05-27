@@ -38,7 +38,7 @@ export default function Watchlist({ userId }: { userId: string }) {
           <Link
             href={`/movie-details/${movie.movie_id}`}
             key={movie.movie_id}
-            className="w-[200] flex flex-col items-center text-center"
+            className="w-[190] flex flex-col items-center text-center"
           >
             <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
               <img
@@ -46,7 +46,7 @@ export default function Watchlist({ userId }: { userId: string }) {
                 alt={movie.movie_title}
                 className="w-[180] h-[240px] object-cover"
               />
-              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-[180] rounded-b-md truncate overflow-hidden whitespace-nowrap">
+              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-[180] rounded-b-md">
                 {movie.movie_title}
               </div>
             </div>

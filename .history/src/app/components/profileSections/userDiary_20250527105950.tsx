@@ -18,7 +18,11 @@ export default function Scores({ userId }: { userId: string }) {
   const [scores, setScores] = useState<Score[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedScore, setSelectedScore] = useState<Score | null>(null);
+
+  // Mapa para controlar qué comentarios tienen overflow (más de 2 líneas)
   const [overflowMap, setOverflowMap] = useState<{ [key: number]: boolean }>({});
+
+  // Referencias a los elementos <p> de los comentarios
   const commentRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
   useEffect(() => {
@@ -37,6 +41,7 @@ export default function Scores({ userId }: { userId: string }) {
     fetchScores();
   }, [userId]);
 
+  // Detectar overflow en los comentarios (más de 2 líneas)
   useEffect(() => {
     const newOverflowMap: { [key: number]: boolean } = {};
 
@@ -66,65 +71,66 @@ export default function Scores({ userId }: { userId: string }) {
     return <p className="mt-6 text-gray-300">There are no scores in your diary.</p>;
 
   return (
-    <div className="mt-3">
-      <h3 className="text-2xl font-semibold mb-4 text-white">My Diary</h3>
-      <div className="flex flex-wrap gap-4 pb-2">
-        {scores.slice().map((score, index) => (
-          <div
-            key={`${score.user_id}-${score.movie_id}`}
-            onClick={() => openModal(score)}
-            className="min-w-[156px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer hover:bg-gray-800 transition"
-          >
-            {/* Fecha */}
-            <div className="mb-1">
-              <p className="text-[10px] text-gray-500">
-                {new Date(score.viewed_at).toLocaleDateString("es-ES", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
+   <div className="mt-3">
+  <h3 className="text-2xl font-semibold mb-4 text-white">My Scores Diary</h3>
+  <div className="flex overflow-x-auto space-x-4 pb-2">
+    {scores.slice().reverse().map((score) => (
+      <Link
+        key={`${score.user_id}-${score.movie_id}`}
+        href={`/movie-details/${score.movie_id}`}
+        className="min-w-[150px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer"
+      >
+        {/* Fecha */}
+        <div className="mb-1">
+          <p className="text-[10px] text-gray-500">
+            {new Date(score.viewed_at).toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </p>
+        </div>
 
-            {/* Carátula */}
-            <div className="relative w-full rounded overflow-hidden mb-1">
-              <img
-                src={`https://image.tmdb.org/t/p/w300${score.poster_path}`}
-                alt={score.movie_title}
-                className="object-cover rounded"
-                loading="lazy"
-              />
-            </div>
+        {/* Carátula */}
+        <div className="relative w-full rounded overflow-hidden mb-1">
+          <img
+            src={`https://image.tmdb.org/t/p/w300${score.poster_path}`}
+            alt={score.movie_title}
+            className="object-cover rounded"
+          />
+        </div>
 
-            {/* Título */}
-            <p className="text-sm text-gray-300 truncate" title={score.movie_title}>
-              {score.movie_title}
-            </p>
+        {/* Título */}
+        <p className="text-sm text-gray-300 truncate" title={score.movie_title}>
+          {score.movie_title}
+        </p>
 
-            {/* Puntaje y comentario */}
-            {(score.puntuacion !== null || score.comentario) && (
-              <div className="flex justify-between mt-1">
-                {score.puntuacion !== null ? (
-                  <p className="text-yellow-400 font-bold">{score.puntuacion}⭐</p>
-                ) : (
-                  <div />
-                )}
+        {/* Puntaje y comentario */}
+        {(score.puntuacion !== null || score.comentario) && (
+          <div className="flex justify-between mt-1">
+            {score.puntuacion !== null ? (
+              <p className="text-yellow-400 font-bold">{score.puntuacion}⭐</p>
+            ) : (
+              <div />
+            )}
 
-                {score.comentario ? (
-                  <span
-                    className="text-yellow-400 font-bold"
-                    title={score.comentario}
-                  >
-                    💬
-                  </span>
-                ) : (
-                  <div />
-                )}
-              </div>
+            {score.comentario ? (
+              <span
+                className="text-yellow-400 font-bold"
+                title={score.comentario}
+              >
+                💬
+              </span>
+            ) : (
+              <div />
             )}
           </div>
-        ))}
-      </div>
+        )}
+      </Link>
+    ))}
+  </div>
+</div>
+
 
       {/* Modal */}
       {modalOpen && selectedScore && (
@@ -137,16 +143,15 @@ export default function Scores({ userId }: { userId: string }) {
             onClick={(e) => e.stopPropagation()}
             style={{ maxHeight: "80vh" }}
           >
-            {/* Poster */}
+            {/* Poster image */}
             <img
               src={`https://image.tmdb.org/t/p/w300${selectedScore.poster_path}`}
               alt={selectedScore.movie_title}
               className="rounded max-h-full object-contain"
               style={{ flexShrink: 0, width: "200px", height: "auto" }}
-              loading="lazy"
             />
 
-            {/* Info */}
+            {/* Movie title, score and comment */}
             <div className="flex flex-col flex-1 overflow-auto">
               <h4 className="text-2xl font-bold mb-2">{selectedScore.movie_title}</h4>
               <p className="text-yellow-400 font-bold text-lg mb-6">
@@ -154,20 +159,13 @@ export default function Scores({ userId }: { userId: string }) {
                   ? `${selectedScore.puntuacion}⭐`
                   : "No rating"}
               </p>
-
               {selectedScore.comentario && (
-                <p
-                  className="whitespace-pre-wrap break-words overflow-auto mb-2"
-                  style={{
-                    wordBreak: "break-word",
-                    maxHeight: "160px",
-                    overflowY: "auto",
-                  }}
+                <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere max-h-40 overflow-auto mb-2"
+                   style={{ wordBreak: "break-word" }}
                 >
-                  {selectedScore.comentario}
+                    {selectedScore.comentario}
                 </p>
               )}
-
               <p className="text-xs text-gray-400 mt-auto self-end">
                 {new Date(selectedScore.viewed_at).toLocaleDateString("es-ES", {
                   day: "2-digit",
@@ -181,11 +179,11 @@ export default function Scores({ userId }: { userId: string }) {
               </p>
             </div>
 
-            {/* Botón cerrar */}
+            {/* Close button */}
             <button
               onClick={closeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold"
-              aria-label="Cerrar modal"
+              aria-label="Close modal"
             >
               &times;
             </button>

@@ -33,20 +33,20 @@ export default function Watchlist({ userId }: { userId: string }) {
   return (
     <div className="mt-3">
       <h3 className="text-2xl font-bold mb-4">My Watchlist</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="flex flex-wrap gap-4 pb-2">
         {movies.map((movie) => (
           <Link
             href={`/movie-details/${movie.movie_id}`}
             key={movie.movie_id}
-            className="w-[200] flex flex-col items-center text-center"
+            className="w-40 flex flex-col items-center text-center"
           >
             <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
               <img
                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                 alt={movie.movie_title}
-                className="w-[180] h-[240px] object-cover"
+                className="min-w-[156px] max-w-[150px] object-cover"
               />
-              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-[180] rounded-b-md truncate overflow-hidden whitespace-nowrap">
+              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-full rounded-b-md">
                 {movie.movie_title}
               </div>
             </div>

@@ -69,7 +69,7 @@ export default function Scores({ userId }: { userId: string }) {
     <div className="mt-3">
       <h3 className="text-2xl font-semibold mb-4 text-white">My Diary</h3>
       <div className="flex flex-wrap gap-4 pb-2">
-        {scores.slice().map((score, index) => (
+        {scores.slice().reverse().map((score, index) => (
           <div
             key={`${score.user_id}-${score.movie_id}`}
             onClick={() => openModal(score)}

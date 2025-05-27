@@ -46,7 +46,7 @@ export default function Watchlist({ userId }: { userId: string }) {
                 alt={movie.movie_title}
                 className="w-[180] h-[240px] object-cover"
               />
-              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-[180] rounded-b-md truncate overflow-hidden whitespace-nowrap">
+              <div className="bg-gray-700 text-white text-sm font-medium px-2 py-1 w-[180] rounded-b-md">
                 {movie.movie_title}
               </div>
             </div>
