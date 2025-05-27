@@ -31,24 +31,26 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   description,
   setDescription,
   userId,
+  onClose,
 }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-black p-6 rounded-lg max-w-xl w-full relative shadow-lg space-y-4">
+      <div className="bg-[#1a1b2e]  p-6 rounded-lg max-w-xl w-full relative shadow-lg space-y-4">
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition-colors duration-200 text-2xl"
           aria-label="Close modal"
+          onClick={() => onClose()}
         >
           &times;
         </button>
 
-        <h2 className="text-2xl font-bold">Edit profile</h2>
+        <h2 className="text-2xl font-bold text-[#22ec8a]">Edit profile</h2>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
-            <label className="block font-medium mb-1">Avatar</label>
+            <label className="block font-medium mb-1 text-[#22ec8a]">Avatar</label>
             <div className="flex space-x-3">
               {["cat", "robot", "alien", "monster", "Sawyer"].map((type) => {
                 const url = `https://api.dicebear.com/7.x/bottts/png?seed=${type}`;
@@ -74,7 +76,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           <Input label="Description" value={description} onChange={setDescription} />
 
           <div>
-            <h3 className="font-semibold mb-1">Favorite films</h3>
+            <h3 className="font-medium mb-1 text-[#22ec8a]">Favorite films</h3>
             {userId && <FavoriteMoviesSection userId={userId} />}
           </div>
 

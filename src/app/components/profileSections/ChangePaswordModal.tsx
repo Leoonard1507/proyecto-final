@@ -47,14 +47,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white text-black p-8 rounded-lg max-w-md w-full relative shadow-lg">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-[#1a1b2e]  p-6 rounded-lg max-w-xl w-full relative shadow-lg space-y-4">
         <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-          aria-label="Close password modal"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition-colors duration-200 text-4xl"
+          aria-label="Close modal"
+          onClick={() => onClose()}
         >
-          ✖
+          &times;
         </button>
 
         <h2 className="text-2xl font-bold mb-5">Change Password</h2>
