@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS project;
-
+USE project;
 
 CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS user (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-USE project;
 CREATE TABLE IF NOT EXISTS watchlist (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -25,7 +24,7 @@ CREATE TABLE IF NOT EXISTS watchlist (
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-CREATE TABLE follows (
+CREATE TABLE IF NOT EXISTS follows (
   follower_id INT NOT NULL,
   followed_id INT NOT NULL,
   PRIMARY KEY (follower_id, followed_id),
@@ -33,7 +32,7 @@ CREATE TABLE follows (
   FOREIGN KEY (followed_id) REFERENCES user(id) ON DELETE CASCADE
 );
 USE project;
-CREATE TABLE favorite_movies (
+CREATE TABLE IF NOT EXISTS favorite_movies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   movie_id INT NOT NULL,
@@ -44,7 +43,7 @@ CREATE TABLE favorite_movies (
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-CREATE TABLE comments (
+CREATE TABLE IF NOT EXISTS comments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   movie_id INT NOT NULL,
@@ -54,8 +53,8 @@ CREATE TABLE comments (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
-use project;
-CREATE TABLE puntuaciones (
+
+CREATE TABLE IF NOT EXISTS scores (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   movie_id INT NOT NULL,
@@ -66,13 +65,12 @@ CREATE TABLE puntuaciones (
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE peliculas_vistas (
+CREATE TABLE IF NOT EXISTS movies_viewed (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   movie_id INT NOT NULL,
   movie_title VARCHAR(255) NOT NULL,
   poster_path VARCHAR(500),
-
   comment_id INT DEFAULT NULL,
   puntuacion_id INT DEFAULT NULL,
 
@@ -82,7 +80,3 @@ CREATE TABLE peliculas_vistas (
   FOREIGN KEY (comment_id) REFERENCES comments(id),
   FOREIGN KEY (puntuacion_id) REFERENCES puntuaciones(id)
 );
-
-
-
-
