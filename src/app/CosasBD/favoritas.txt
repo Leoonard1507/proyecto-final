@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS user (
     role ENUM('administrator', 'client') DEFAULT 'client',
     password VARCHAR(255) NOT NULL,
     description TEXT,
+    avatar VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS follows (
   FOREIGN KEY (follower_id) REFERENCES user(id) ON DELETE CASCADE,
   FOREIGN KEY (followed_id) REFERENCES user(id) ON DELETE CASCADE
 );
-USE project;
+
 CREATE TABLE IF NOT EXISTS favorite_movies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -73,10 +74,9 @@ CREATE TABLE IF NOT EXISTS movies_viewed (
   poster_path VARCHAR(500),
   comment_id INT DEFAULT NULL,
   puntuacion_id INT DEFAULT NULL,
-
   viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (comment_id) REFERENCES comments(id),
-  FOREIGN KEY (puntuacion_id) REFERENCES puntuaciones(id)
+  FOREIGN KEY (puntuacion_id) REFERENCES scores(id)
 );

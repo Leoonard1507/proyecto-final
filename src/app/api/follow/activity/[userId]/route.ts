@@ -29,7 +29,7 @@ export async function GET(req: Request, { params }: { params: { userId: string }
       FROM movies_viewed pv
       JOIN follows f ON f.followed_id = pv.user_id
       JOIN user u ON u.id = pv.user_id
-      LEFT JOIN puntuaciones p ON pv.puntuacion_id = p.id
+      LEFT JOIN scores p ON pv.puntuacion_id = p.id
       LEFT JOIN comments c ON pv.comment_id = c.id
       WHERE f.follower_id = ?
     `;

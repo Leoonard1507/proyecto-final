@@ -69,9 +69,9 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
 
   const handleRemoveMovie = async (id: number) => {
     try {
-        const res = await fetch(`/api/user/${userId}/favorites?movie_id=${id}`, {
-            method: "DELETE",
-          });          
+      const res = await fetch(`/api/user/${userId}/favorites?movie_id=${id}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -137,16 +137,16 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
       </ul>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-          <div className="bg-white text-black rounded-lg max-w-xl w-full p-6 relative shadow-lg">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-[#1a1b2e] rounded-lg max-w-xl w-full p-6 relative shadow-lg">
             <button
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-100 transition-colors duration-200 text-2xl"
+              aria-label="Close modal"
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-xl"
-              aria-label="Cerrar modal"
             >
-              ✖
+              &times;
             </button>
-            <h2 className="text-2xl font-semibold mb-4">Buscar películas</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-[#22ec8a]">Buscar películas</h2>
             <SearchFavsEdit
               onSelectMovie={handleAddMovie}
             />

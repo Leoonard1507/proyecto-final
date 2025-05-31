@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from 'next/image';
 import { reisterSchema } from "../schema/registerSchema";
 import { toast } from "react-toastify";
+import { set } from "zod";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -68,6 +69,12 @@ export default function RegisterPage() {
     const data = await response.json();
     if (response.ok) {
       toast.success("Successfully registered user");
+      setUsername("");
+      setUsermail("");
+      setPassword("");
+      setBirthdate("");
+      setPassword2("");
+      setNickname("");
     } else {
       toast.error(data.error);
     }

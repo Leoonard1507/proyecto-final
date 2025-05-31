@@ -1,3 +1,4 @@
+import { changePasswordSchema } from "@/app/schema/changePasswordSchema";
 import Input from "../Input";
 import { toast } from "react-toastify";
 
@@ -26,25 +27,33 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (newPassword !== repeatPassword) {
-      toast("The new passwords do not match.");
-      return;
-    }
+  try {
+    // Validar los campos con Zod
+    changePasswordSchema.parse({
+      currentPassword,
+      newPassword,
+      repeatPassword,
+    });
 
-    try {
-      await updateUserProfile();
-      onClose();
-      setCurrentPassword("");
-      setNewPassword("");
-      setRepeatPassword("");
-    } catch (err) {
-      toast("Error updating password.");
+    await updateUserProfile();
+    setCurrentPassword("");
+    setNewPassword("");
+    setRepeatPassword("");
+  } catch (err: any) {
+    // Si es un error de Zod, mostramos los mensajes del schema
+    if (err.name === "ZodError") {
+      const messages = err.errors.map((e: any) => e.message).join(", ");
+      toast.error(messages);
+    } else {
+      toast.error("Error updating password.");
       console.error(err);
     }
-  };
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">

@@ -11,7 +11,7 @@ export async function GET(req: Request, { params }: { params: { userId: string }
     const [rows] = await db.execute("SELECT COUNT(*) AS diarys_count FROM movies_viewed WHERE user_id = ?", [userId]);
     return NextResponse.json(rows);
   } catch (err) {
-    console.error("Error al obtener el diary:", err);
-    return NextResponse.json({ error: "Error al obtener el diary" }, { status: 500 });
+    console.error("Error getting diary:", err);
+    return NextResponse.json({ error: "Error getting diary" }, { status: 500 });
   }
 }

@@ -53,7 +53,7 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
         <input
           type="text"
           placeholder="Buscar película..."
-          className="flex-grow p-2 border border-gray-300 rounded"
+          className="flex-grow p-2 border border-white text-white rounded"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -76,7 +76,7 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
           <button
             key={movie.id}
             onClick={() => onSelectMovie(movie)}
-            className="flex flex-col items-center hover:bg-gray-100 p-2 rounded"
+            className="flex flex-col items-center border border-transparent hover:border-white p-2 rounded"
             type="button"
           >
             {movie.poster_path ? (

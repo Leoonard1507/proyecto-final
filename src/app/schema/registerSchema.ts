@@ -5,7 +5,7 @@ const dateSchema = z.string().refine((dateStr) => !isNaN(new Date(dateStr).getTi
   message: "Invalid date",
 });
 
-// Validar los valores del
+// Validar los valores del registro
 export const reisterSchema = z.object({
   nickname: z.string().min(2, "Nickname must have at least 2 letters"),
   username: z.string().min(2, "Name must have at least 2 letters"),
