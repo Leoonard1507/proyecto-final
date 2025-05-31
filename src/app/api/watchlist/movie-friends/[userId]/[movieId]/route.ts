@@ -11,7 +11,7 @@ export async function GET(
   const movieIdNum = Number(params.movieId);
 
   if (isNaN(userIdNum) || isNaN(movieIdNum)) {
-    return NextResponse.json({ error: 'Parámetros inválidos' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 });
   }
 
   try {
@@ -33,9 +33,9 @@ export async function GET(
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al obtener amigos con película en watchlist:", error);
+    console.error("Error getting friends with movie in watchlist:", error);
     return NextResponse.json(
-      { error: "Error al obtener los datos" },
+      { error: "Error getting data" },
       { status: 500 }
     );
   }

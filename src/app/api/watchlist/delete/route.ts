@@ -7,7 +7,7 @@ export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { movieId } = await request.json();
@@ -23,9 +23,9 @@ export async function DELETE(request: Request) {
 
     await db.end();
 
-    return NextResponse.json({ message: "Película eliminada de la watchlist" });
+    return NextResponse.json({ message: "Movie removed from watchlist" });
   } catch (error) {
-    console.error("Error al eliminar de la watchlist:", error);
-    return NextResponse.json({ error: "Error al eliminar" }, { status: 500 });
+    console.error("Error deleting from watchlist:", error);
+    return NextResponse.json({ error: "Error deleting" }, { status: 500 });
   }
 }

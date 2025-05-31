@@ -16,10 +16,10 @@ export async function POST(request: Request) {
   try {
     const db = await connectDB();
     await db.execute("INSERT INTO follows (follower_id, followed_id) VALUES (?, ?)", [followerId, followedId]);
-    return NextResponse.json({ message: "Usuario seguido" });
+    return NextResponse.json({ message: "Followed user" });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Error al seguir al usuario" }, { status: 500 });
+    return NextResponse.json({ error: "Error following user" }, { status: 500 });
   }
 }
 export async function DELETE(request: Request) {
@@ -32,10 +32,10 @@ export async function DELETE(request: Request) {
     try {
       const db = await connectDB();
       await db.execute("DELETE FROM follows WHERE follower_id = ? AND followed_id = ?", [followerId, followedId]);
-      return NextResponse.json({ message: "Usuario dejado de seguir" });
+      return NextResponse.json({ message: "User unfollowed" });
     } catch (err) {
       console.error(err);
-      return NextResponse.json({ error: "Error al dejar de seguir al usuario" }, { status: 500 });
+      return NextResponse.json({ error: "Error when unfollowing user" }, { status: 500 });
     }
   }
 export async function GET(req: Request) {
@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     const followedId = searchParams.get("followedId");
     const followerId = session.user.id;
   
-    if (!followedId) return NextResponse.json({ error: "Parámetro seguido faltante" }, { status: 400 });
+    if (!followedId) return NextResponse.json({ error: "Missing followed parameter" }, { status: 400 });
   
     try {
       const db = await connectDB();
@@ -59,7 +59,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ isFollowing });
     } catch (err) {
       console.error(err);
-      return NextResponse.json({ error: "Error al comprobar seguimiento" }, { status: 500 });
+      return NextResponse.json({ error: "Error checking tracking" }, { status: 500 });
     }
   }
   

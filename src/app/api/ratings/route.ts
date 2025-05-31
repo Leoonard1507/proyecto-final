@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.id) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { movie_id, movie_title, poster_path, puntuacion } = await request.json();
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     puntuacion < 1 ||
     puntuacion > 10
   ) {
-    return NextResponse.json({ error: "Campos inválidos" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid fields" }, { status: 400 });
   }
 
   try {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     // Insert y resultado para obtener insertId
     const [result]: any = await db.execute(
-      `INSERT INTO puntuaciones (user_id, movie_id, movie_title, poster_path, puntuacion)
+      `INSERT INTO scores (user_id, movie_id, movie_title, poster_path, puntuacion)
        VALUES (?, ?, ?, ?, ?)`,
       [user_id, movie_id, movie_title, poster_path || null, puntuacion]
     );
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ insertId: result.insertId }, { status: 201 });
   } catch (error) {
-    console.error("Error al insertar puntuación:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    console.error("Error inserting punctuation:", error);
+    return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }

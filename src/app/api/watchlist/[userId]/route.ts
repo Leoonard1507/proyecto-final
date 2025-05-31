@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: { userId: string }
     const [rows] = await db.execute("SELECT movie_id, movie_title, poster_path FROM watchlist WHERE user_id = ?", [userId]);
     return NextResponse.json(rows);
   } catch (err) {
-    console.error("Error al obtener la watchlist:", err);
-    return NextResponse.json({ error: "Error al obtener la watchlist" }, { status: 500 });
+    console.error("Error getting watchlist:", err);
+    return NextResponse.json({ error: "Error getting watchlist" }, { status: 500 });
   }
 }

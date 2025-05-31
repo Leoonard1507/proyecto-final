@@ -16,7 +16,7 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al obtener following:", error);
-    return NextResponse.json({ error: "Error al obtener following" }, { status: 500 });
+    console.error("Error getting following:", error);
+    return NextResponse.json({ error: "Error getting following" }, { status: 500 });
   }
 }

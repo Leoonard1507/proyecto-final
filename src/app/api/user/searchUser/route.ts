@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al conectar con la BBDD o al consultar:", error);
-    return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
+    console.error("Error connecting to or querying the database:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

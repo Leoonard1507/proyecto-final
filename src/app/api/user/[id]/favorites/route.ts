@@ -11,8 +11,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     );
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al obtener favoritas:", error);
-    return NextResponse.json({ message: "Error al obtener favoritas" }, { status: 500 });
+    console.error("Error getting favorites:", error);
+    return NextResponse.json({ message: "Error getting favorites" }, { status: 500 });
   }
 }
 
@@ -22,7 +22,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const { movie_id, title, poster_path } = await req.json();
 
     if (!movie_id || !title) {
-      return NextResponse.json({ message: "Datos incompletos" }, { status: 400 });
+      return NextResponse.json({ message: "Incomplete data" }, { status: 400 });
     }
 
     const db = await connectDB();
@@ -31,13 +31,13 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       [userId, movie_id, title, poster_path]
     );
 
-    return NextResponse.json({ message: "Película añadida a favoritas" });
+    return NextResponse.json({ message: "Movie added to favorites" });
   } catch (error: any) {
-    console.error("Error al añadir favorita:", error);
+    console.error("Error adding favorite:", error);
     if (error.code === "ER_DUP_ENTRY") {
-      return NextResponse.json({ message: "Ya has añadido esta película" }, { status: 409 });
+      return NextResponse.json({ message: "You have already added this movie" }, { status: 409 });
     }
-    return NextResponse.json({ message: "Error al añadir favorita" }, { status: 500 });
+    return NextResponse.json({ message: "Error adding favorite" }, { status: 500 });
   }
 }
 
@@ -58,9 +58,9 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       "DELETE FROM favorite_movies WHERE user_id = ? AND movie_id = ?",
       [userId, movie_id]
     );
-    return NextResponse.json({ message: "Película eliminada de favoritas" });
+    return NextResponse.json({ message: "Movie removed from favorites" });
   } catch (error) {
-    console.error("Error al eliminar favorita:", error);
-    return NextResponse.json({ message: "Error al eliminar favorita" }, { status: 500 });
+    console.error("Error deleting favorite:", error);
+    return NextResponse.json({ message: "Error deleting favorite" }, { status: 500 });
   }
 }

@@ -9,13 +9,13 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   
   if (!session || !session.user?.id) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const {movie_id, movie_title, poster_path } = await request.json();
 
   if (!movie_id || !movie_title || !poster_path) {
-    return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
+    return NextResponse.json({ error: "Incomplete data" }, { status: 400 });
   }
 
   const user_id = session.user.id;
@@ -31,9 +31,9 @@ export async function POST(request: Request) {
 
     await db.end();
 
-    return NextResponse.json({ message: "Película añadida a la watchlist" });
+    return NextResponse.json({ message: "Movie added to watchlist" });
   } catch (error) {
-    console.error("Error al añadir a la watchlist:", error);
-    return NextResponse.json({ error: "Error al guardar en la base de datos" }, { status: 500 });
+    console.error("Error adding to watchlist:", error);
+    return NextResponse.json({ error: "Error saving to database" }, { status: 500 });
   }
 }

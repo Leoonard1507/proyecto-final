@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: { userId: string }
     const [rows] = await db.execute("SELECT * FROM comments WHERE user_id = ?", [userId]);
     return NextResponse.json(rows);
   } catch (err) {
-    console.error("Error al obtener el comentario:", err);
-    return NextResponse.json({ error: "Error al obtener el comentario" }, { status: 500 });
+    console.error("Error getting comment:", err);
+    return NextResponse.json({ error: "Error getting comment" }, { status: 500 });
   }
 }

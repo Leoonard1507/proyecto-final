@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.id) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const {
@@ -21,23 +21,23 @@ export async function POST(request: Request) {
   const user_id = session.user.id;
 
   if (!movie_id || !movie_title) {
-    return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
+    return NextResponse.json({ error: "Required fields are missing" }, { status: 400 });
   }
 
   try {
     const db = await connectDB();
 
     await db.execute(
-      `INSERT INTO peliculas_vistas (user_id, movie_id, movie_title, poster_path, comment_id, puntuacion_id)
+      `INSERT INTO movies_viewed (user_id, movie_id, movie_title, poster_path, comment_id, puntuacion_id)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [user_id, movie_id, movie_title, poster_path || null, comment_id, puntuacion_id]
     );
 
     await db.end();
 
-    return NextResponse.json({ message: "Vista registrada correctamente" }, { status: 201 });
+    return NextResponse.json({ message: "View registered successfully" }, { status: 201 });
   } catch (error) {
-    console.error("Error al registrar vista:", error);
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    console.error("Error registering view:", error);
+    return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
-import FavoriteMoviesList from "../components/profileSections/FavMoviesList"; // para mostrar las favs en el perfil
+import FavoriteMoviesList from "../components/profileSections/FavMoviesList";
 import EditProfileModal from "../components/profileSections/EditProfileModal";
 import ChangePasswordModal from "../components/profileSections/ChangePaswordModal";
 import ProfileTabs from "../components/profileSections/ProfileTabs";

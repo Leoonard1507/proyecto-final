@@ -23,7 +23,7 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
         p.puntuacion,
         c.comentario,
         pv.viewed_at
-      FROM peliculas_vistas pv
+      FROM movies_viewed pv
       JOIN user u ON u.id = pv.user_id
       LEFT JOIN puntuaciones p ON pv.puntuacion_id = p.id
       LEFT JOIN comments c ON pv.comment_id = c.id
@@ -35,7 +35,7 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al obtener actividad del usuario:", error);
-    return NextResponse.json({ error: "Error al obtener actividad" }, { status: 500 });
+    console.error("Error getting user activity:", error);
+    return NextResponse.json({ error: "Error getting activity" }, { status: 500 });
   }
 }

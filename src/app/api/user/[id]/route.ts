@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
     // Si no se encuentra el usuario
     if (rows.length === 0) {
-      return NextResponse.json({ message: "Usuario no encontrado" }, { status: 404 });
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     // Devuelve el usuario encontrado
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("Error al conectar con la BBDD o al consultar:", error);
-    return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
+    console.error("Error connecting to or querying the database:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
