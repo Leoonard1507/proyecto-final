@@ -1,6 +1,8 @@
 import Image from "next/image";
+import FollowButton from "./followButton";
 
-interface Props {
+interface ProfileCompactCardProps {
+  userId:string;
   avatar: string;
   nickname: string;
   followingCount: number | null;
@@ -16,7 +18,8 @@ export default function ProfileCompactCard({
   followerCount,
   commentsCount,
   diaryCount,
-}: Props) {
+  userId,
+}: ProfileCompactCardProps) {
   const safe = (n: number | null) => n ?? 0;
 
   return (
@@ -50,6 +53,8 @@ export default function ProfileCompactCard({
           <span className="text-base font-semibold text-xl">{safe(diaryCount)}</span>
           <span className="text-xs text-gray-500">diary</span>
         </div>
+
+        <FollowButton targetUserId={userId} />
       </div>
     </div>
   );

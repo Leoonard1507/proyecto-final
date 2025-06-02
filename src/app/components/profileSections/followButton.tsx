@@ -1,15 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 
 interface FollowButtonProps {
-  targetUserId: string; // ID del perfil que se está viendo
+  targetUserId: string; 
 }
 
-export default function FollowButton({ targetUserId }: FollowButtonProps) {
-  const { data: session } = useSession();
-  const [isFollowing, setIsFollowing] = useState(false);
+export default function FollowButton({ targetUserId }: FollowButtonProps) {  const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

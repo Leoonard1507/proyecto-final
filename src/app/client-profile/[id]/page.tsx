@@ -11,13 +11,7 @@ import ProfileCompactCard from "../../components/profileSections/ProfileCompactC
 export default function ProfilePage() {
   const params = useParams();
   const userIdFromUrl = params?.id as string;
-
-  const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
-  const [usermail, setUsermail] = useState("");
-  const [role, setRole] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
@@ -106,10 +100,6 @@ export default function ProfilePage() {
       if (!res.ok) throw new Error("Could not get user");
       const user = await res.json();
 
-      setName(user.name || "");
-      setUsermail(user.email || "");
-      setRole(user.role || "");
-      setBirthdate(user.birthdate || "");
       setNickname(user.nickName || "");
       setDescription(user.description || "");
       setAvatar(user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`);
@@ -129,6 +119,7 @@ export default function ProfilePage() {
           followerCount={followerCount}
           commentsCount={commentsCount}
           diaryCount={diaryCount}
+          userId={userId}
         />
 
         {description && (
