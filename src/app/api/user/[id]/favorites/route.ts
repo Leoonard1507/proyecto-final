@@ -16,6 +16,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
+
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const userId = params.id;
   try {
@@ -24,6 +25,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     if (!movie_id || !title) {
       return NextResponse.json({ message: "Incomplete data" }, { status: 400 });
     }
+
 
     const db = await connectDB();
     await db.query(

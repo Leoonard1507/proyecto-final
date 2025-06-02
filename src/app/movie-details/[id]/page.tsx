@@ -2,7 +2,6 @@
 "use client";
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/libs/axios';
-import { useSession } from 'next-auth/react';
 import Navbar from '@/app/components/Navbar';
 import AddToWatchlistButton from '@/app/components/moviePageElements/AddToWatchlist';
 import ViewCommentRatingModal from '@/app/components/moviePageElements/ViewCommentRatingModal';
@@ -21,10 +20,8 @@ export interface Movie {
 
 const MovieDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const { data: session } = useSession();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-  const [newComment, setNewComment] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState<'watched' | 'watchlist'>('watched');
@@ -44,58 +41,12 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
     fetchMovieDetails();
   }, [id]);
 
-  const handleCommentSubmit = async () => {
-    if (!newComment.trim()) {
-      alert("Please write a comment");
-      return;
-    }
-
-    // Validaciones previas
-    if (!session?.user?.id) {
-      alert("You must be logged in to comment.");
-      return;
-    }
-
-    if (!movie) {
-      alert("Movie data is not available.");
-      return;
-    }
-
-    /*
-    const commentToSend = {
-      user_id: session?.user?.id,       // ID del usuario desde la sesión (asegúrate que exista)
-      movie_id: movie?.id,              // ID de la película
-      movie_title: movie?.title,        // Título de la película
-      poster_path: movie?.poster_path,  // Path del póster (opcional)
-      comentario: newComment            // El texto del comentario
-    };
-
-
-    try {
-      await axios.post('/api/comment', commentToSend);
-      setNewComment("");
-      alert("Comment submitted successfully");
-    } catch (error: any) {
-      if (error.isAxiosError) {
-        console.error("Axios error response:", error.response);
-        alert(`Failed to submit comment: ${error.response?.data?.error || error.message}`);
-      } else {
-        console.error("Non-Axios error:", error);
-        alert("Failed to submit comment");
-      }
-    }
-    */
-
-
-  };
-
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;
   if (!movie) return <div className="text-center text-white py-20">Movie not found.</div>;
 
   return (
     <>
       <Navbar />
-
       {/* Background */}
       <div className="w-full h-[50vh]">
         {movie.backdrop_path && (
@@ -137,7 +88,7 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
 
           <button
             onClick={() => setModalOpen(true)}
-            className="right-8 bg-green-500 text-white rounded w-12 h-12 text-3xl font-bold"
+            className="right-8 bg-green-500 text-white rounded w-12 h-12 text-3xl font-bold cursor-pointer"
             title="Añadir puntuación o comentario"
           >
             +
@@ -179,30 +130,6 @@ const MovieDetailPage = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
       </div>
-
-
-
-
-      {/* Comments Section
-      <div className="max-w-6xl mx-auto mt-10">
-        <h2 className="text-2xl font-semibold text-white mb-4">Comments</h2>
-
-        
-        <div className="mb-6"> 
-          <textarea
-            className="w-full p-3 mt-4 rounded-md bg-gray-800 text-white border-2 border-[#777] focus:outline-none focus:border-[#22ec8a]"
-            placeholder="Leave your comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button
-            onClick={handleCommentSubmit}
-            className="mt-4 px-6 py-2 bg-[#22ec8a] text-black cursor-pointer rounded-md hover:opacity-70 transition-opacity transition duration-200"
-          >
-            Submit Comment
-          </button>
-        </div>
-      </div>*/}
     </>
   );
 };

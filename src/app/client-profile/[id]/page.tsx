@@ -3,12 +3,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
-import { toast } from "react-toastify";
 import FavoriteMoviesList from "../../components/profileSections/FavMoviesList";
 import ProfileTabs from "../../components/profileSections/ProfileTabs";
 import ProfileDetailsPanel from "../../components/profileSections/ProfileDetailsPanelOthers";
 import ProfileCompactCard from "../../components/profileSections/ProfileCompactCardOther";
-import { editUserSchema } from "../../schema/editUserSchema";
 
 export default function ProfilePage() {
   const params = useParams();

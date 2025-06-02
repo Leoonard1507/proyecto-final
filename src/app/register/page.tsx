@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from 'next/image';
 import { reisterSchema } from "../schema/registerSchema";
 import { toast } from "react-toastify";
-import { set } from "zod";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");

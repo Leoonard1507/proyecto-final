@@ -80,14 +80,14 @@ export default function AddToWatchlist({
       {isInWatchlist ? (
         <button
           onClick={handleRemoveFromWatchlist}
-          className="bg-red-800 text-white px-4 py-2 rounded hover:opacity-70 cursor-pointer"
+          className="bg-red-800 text-white px-4 py-3 rounded hover:opacity-70 cursor-pointer"
         >
           Remove from Watchlist
         </button>
       ) : (
         <button
           onClick={handleAddToWatchlist}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:opacity-70 cursor-pointer"
+          className="bg-blue-600 text-white px-4 py-3 rounded hover:opacity-70 cursor-pointer"
         >
           Add to Watchlist
         </button>

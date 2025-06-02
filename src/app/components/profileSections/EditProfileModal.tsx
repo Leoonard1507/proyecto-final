@@ -46,7 +46,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           &times;
         </button>
 
-        <h2 className="text-2xl font-bold text-[#22ec8a]">Edit profile</h2>
+        <h2 className="text-2xl font-bold &apos;">Edit profile</h2>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>

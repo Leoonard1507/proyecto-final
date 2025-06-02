@@ -52,8 +52,8 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
       <div className="flex items-center gap-2 mb-4">
         <input
           type="text"
-          placeholder="Buscar película..."
-          className="flex-grow p-2 border border-white text-white rounded"
+          placeholder="Search movie..."
+          className="flex-grow p-2 border border-[#777] text-white rounded focus:border-[#22ec8a] transition-colors duration-200 outline-none"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -65,9 +65,9 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
         <button
           type="button"
           onClick={handleSearch}
-          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          className="bg-[#22ec8a] text-black font-bold px-3 py-2 rounded hover:opacity-70 transition-opacity cursor-pointer"
         >
-          Buscar
+          Search
         </button>
       </div>
 
@@ -89,7 +89,7 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
               />
             ) : (
               <div className="w-[80px] h-[120px] bg-gray-300 flex items-center justify-center rounded text-xs text-gray-600">
-                Sin imagen
+                No image
               </div>
             )}
             <span className="text-sm mt-2 text-center">{movie.title}</span>

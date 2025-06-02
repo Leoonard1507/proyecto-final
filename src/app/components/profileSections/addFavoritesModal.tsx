@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import SearchFavsEdit from "./searchFavsEdit";
+import { toast } from "react-toastify";
 
 interface Movie {
   id: number;
@@ -26,7 +27,7 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
     setLoading(true);
     fetch(`/api/user/${userId}/favorites`)
       .then((res) => {
-        if (!res.ok) throw new Error("Error cargando favoritas");
+        if (!res.ok) throw new Error("Error loading favorites");
         return res.json();
       })
       .then((data: Movie[]) => {
@@ -56,14 +57,14 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
 
       if (!res.ok) {
         const errorData = await res.json();
-        alert(errorData.message || "Error añadiendo película");
+        toast.error(errorData.message || "Error adding movie");
         return;
       }
 
       setFavoriteMovies((prev) => [...prev, movie]);
       setIsModalOpen(false);
     } catch {
-      alert("Error de red");
+      toast.error("Network error");
     }
   };
 
@@ -75,17 +76,17 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
 
       if (!res.ok) {
         const errorData = await res.json();
-        alert(errorData.message || "Error eliminando película");
+        toast.error(errorData.message || "Error deleting movie");
         return;
       }
 
       setFavoriteMovies((prev) => prev.filter((movie) => movie.id !== id));
     } catch {
-      alert("Error de red");
+      toast.error("Network error");
     }
   };
 
-  if (loading) return <p>Cargando favoritas...</p>;
+  if (loading) return <p>Loading favorites...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
@@ -97,13 +98,13 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
             className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
             type="button"
           >
-            Añadir película
+            Add movie
           </button>
         )}
       </div>
 
       {favoriteMovies.length === 0 && (
-        <p className="text-gray-400 italic">No has añadido ninguna película favorita.</p>
+        <p className="text-gray-400 italic">You haven&apos;t added any favorite movies.</p>
       )}
 
       <ul className="flex gap-4 flex-nowrap ">
@@ -121,14 +122,14 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
               />
             ) : (
               <div className="w-16 h-24 bg-gray-300 flex items-center justify-center rounded text-xs text-gray-600">
-                Sin imagen
+                No image
               </div>
             )}
             <button
               onClick={() => handleRemoveMovie(movie.id)}
               type="button"
               className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-              aria-label={`Eliminar ${movie.title}`}
+              aria-label={`Delete ${movie.title}`}
             >
               &times;
             </button>
@@ -146,7 +147,7 @@ export default function FavoriteMoviesSection({ userId }: FavoriteMoviesSectionP
             >
               &times;
             </button>
-            <h2 className="text-2xl font-semibold mb-4 text-[#22ec8a]">Buscar películas</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">Search movies</h2>
             <SearchFavsEdit
               onSelectMovie={handleAddMovie}
             />

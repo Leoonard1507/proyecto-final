@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link"; 
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -59,7 +60,7 @@ export default function ProfilePage() {
       throw new Error("Error al actualizar el perfil");
     }
 
-    alert("Perfil actualizado con éxito!");
+    toast.success("Perfil actualizado con éxito!");
     setIsModalOpen(false);
     await fetchUserData(userId);
     setLoading(false);

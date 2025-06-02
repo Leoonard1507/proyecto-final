@@ -13,7 +13,7 @@ const Input: React.FC<InputProps> = ({ label, value, onChange, type = "text" }) 
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-gray-300 p-2 rounded"
+        className="w-full border border-[#777] p-2 rounded focus:border-[#22ec8a] transition-colors duration-200 outline-none"
       />
     </div>
   );
