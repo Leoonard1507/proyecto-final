@@ -16,23 +16,25 @@ export async function GET(req: Request, context: { params: Promise<{ userId: str
     const db = await connectDB();
 
     const baseQuery = `
-      SELECT 
-        pv.user_id,
-        u.nickName,
-        u.avatar as avatar,
-        pv.movie_id,
-        pv.movie_title,
-        pv.poster_path,
-        p.puntuacion,
-        c.comentario,
-        pv.viewed_at
-      FROM movies_viewed pv
-      JOIN follows f ON f.followed_id = pv.user_id
-      JOIN user u ON u.id = pv.user_id
-      LEFT JOIN scores p ON pv.puntuacion_id = p.id
-      LEFT JOIN comments c ON pv.comment_id = c.id
-      WHERE f.follower_id = ?
-    `;
+  SELECT 
+    pv.user_id,
+    u.nickName,
+    u.avatar as avatar,
+    pv.movie_id,
+    pv.movie_title,
+    pv.poster_path,
+    p.puntuacion,
+    c.comentario,
+    pv.comment_id,      
+    pv.viewed_at
+  FROM movies_viewed pv
+  JOIN follows f ON f.followed_id = pv.user_id
+  JOIN user u ON u.id = pv.user_id
+  LEFT JOIN scores p ON pv.puntuacion_id = p.id
+  LEFT JOIN comments c ON pv.comment_id = c.id
+  WHERE f.follower_id = ?
+`;
+
 
     const [rows] = await db.execute(
       movieIdParam

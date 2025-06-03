@@ -16,6 +16,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ userId:
 
     const [rows] = await db.execute(
       `SELECT 
+        pv.id,
         pv.user_id,
         u.nickName,
         pv.movie_id,

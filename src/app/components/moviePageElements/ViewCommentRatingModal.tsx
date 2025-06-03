@@ -109,7 +109,7 @@ export default function ViewCommentRatingModal({ movie, onClose }: Props) {
             type="number"
             min={1}
             max={10}
-            step={0.5}
+            step={1}
             value={puntuacion ?? ""}
             onChange={(e) =>
               setPuntuacion(e.target.value ? parseFloat(e.target.value) : undefined)

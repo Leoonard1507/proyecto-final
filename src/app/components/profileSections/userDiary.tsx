@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 type Score = {
+  id: number;
   user_id: number;
   nickName: string;
   movie_id: number;
@@ -71,7 +72,7 @@ export default function Scores({ userId }: { userId: string }) {
       <div className="flex flex-wrap gap-4 pb-2">
         {scores.slice().map((score, index) => (
           <div
-            key={`${score.user_id}-${score.movie_id}`}
+            key={`${score.user_id}-${score.movie_id}-${score.id}`}
             onClick={() => openModal(score)}
             className="min-w-[156px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer hover:bg-gray-800 transition"
           >
