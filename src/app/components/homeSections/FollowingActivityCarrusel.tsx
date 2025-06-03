@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import LikeButton from '../LikeButton';
 
 type Activity = {
+  id:number;
   user_id: number;
   nickName: string;
   movie_id: number;
@@ -11,6 +13,7 @@ type Activity = {
   poster_path: string;
   puntuacion: number | null;
   comentario: string | null;
+  comment_id: number;
   viewed_at: string;
 };
 
@@ -18,6 +21,8 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+
+  
 
   useEffect(() => {
     if (!userId) return;
@@ -42,6 +47,7 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
     };
 
     fetchActivity();
+    
   }, [userId]);
 
   if (!userId) return <p className="text-white">User not logged in</p>;
@@ -54,7 +60,7 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
       <div className="flex overflow-x-auto space-x-4 pb-2">
         {activities.map((activity) => (
           <div
-            key={`${activity.user_id}-${activity.movie_id}-${activity.viewed_at}`}
+            key={`${activity.user_id}-${activity.movie_id}-${activity.id}`}
             className="min-w-[150px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer"
             onClick={() => setSelectedActivity(activity)}
           >
@@ -153,13 +159,22 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
               )}
 
               {selectedActivity.comentario && (
-                <p
-                  className="whitespace-pre-wrap break-words overflow-wrap-anywhere max-h-40 overflow-auto mb-2"
-                  style={{ wordBreak: "break-word" }}
-                >
-                  {selectedActivity.comentario}
-                </p>
+                <>
+                  <p
+                    className="whitespace-pre-wrap break-words overflow-wrap-anywhere max-h-40 overflow-auto mb-2"
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    {selectedActivity.comentario}
+                  </p>
+
+                  {selectedActivity.comment_id && (
+                    <div className="mb-2">
+                      <LikeButton commentId={selectedActivity.comment_id} />
+                    </div>
+                  )}
+                </>
               )}
+
 
               <p className="text-xs text-gray-400 mt-auto self-end">
                 {new Date(selectedActivity.viewed_at).toLocaleDateString("es-ES", {
