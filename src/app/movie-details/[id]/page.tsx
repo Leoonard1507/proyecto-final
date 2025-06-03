@@ -7,6 +7,7 @@ import AddToWatchlistButton from '@/app/components/moviePageElements/AddToWatchl
 import ViewCommentRatingModal from '@/app/components/moviePageElements/ViewCommentRatingModal';
 import WatchedByFriends from '@/app/components/moviePageElements/WatchedByFriend';
 import WantsToWatchFriends from '@/app/components/moviePageElements/WantToWatchFriend';
+import { useParams } from 'next/navigation';
 
 export interface Movie {
   id: number;
@@ -18,12 +19,12 @@ export interface Movie {
   backdrop_path: string;
 }
 
-const MovieDetailPage = ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const MovieDetailPage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-
   const [activeTab, setActiveTab] = useState<'watched' | 'watchlist'>('watched');
 
   useEffect(() => {

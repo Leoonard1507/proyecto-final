@@ -3,12 +3,10 @@
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { userId: string; movieId: string } }
-) {
-  const userIdNum = Number(params.userId);
-  const movieIdNum = Number(params.movieId);
+export async function GET(_req: Request, context: { params: Promise<{ userId: string; movieId: string }> }) {
+  const { userId, movieId } = await context.params;
+  const userIdNum = Number(userId);
+  const movieIdNum = Number(movieId);
 
   if (isNaN(userIdNum) || isNaN(movieIdNum)) {
     return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 });

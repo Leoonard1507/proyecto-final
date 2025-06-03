@@ -1,8 +1,8 @@
 import { connectDB } from "@/libs/mysql";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(req: NextRequest, context: { params: { userId: string } }) {
-  const { userId } = context.params;
+export async function GET(req: NextRequest, { params }: { params: { userId: string } | Promise<{ userId: string }> }) {
+  const { userId } = await params;
 
   try {
     const db = await connectDB();

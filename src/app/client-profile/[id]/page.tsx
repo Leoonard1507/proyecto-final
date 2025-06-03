@@ -20,7 +20,6 @@ export default function ProfilePage() {
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);
   const [diaryCount, setDiaryCount] = useState<number | null>(null);
-  const [reviewsCount, setReviewsCount] = useState<number | null>(null);
 
   useEffect(() => {
     if (userIdFromUrl) {
@@ -30,7 +29,6 @@ export default function ProfilePage() {
       fetchFollowerCount(userIdFromUrl);
       fetchCommentsCount(userIdFromUrl);
       fetchDiaryCount(userIdFromUrl);
-      fetchReviewsCount(userIdFromUrl);
     }
   }, [userIdFromUrl]);
 
@@ -79,18 +77,6 @@ export default function ProfilePage() {
     } catch (error) {
       console.error("Error fetching diary count:", error);
       setDiaryCount(0);
-    }
-  };
-
-  const fetchReviewsCount = async (userId: string) => {
-    try {
-      const res = await fetch(`/api/countReviews/${userId}`);
-      if (!res.ok) throw new Error("Failed to fetch reviews count");
-      const data = await res.json();
-      setReviewsCount(data[0]?.reviews_count ?? 0);
-    } catch (error) {
-      console.error("Error fetching reviews count:", error);
-      setReviewsCount(0);
     }
   };
 

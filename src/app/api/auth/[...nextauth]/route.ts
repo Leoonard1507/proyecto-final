@@ -42,7 +42,7 @@ const authOptions: NextAuthOptions = {
 
           return {
             id: user.id,
-            nickname: user.nickname,
+            nickname: user.nickName,
             name: user.name,
             email: user.email,
             role: user.role,
@@ -51,7 +51,7 @@ const authOptions: NextAuthOptions = {
           };
 
         } finally {
-          await db.end();
+          
         }
       },
     }),

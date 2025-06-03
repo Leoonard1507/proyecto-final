@@ -3,8 +3,9 @@
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
-export async function GET(_req: Request, { params }: { params: { userId: string } }) {
-  const userIdNum = Number(params.userId);
+export async function GET(_req: Request, { params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params;
+  const userIdNum = Number(userId);
 
   if (isNaN(userIdNum)) {
     return NextResponse.json({ error: "Invalid userId" }, { status: 400 });

@@ -1,12 +1,26 @@
+// libs/mysql.ts
 import mysql from "mysql2/promise";
 
-// Función para conectar a la base de datos
+declare global {
+  // Esto extiende el objeto global para TypeScript
+  // eslint-disable-next-line no-var
+  var _mysqlPool: mysql.Pool | undefined;
+}
+
 export async function connectDB() {
-  const connection = await mysql.createConnection({
+  if (global._mysqlPool) {
+    return global._mysqlPool;
+  }
+
+  global._mysqlPool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
   });
-  return connection;
+
+  return global._mysqlPool;
 }

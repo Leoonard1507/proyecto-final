@@ -1,10 +1,10 @@
-// /app/api/activity/[userId]/route.ts
-
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request, { params }: { params: { userId: string } }) {
-  const userIdNum = Number(params.userId);
+export async function GET(req: Request, context: { params: Promise<{ userId: string }> }) {
+  const { userId } = await context.params;
+  const userIdNum = Number(userId);
+
   const { searchParams } = new URL(req.url);
   const movieIdParam = searchParams.get("movieId");
 

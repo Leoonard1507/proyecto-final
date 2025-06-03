@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mysql";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const userId = params.id;
+  const { id: userId } = await params;
   try {
     const db = await connectDB();
     const [rows] = await db.query(
@@ -18,7 +18,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
-  const userId = params.id;
+  const { id: userId } = await params;
   try {
     const { movie_id, title, poster_path } = await req.json();
 
@@ -44,7 +44,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 }
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  const userId = params.id;
+  const { id: userId } = await params;
 
   // Extraemos el parametro movie_id de la query string
   const { searchParams } = new URL(req.url);

@@ -10,6 +10,8 @@ export default function FollowButton({ targetUserId }: FollowButtonProps) {  con
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!targetUserId) return;
+
     const checkFollowStatus = async () => {
 
       try {

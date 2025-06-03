@@ -35,27 +35,27 @@ export default function ProfileCompactCard({
         <span className="text-xl font-semibold">{nickname || "—"}</span>
 
         <div className="flex flex-col ml-35 items-center border-r border-gray-400 pr-4">
-          <span className="text-base font-semibold text-xl">{safe(followingCount)}</span>
+          <span className="font-semibold text-xl">{safe(followingCount)}</span>
           <span className="text-xs text-gray-500">following</span>
         </div>
 
         <div className="flex flex-col items-center border-r border-gray-400 pr-4">
-          <span className="text-base font-semibold text-xl">{safe(followerCount)}</span>
+          <span className="font-semibold text-xl">{safe(followerCount)}</span>
           <span className="text-xs text-gray-500">followers</span>
         </div>
 
         <div className="flex flex-col items-center border-r border-gray-400 pr-4">
-          <span className="text-base font-semibold text-xl">{safe(commentsCount)}</span>
+          <span className="font-semibold text-xl">{safe(commentsCount)}</span>
           <span className="text-xs text-gray-500">comments</span>
         </div>
 
         <div className="flex flex-col items-center">
-          <span className="text-base font-semibold text-xl">{safe(diaryCount)}</span>
+          <span className="font-semibold text-xl">{safe(diaryCount)}</span>
           <span className="text-xs text-gray-500">diary</span>
         </div>
 
-        <FollowButton targetUserId={userId} />
       </div>
+        <FollowButton targetUserId={userId} />
     </div>
   );
 }
