@@ -54,7 +54,9 @@ export default function ProfileCompactCard({
           <span className="text-xs text-gray-500">diary</span>
         </div>
 
-        <FollowButton targetUserId={userId} />
+        <div className="flex flex-col ml-5">
+          <FollowButton targetUserId={userId} />
+        </div>
       </div>
     </div>
   );
