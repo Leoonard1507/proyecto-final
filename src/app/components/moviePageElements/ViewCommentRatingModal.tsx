@@ -87,7 +87,7 @@ export default function ViewCommentRatingModal({ movie, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
 
       <div className="bg-gray-900 text-white p-6 rounded-md max-w-md w-full">
         <h2 className="text-lg text-center font-semibold text-white">I&apos;ve watched:</h2>

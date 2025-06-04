@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
-import LikeButton from '../LikeButton';
 
 type Activity = {
   id: number;
@@ -144,8 +143,8 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
 
       {/* Modal */}
       {selectedActivity && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+        <div 
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50"
           onClick={() => setSelectedActivity(null)}
         >
           <div
@@ -183,11 +182,6 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
                   <p className="whitespace-pre-wrap break-words max-h-40 overflow-auto mb-2">
                     {selectedActivity.comentario}
                   </p>
-                  {selectedActivity.comment_id && (
-                    <div className="mb-2">
-                      <LikeButton commentId={selectedActivity.comment_id} />
-                    </div>
-                  )}
                 </>
               )}
 

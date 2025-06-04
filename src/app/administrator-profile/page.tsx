@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
-import FavoriteMoviesList from "../components/profileSections/FavMoviesList"; // para mostrar las favs en el perfil
+import FavoriteMoviesList from "../components/profileSections/FavMoviesList";
 import EditProfileModal from "../components/profileSections/EditProfileModal";
 import ChangePasswordModal from "../components/profileSections/ChangePaswordModal";
 import ProfileTabs from "../components/profileSections/ProfileTabs";
 import ProfileDetailsPanel from "../components/profileSections/ProfileDetailsPanel";
 import ProfileCompactCard from "../components/profileSections/ProfileCompactCard";
 import { editUserSchema } from "../schema/editUserSchema";
+import ProfilePageSkeleton from "../skeletons/ProfileSkeleton";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -35,6 +36,8 @@ export default function ProfilePage() {
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);
   const [diaryCount, setDiaryCount] = useState<number | null>(null);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -97,6 +100,7 @@ export default function ProfilePage() {
 
   const fetchUserData = async (userId: string) => {
     try {
+      setIsLoadingData(true);
       const res = await fetch(`/api/user/${userId}`);
       if (!res.ok) throw new Error("Could not get user");
       const user = await res.json();
@@ -108,32 +112,31 @@ export default function ProfilePage() {
       setNickname(user.nickName || "");
       setDescription(user.description || "");
       setAvatar(user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`);
-      // setFavoriteMovies(user.favorites || []); // Si decides usar favoritas aquí
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error);
+    } finally {
+      setIsLoadingData(false);
     }
   };
 
   const updateUserProfile = async () => {
     setLoading(true);
-    try {
-      // Prepara los datos para validación
-      const dataToValidate = {
-        nickname,
-        username: name,
-        description,
-      };
 
-      // Validar usando Zod
+    const dataToValidate = {
+      nickname,
+      username: name,
+      description,
+    };
+
+    try {
       const validatedData = editUserSchema.parse(dataToValidate);
 
-      // Construye el objeto final a enviar (puedes añadir más campos si no están en el schema)
       const dataToSend = {
         nickname: validatedData.nickname,
         name: validatedData.username,
         email: usermail,
         role,
-        description: validatedData.description,
+        description: description,
         avatar,
         currentPassword,
         newPassword,
@@ -145,33 +148,37 @@ export default function ProfilePage() {
         body: JSON.stringify(dataToSend),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Response error:", errorData);
-        throw new Error(errorData.message || "Error updating profile");
+      const responseData = await response.json();
+
+      if (!response.ok || (responseData.message && responseData.message.toLowerCase().includes("incorrect"))) {
+        throw new Error(responseData.message || "Error updating profile");
       }
 
-      const responseData = await response.json();
       toast.success(responseData.message);
-
       setIsModalOpen(false);
       setIsPasswordModalOpen(false);
       setCurrentPassword("");
       setNewPassword("");
       setRepeatPassword("");
       await fetchUserData(userId);
+
     } catch (error: any) {
       if (error.name === "ZodError") {
         const messages = error.errors.map((e: any) => e.message).join(", ");
-        toast.error(`Validation error: ${messages}`);
+        toast.error(messages);
       } else {
         toast.error(error.message || "Error updating profile");
       }
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleCloseEditModal = async () => {
+    await fetchUserData(userId);
+    setIsModalOpen(false);
+  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,49 +189,52 @@ export default function ProfilePage() {
     <div className="min-h-screen text-white">
       {/* Navbar */}
       <Navbar />
-      {/* Contenedor de perfil */}
-      <div className="max-w-4xl mx-auto mt-10 space-y-6">
-        {/* Perfil compacto */}
-        <ProfileCompactCard
-          avatar={avatar}
-          nickname={nickname}
-          followingCount={followingCount}
-          followerCount={followerCount}
-          commentsCount={commentsCount}
-          diaryCount={diaryCount}
-          showDetails={showDetails}
-          toggleDetails={() => setShowDetails((prev) => !prev)}
-        />
-
-        {/* Perfil detallado */}
-        {showDetails && (
-          <ProfileDetailsPanel
-            name={name}
-            usermail={usermail}
-            birthdate={birthdate}
-            role={role}
-            description={description}
-            loading={loading}
-            onEditProfile={() => setIsModalOpen(true)}
-            onChangePassword={() => setIsPasswordModalOpen(true)}
+      {/* Skeleton o contenido real según el estado de carga */}
+      {isLoadingData ? (
+        <ProfilePageSkeleton />
+      ) : (
+        <div className="max-w-4xl mt-10 space-y-6">
+          {/* Perfil compacto */}
+          <ProfileCompactCard
+            avatar={avatar}
+            nickname={nickname}
+            followingCount={followingCount}
+            followerCount={followerCount}
+            commentsCount={commentsCount}
+            diaryCount={diaryCount}
+            showDetails={showDetails}
+            toggleDetails={() => setShowDetails((prev) => !prev)}
           />
-        )}
 
-        {/* Mostrar las favoritas */}
-        {userId && (
-          <div className="border rounded-xl shadow-md p-6 mt-6">
-            <FavoriteMoviesList userId={userId} />
-          </div>
-        )}
+          {/* Perfil detallado */}
+          {showDetails && (
+            <ProfileDetailsPanel
+              name={name}
+              usermail={usermail}
+              birthdate={birthdate}
+              role={role}
+              description={description}
+              loading={loading}
+              onEditProfile={() => setIsModalOpen(true)}
+              onChangePassword={() => setIsPasswordModalOpen(true)}
+            />
+          )}
 
-        {/* Tabs para mostrar contenido */}
-        <ProfileTabs
-          userId={userId}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
-      </div>
+          {/* Mostrar las favoritas */}
+          {userId && (
+            <div className="border rounded-xl shadow-md p-6 mt-6">
+              <FavoriteMoviesList userId={userId} />
+            </div>
+          )}
 
+          {/* Tabs para mostrar contenido */}
+          <ProfileTabs
+            userId={userId}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+        </div>
+      )}
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
         <ChangePasswordModal
@@ -244,7 +254,7 @@ export default function ProfilePage() {
       {isModalOpen && (
         <EditProfileModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseEditModal}
           onSubmit={handleSubmit}
           loading={loading}
           avatar={avatar}

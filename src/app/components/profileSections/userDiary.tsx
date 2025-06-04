@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
 
 type Score = {
   id: number;
@@ -19,7 +18,6 @@ export default function Scores({ userId }: { userId: string }) {
   const [scores, setScores] = useState<Score[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedScore, setSelectedScore] = useState<Score | null>(null);
-  const [overflowMap, setOverflowMap] = useState<{ [key: number]: boolean }>({});
   const commentRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
   useEffect(() => {
@@ -50,7 +48,6 @@ export default function Scores({ userId }: { userId: string }) {
       }
     });
 
-    setOverflowMap(newOverflowMap);
   }, [scores]);
 
   function openModal(score: Score) {
@@ -70,7 +67,7 @@ export default function Scores({ userId }: { userId: string }) {
     <div className="mt-3">
       <h3 className="text-2xl font-semibold mb-4 text-white">Diary</h3>
       <div className="flex flex-wrap gap-4 pb-2">
-        {scores.slice().map((score, index) => (
+        {scores.slice().map((score) => (
           <div
             key={`${score.user_id}-${score.movie_id}-${score.id}`}
             onClick={() => openModal(score)}
@@ -129,8 +126,8 @@ export default function Scores({ userId }: { userId: string }) {
 
       {/* Modal */}
       {modalOpen && selectedScore && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+        <div 
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50"
           onClick={closeModal}
         >
           <div

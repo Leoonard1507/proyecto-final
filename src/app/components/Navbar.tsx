@@ -2,14 +2,33 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const res = await fetch('/api/auth/session');
+      const data = await res.json();
+      setRole(data?.user?.role || null);
+    };
+
+    fetchRole();
+  }, []);
+
+  const handleProfileClick = () => {
+    if (role === 'administrator') {
+      router.push('/administrator-profile');
+    } else if (role === 'client') {
+      router.push('/client-profile');
+    } else {
+      router.push('/login'); // fallback por si no está autenticado
+    }
+  };
 
   const handleLogout = () => {
-    // Aquí podrías limpiar cookies, localStorage, o llamar a un endpoint
-    // Por ahora simulamos cierre de sesión redirigiendo al login
-    // localStorage.removeItem('token'); (si lo usas)
     router.push('/');
   };
 
@@ -23,7 +42,7 @@ export default function Navbar() {
           <Link href="/search" className="hover:text-red-400 transition text-2xl">🔍</Link>
         </li>
         <li>
-          <Link href="/client-profile" className="hover:text-red-400 transition text-2xl">👤</Link>
+          <button onClick={handleProfileClick} className="hover:text-red-400 transition text-2xl cursor-pointer">👤</button>
         </li>
         <li>
           <button

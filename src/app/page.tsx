@@ -26,17 +26,8 @@ export default function LoginPage() {
       return;
     }
 
-    const res = await fetch("/api/auth/session");
-    const session = await res.json();
-
-    // Lógica para redirigir
-    if (session?.user?.role === "administrator") {
-      router.push(`/home-page`);
-    } else if (session?.user?.role === "client") {
-      router.push(`/home-page`);
-    } else {
-      toast.error("You do not have access to any of the sections.");
-    }    
+    // Redirigir a la página inicial
+    router.push(`/home-page`);   
   };
 
   return (
