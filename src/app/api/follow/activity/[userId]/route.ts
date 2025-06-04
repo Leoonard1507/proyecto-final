@@ -1,3 +1,5 @@
+// Este endpoint devuelve la actividad de los amigos (a los que sigue el usuario con userId), opcionalmente filtrada por una película concreta.
+
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
