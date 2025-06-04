@@ -1,18 +1,10 @@
 import ProfileField from "./ProfilrFirld";
 
 interface ProfileDetailsPanelProps {
-  //name: string;
-  //usermail: string;
-  //birthdate: string;
-  //role: string;
   description: string;
 }
 
 const ProfileDetailsPanel: React.FC<ProfileDetailsPanelProps> = ({
-  //name,
-  //usermail,
-  //birthdate,
-  //role,
   description,
 }) => {
   return (

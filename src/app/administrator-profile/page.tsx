@@ -147,7 +147,7 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error en la respuesta:", errorData);
+        console.error("Response error:", errorData);
         throw new Error(errorData.message || "Error updating profile");
       }
 

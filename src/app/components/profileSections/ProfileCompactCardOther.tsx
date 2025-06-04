@@ -1,5 +1,6 @@
 import Image from "next/image";
 import FollowButton from "./followButton";
+import { useSession } from "next-auth/react";
 
 interface ProfileCompactCardProps {
   userId:string;
@@ -21,6 +22,8 @@ export default function ProfileCompactCard({
   userId,
 }: ProfileCompactCardProps) {
   const safe = (n: number | null) => n ?? 0;
+  const { data: session } = useSession();
+  const sessionUserId = session?.user?.id;
 
   return (
     <div className="flex items-center justify-between border rounded-xl shadow-md p-4">
@@ -55,7 +58,9 @@ export default function ProfileCompactCard({
         </div>
 
       </div>
-        <FollowButton targetUserId={userId} />
+        {String(sessionUserId) !== String(userId) && (
+          <FollowButton targetUserId={userId} />
+        )}
     </div>
   );
 }

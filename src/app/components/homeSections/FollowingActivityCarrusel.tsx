@@ -56,11 +56,11 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-semibold mb-4 text-white">Friend's Activity</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-white">Friend&apos;s Activity</h2>
       <div className="flex overflow-x-auto space-x-4 pb-2">
-        {activities.map((activity) => (
+        {activities.map((activity, index) => (
           <div
-            key={`${activity.user_id}-${activity.movie_id}-${activity.id}`}
+            key={`${activity.user_id}-${activity.movie_id}-${index}`}
             className="min-w-[150px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer"
             onClick={() => setSelectedActivity(activity)}
           >

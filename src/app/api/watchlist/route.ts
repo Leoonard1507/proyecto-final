@@ -29,8 +29,6 @@ export async function POST(request: Request) {
       [user_id, movie_id, movie_title, poster_path]
     );
 
-    await db.end();
-
     return NextResponse.json({ message: "Movie added to watchlist" });
   } catch (error) {
     console.error("Error adding to watchlist:", error);

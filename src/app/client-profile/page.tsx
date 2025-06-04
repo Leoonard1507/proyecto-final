@@ -136,7 +136,7 @@ export default function ProfilePage() {
         name: validatedData.username,
         email: usermail,
         role,
-        description: validatedData.description,
+        description: description,
         avatar,
         currentPassword,
         newPassword,

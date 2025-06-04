@@ -21,8 +21,6 @@ export async function DELETE(request: Request) {
       [userId, movieId]
     );
 
-    await db.end();
-
     return NextResponse.json({ message: "Movie removed from watchlist" });
   } catch (error) {
     console.error("Error deleting from watchlist:", error);
