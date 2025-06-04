@@ -17,6 +17,7 @@ export async function GET(req: Request, context: { params: Promise<{ userId: str
 
     const baseQuery = `
   SELECT 
+    pv.id,
     pv.user_id,
     u.nickName,
     u.avatar as avatar,
