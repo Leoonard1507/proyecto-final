@@ -70,22 +70,23 @@ export default function MovieCarouselSection({ title, endpoint }: Props) {
 
       {/* Flechas */}
       {movies.length > visibleItems && (
-        <div className="absolute top-1/2 left-0 right-0 flex justify-between items-center px-2 transform -translate-y-1/2">
+        <div className="z-0 absolute top-1/2 left-0 right-0 flex justify-between items-center px-2 transform -translate-y-1/2 pointer-events-none">
           <button
             onClick={handlePrev}
-            className="text-white bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 disabled:opacity-30 cursor-pointer"
+            className="z-50 text-white bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 disabled:opacity-30 cursor-pointer pointer-events-auto"
             disabled={currentIndex === 0}
           >
             ‹
           </button>
           <button
             onClick={handleNext}
-            className="text-white bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 disabled:opacity-30 cursor-pointer"
+            className="z-50 text-white bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 disabled:opacity-30 cursor-pointer pointer-events-auto"
             disabled={currentIndex === maxIndex}
           >
             ›
           </button>
         </div>
+
       )}
     </section>
   );
