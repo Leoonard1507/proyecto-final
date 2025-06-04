@@ -13,6 +13,7 @@ import ProfileDetailsPanel from "../components/profileSections/ProfileDetailsPan
 import ProfileCompactCard from "../components/profileSections/ProfileCompactCard";
 import { editUserSchema } from "../schema/editUserSchema";
 import ProfilePageSkeleton from "../skeletons/ProfileSkeleton";
+import UserSearch from "../components/adminComponents/searchUser";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -186,55 +187,65 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen text-white">
-      {/* Navbar */}
-      <Navbar />
-      {/* Skeleton o contenido real según el estado de carga */}
-      {isLoadingData ? (
-        <ProfilePageSkeleton />
-      ) : (
-        <div className="max-w-4xl mt-10 space-y-6">
-          {/* Perfil compacto */}
-          <ProfileCompactCard
-            avatar={avatar}
-            nickname={nickname}
-            followingCount={followingCount}
-            followerCount={followerCount}
-            commentsCount={commentsCount}
-            diaryCount={diaryCount}
-            showDetails={showDetails}
-            toggleDetails={() => setShowDetails((prev) => !prev)}
-          />
+    <><Navbar />
+    <div className="min-h-screen text-white px-6">
 
-          {/* Perfil detallado */}
-          {showDetails && (
-            <ProfileDetailsPanel
-              name={name}
-              usermail={usermail}
-              birthdate={birthdate}
-              role={role}
-              description={description}
-              loading={loading}
-              onEditProfile={() => setIsModalOpen(true)}
-              onChangePassword={() => setIsPasswordModalOpen(true)}
-            />
+
+      {/* Contenedor flex para contenido principal y buscador */}
+      <div className="mt-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start lg:space-x-12">
+
+        {/* Contenido principal */}
+        <div className="flex-1 space-y-6 max-w-5xl">
+          {isLoadingData ? (
+            <ProfilePageSkeleton />
+          ) : (
+            <>
+              {/* Perfil compacto */}
+              <ProfileCompactCard
+                avatar={avatar}
+                nickname={nickname}
+                followingCount={followingCount}
+                followerCount={followerCount}
+                commentsCount={commentsCount}
+                diaryCount={diaryCount}
+                showDetails={showDetails}
+                toggleDetails={() => setShowDetails((prev) => !prev)} />
+
+              {/* Perfil detallado */}
+              {showDetails && (
+                <ProfileDetailsPanel
+                  name={name}
+                  usermail={usermail}
+                  birthdate={birthdate}
+                  role={role}
+                  description={description}
+                  loading={loading}
+                  onEditProfile={() => setIsModalOpen(true)}
+                  onChangePassword={() => setIsPasswordModalOpen(true)} />
+              )}
+
+              {/* Mostrar las favoritas */}
+              {userId && (
+                <div className="border rounded-xl shadow-md p-6 mt-6">
+                  <FavoriteMoviesList userId={userId} />
+                </div>
+              )}
+
+              {/* Tabs para mostrar contenido */}
+              <ProfileTabs
+                userId={userId}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab} />
+            </>
           )}
-
-          {/* Mostrar las favoritas */}
-          {userId && (
-            <div className="border rounded-xl shadow-md p-6 mt-6">
-              <FavoriteMoviesList userId={userId} />
-            </div>
-          )}
-
-          {/* Tabs para mostrar contenido */}
-          <ProfileTabs
-            userId={userId}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
         </div>
-      )}
+
+        {/* Buscador */}
+        <div className="w-full lg:w-[400px] mt-10 lg:mt-0">
+          <UserSearch />
+        </div>
+      </div>
+
       {/* Modal cambiar contraseña */}
       {isPasswordModalOpen && (
         <ChangePasswordModal
@@ -246,8 +257,7 @@ export default function ProfilePage() {
           setNewPassword={setNewPassword}
           repeatPassword={repeatPassword}
           setRepeatPassword={setRepeatPassword}
-          updateUserProfile={updateUserProfile}
-        />
+          updateUserProfile={updateUserProfile} />
       )}
 
       {/* Modal editar perfil */}
@@ -265,9 +275,10 @@ export default function ProfilePage() {
           setNickname={setNickname}
           description={description}
           setDescription={setDescription}
-          userId={session?.user?.id}
-        />
+          userId={session?.user?.id} />
       )}
-    </div>
+    </div></>
   );
+  
+  
 }
