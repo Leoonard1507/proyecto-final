@@ -33,8 +33,6 @@ export async function POST(request: Request) {
       [user_id, movie_id, movie_title, poster_path || null, puntuacion]
     );
 
-    await db.end();
-
     return NextResponse.json({ insertId: result.insertId }, { status: 201 });
   } catch (error) {
     console.error("Error inserting punctuation:", error);

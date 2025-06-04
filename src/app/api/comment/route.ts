@@ -27,8 +27,6 @@ export async function POST(request: Request) {
       [user_id, movie_id, movie_title, poster_path || null, comentario]
     );
 
-    await db.end();
-
     // Devolvemos el insertId para usarlo luego en otras tablas
     return NextResponse.json({ insertId: result.insertId }, { status: 201 });
   } catch (error) {
