@@ -1,4 +1,5 @@
 // /app/api/activity/user/[userId]/route.ts
+// Este endpoint devuelve únicamente la actividad del usuario específico identificado por userId.
 
 import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
