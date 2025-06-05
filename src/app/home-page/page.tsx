@@ -8,34 +8,32 @@ import FollowingActivityCarousel from '../components/homeSections/FollowingActiv
 import Navbar from '../components/Navbar';
 
 export default function HomePage() {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
 
-    return (
-        <>
-            <Navbar />
+  return (
+    <>
+      <Navbar />
 
-            <main className="p-4 space-y-10">
+      <main className="p-4 space-y-10">
+        <FeaturedMovieBanner />
 
-                <FeaturedMovieBanner />
+        {session?.user?.id && <FollowingActivityCarousel userId={session.user.id} />}
 
-                {session?.user?.id && <FollowingActivityCarousel userId={session.user.id} />}
+        <MovieCarouselSection
+          title="🔥 Trending this week"
+          endpoint="/trending/movie/week"
+        />
 
-                <MovieCarouselSection
-                    title="🔥 Trending this week"
-                    endpoint="/trending/movie/week"
-                />
+        <MovieCarouselSection
+          title="⭐ Top rated"
+          endpoint="/movie/top_rated"
+        />
 
-                <MovieCarouselSection
-                    title="⭐ Top rated"
-                    endpoint="/movie/top_rated"
-                />
-
-                <MovieCarouselSection
-                    title="🎬 Latest releases"
-                    endpoint="/movie/now_playing"
-                />
-
-            </main>
-        </>
-    );
+        <MovieCarouselSection
+          title="🎬 Latest releases"
+          endpoint="/movie/now_playing"
+        />
+      </main>
+    </>
+  );
 }

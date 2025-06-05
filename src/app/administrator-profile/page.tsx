@@ -190,7 +190,6 @@ export default function ProfilePage() {
     <><Navbar />
     <div className="min-h-screen text-white px-6">
 
-
       {/* Contenedor flex para contenido principal y buscador */}
       <div className="mt-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start lg:space-x-12">
 
@@ -241,9 +240,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Buscador */}
-        <div className="w-full lg:w-[400px] mt-10 lg:mt-0">
-          <UserSearch />
-        </div>
+        <UserSearch />
       </div>
 
       {/* Modal cambiar contraseña */}

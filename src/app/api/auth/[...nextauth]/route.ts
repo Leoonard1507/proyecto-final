@@ -7,7 +7,7 @@ import { RowDataPacket } from "mysql2";
 import { User } from "@/types/User";
 
 const authOptions: NextAuthOptions = {
-  
+
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -17,27 +17,32 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email y contraseña son obligatorios");
+          throw new Error("Email and password are required");
         }
 
         const db = await connectDB();
 
         try {
           const [rows] = await db.query<RowDataPacket[]>(
-            "SELECT * FROM user WHERE email = ?", 
+            "SELECT * FROM user WHERE email = ?",
             [credentials.email]
           );
 
           if (!rows.length) {
-            throw new Error("Credenciales incorrectas (usuario no encontrado)");
+            throw new Error("Incorrect credentials");
           }
 
           const user = rows[0];
 
+          // Chequeo si el usuario está bloqueado
+          if (user.blocked) {
+            throw new Error("Your account has been blocked. Contact support.");
+          }
+
           const isValidPassword = await compare(credentials.password, user.password);
-          
+
           if (!isValidPassword) {
-            throw new Error("Credenciales incorrectas (contraseña)");
+            throw new Error("Incorrect credentials");
           }
 
           return {
@@ -51,7 +56,7 @@ const authOptions: NextAuthOptions = {
           };
 
         } finally {
-          
+
         }
       },
     }),
@@ -88,7 +93,7 @@ const authOptions: NextAuthOptions = {
         token.description = customUser.description ?? "";
       }
       return token;
-    },    
+    },
   },
 
   secret: process.env.NEXTAUTH_SECRET,

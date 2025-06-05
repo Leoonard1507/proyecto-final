@@ -38,7 +38,7 @@ export default function FavoriteMoviesList({ userId }: { userId: string }) {
           <div key={movie.id} className="text-center">
             <Link
               key={movie.id}
-              href={`/movie-details/${movie.id}`} // 👈 Esto lleva a la página de detalles
+              href={`/movie-details/${movie.id}`} // Esto lleva a la página de detalles
               className="hover:opacity-70"
             >
               <img

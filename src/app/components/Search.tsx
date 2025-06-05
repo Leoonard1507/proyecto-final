@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axiosInstance from '@/libs/axios';
 
@@ -16,11 +16,9 @@ export default function Search() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<SearchType>('movie');
   const [results, setResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
     if (!searchTerm) return;
-    setLoading(true);
     try {
       if (searchType === 'movie') {
         const response = await axiosInstance.get(`/search/movie?query=${searchTerm}`);
@@ -53,9 +51,21 @@ export default function Search() {
     } catch (error) {
       console.error('Error al buscar:', error);
     } finally {
-      setLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim()) {
+        handleSearch();
+      } else {
+        setResults([]);
+      }
+    }, 1); // Espera 500ms después de dejar de escribir
+
+    return () => clearTimeout(delayDebounce); // Limpia el timeout anterior si el usuario sigue escribiendo
+  }, [searchTerm, searchType]);
 
   return (
     <div className="w-full flex flex-col items-center py-5">
@@ -67,15 +77,8 @@ export default function Search() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar película, persona o usuario..."
-            className="w-full px-4 py-2 border-2 border-[#777] rounded focus:outline-none focus:border-[#22ec8a] text-white"
+            className="w-full px-4 py-4 border-2 border-[#777] rounded-lg focus:outline-none focus:border-[#22ec8a] text-white"
           />
-          <button
-            onClick={handleSearch}
-            disabled={loading}
-            className="bg-[#22ec8a] text-black font-bold px-4 py-2 rounded hover:opacity-70 transition-opacity"
-          >
-            {loading ? 'Searching...' : 'Search'}
-          </button>
         </div>
 
         <div className="flex items-center justify-center gap-6 text-white">

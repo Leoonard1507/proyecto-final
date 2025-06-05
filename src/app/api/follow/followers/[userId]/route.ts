@@ -16,7 +16,7 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error al obtener followers:", error);
-    return NextResponse.json({ error: "Error al obtener followers" }, { status: 500 });
+    console.error("Error getting followers:", error);
+    return NextResponse.json({ error: "Error getting followers" }, { status: 500 });
   }
 }

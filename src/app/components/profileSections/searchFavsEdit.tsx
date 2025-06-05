@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axiosInstance from "@/libs/axios"; // asegúrate que este es tu axios configurado
-
+import axiosInstance from "@/libs/axios";
 
 interface Movie {
   id: number;
@@ -15,37 +14,39 @@ interface SearchFavsEditProps {
 }
 
 export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Movie[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [query, setQuery] = useState(""); // valor del input
+  const [results, setResults] = useState<Movie[]>([]); // resultados de películas
 
-  const handleSearch = async () => {
+  useEffect(() => {
     const term = query.trim();
-    if (term.length === 0) {
+
+    // Si no hay texto, vaciar resultados
+    if (term === "") {
       setResults([]);
       return;
     }
-    setSearchTerm(term);
-  };
 
-  useEffect(() => {
-    if (!searchTerm) return;
+    // Crear un timeout para aplicar debounce (retrasar la búsqueda)
+    const timeoutId = setTimeout(() => {
+      const fetchMovies = async () => {
+        try {
+          const response = await axiosInstance.get(`/search/movie?query=${encodeURIComponent(term)}`);
+          const filteredMovies = response.data.results
+            .filter((movie: any) => !movie.adult)
+            .sort((a: any, b: any) => b.popularity - a.popularity);
+          setResults(filteredMovies);
+        } catch (error) {
+          console.error("Error fetching movies:", error);
+          setResults([]);
+        }
+      };
 
-    const fetchMovies = async () => {
-      try {
-        const response = await axiosInstance.get(`/search/movie?query=${encodeURIComponent(searchTerm)}`);
-        const filteredMovies = response.data.results
-          .filter((movie: any) => !movie.adult)
-          .sort((a: any, b: any) => b.popularity - a.popularity);
-        setResults(filteredMovies);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-        setResults([]);
-      }
-    };
+      fetchMovies();
+    }, 1); // Espera 1ms desde que el usuario deja de escribir
 
-    fetchMovies();
-  }, [searchTerm]);
+    // Limpiar timeout si el usuario escribe antes de que pasen los 500ms
+    return () => clearTimeout(timeoutId);
+  }, [query]);
 
   return (
     <div>
@@ -55,20 +56,8 @@ export default function SearchFavsEdit({ onSelectMovie }: SearchFavsEditProps) {
           placeholder="Search movie..."
           className="flex-grow p-2 border border-[#777] text-white rounded focus:border-[#22ec8a] transition-colors duration-200 outline-none"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
+          onChange={(e) => setQuery(e.target.value)} // Actualiza el query en cada cambio
         />
-        <button
-          type="button"
-          onClick={handleSearch}
-          className="bg-[#22ec8a] text-black font-bold px-3 py-2 rounded hover:opacity-70 transition-opacity cursor-pointer"
-        >
-          Search
-        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-4 max-h-96 overflow-y-auto">

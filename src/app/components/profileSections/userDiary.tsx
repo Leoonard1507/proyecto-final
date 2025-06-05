@@ -64,18 +64,18 @@ export default function Scores({ userId }: { userId: string }) {
     return <p className="mt-6 text-gray-300">There are no scores in your diary.</p>;
 
   return (
-    <div className="mt-3">
+    <div>
       <h3 className="text-2xl font-semibold mb-4 text-white">Diary</h3>
-      <div className="flex flex-wrap gap-4 pb-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
         {scores.slice().map((score) => (
           <div
             key={`${score.user_id}-${score.movie_id}-${score.id}`}
             onClick={() => openModal(score)}
-            className="min-w-[156px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer hover:bg-gray-800 transition"
+            className="w-full sm:min-w-[170px] sm:max-w-[176px] flex-shrink-0 bg-gray-900 rounded-lg p-1 text-white relative cursor-pointer hover:bg-gray-800 transition"
           >
             {/* Fecha */}
             <div className="mb-1">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-[10px] text-gray-500 gap-4">
                 {new Date(score.viewed_at).toLocaleDateString("es-ES", {
                   day: "2-digit",
                   month: "short",
@@ -85,7 +85,7 @@ export default function Scores({ userId }: { userId: string }) {
             </div>
 
             {/* Carátula */}
-            <div className="relative w-full rounded overflow-hidden mb-1">
+            <div className="relative w-full rounded overflow-hidden">
               <img
                 src={`https://image.tmdb.org/t/p/w300${score.poster_path}`}
                 alt={score.movie_title}

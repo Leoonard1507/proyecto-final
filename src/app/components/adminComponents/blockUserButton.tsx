@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 // Define el tipo de las props que recibe el componente
 type BlockUserButtonProps = {
-  userId: string;               // ID del usuario al que se va a bloquear o desbloquear
-  blocked: boolean;             // Estado actual de bloqueo (true = bloqueado, false = desbloqueado)
+  userId: string; // ID del usuario al que se va a bloquear o desbloquear
+  blocked: boolean; // Estado actual de bloqueo (true = bloqueado, false = desbloqueado)
   onBlock?: (blocked: boolean) => void; // Callback opcional que se llama cuando cambia el estado de bloqueo
 };
 

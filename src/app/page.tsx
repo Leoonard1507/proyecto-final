@@ -23,7 +23,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      toast.error("Incorrect username or password"); // Mostrar mensaje de error si falla la autenticación
+      toast.error(result.error); // Mostrar mensaje de error si falla la autenticación
       return;
     }
 
