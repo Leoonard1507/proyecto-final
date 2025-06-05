@@ -43,7 +43,7 @@ export default function FollowersModal({ userId, type, onClose }: Props) {
   }, [userId, type]); // Dependencias del efecto
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 h-full">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 h-full h-full">
       {/* Fondo oscuro con desenfoque que cubre toda la pantalla */}
       <div className="bg-gray-900 rounded-lg w-full max-w-md p-6 relative">
         {/* Contenedor del modal */}

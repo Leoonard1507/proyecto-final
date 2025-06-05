@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
 type Score = {
@@ -66,16 +67,16 @@ export default function Scores({ userId }: { userId: string }) {
   return (
     <div>
       <h3 className="text-2xl font-semibold mb-4 text-white">Diary</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
+      <div className="flex flex-wrap gap-8 p-2">
         {scores.slice().map((score) => (
           <div
             key={`${score.user_id}-${score.movie_id}-${score.id}`}
             onClick={() => openModal(score)}
-            className="w-full sm:min-w-[170px] sm:max-w-[176px] flex-shrink-0 bg-gray-900 rounded-lg p-1 text-white relative cursor-pointer hover:bg-gray-800 transition"
+            className="w-[140px] bg-gray-900 rounded-lg p-1 text-white relative cursor-pointer hover:bg-gray-800 transition"
           >
             {/* Fecha */}
             <div className="mb-1">
-              <p className="text-[10px] text-gray-500 gap-4">
+              <p className="text-[9px] text-gray-500 gap-4">
                 {new Date(score.viewed_at).toLocaleDateString("es-ES", {
                   day: "2-digit",
                   month: "short",
@@ -83,34 +84,35 @@ export default function Scores({ userId }: { userId: string }) {
                 })}
               </p>
             </div>
-
+  
             {/* Carátula */}
             <div className="relative w-full rounded overflow-hidden">
               <img
                 src={`https://image.tmdb.org/t/p/w300${score.poster_path}`}
                 alt={score.movie_title}
-                className="object-cover rounded"
+                className="object-cover rounded w-full"
                 loading="lazy"
+                style={{ height: "190px" }}
               />
             </div>
-
+  
             {/* Título */}
-            <p className="text-sm text-gray-300 truncate" title={score.movie_title}>
+            <p className="text-xs text-gray-300 truncate" title={score.movie_title}>
               {score.movie_title}
             </p>
-
+  
             {/* Puntaje y comentario */}
             {(score.puntuacion !== null || score.comentario) && (
               <div className="flex justify-between mt-1">
                 {score.puntuacion !== null ? (
-                  <p className="text-yellow-400 font-bold">{score.puntuacion}⭐</p>
+                  <p className="text-yellow-400 font-bold text-sm">{score.puntuacion}⭐</p>
                 ) : (
                   <div />
                 )}
-
+  
                 {score.comentario ? (
                   <span
-                    className="text-yellow-400 font-bold"
+                    className="text-yellow-400 font-bold text-sm"
                     title={score.comentario}
                   >
                     💬
@@ -123,7 +125,7 @@ export default function Scores({ userId }: { userId: string }) {
           </div>
         ))}
       </div>
-
+  
       {/* Modal */}
       {modalOpen && selectedScore && (
         <div 
@@ -136,6 +138,7 @@ export default function Scores({ userId }: { userId: string }) {
             style={{ maxHeight: "80vh" }}
           >
             {/* Poster */}
+            <Link href={`/movie-details/${selectedScore.movie_id}`} className="flex-shrink-0">
             <img
               src={`https://image.tmdb.org/t/p/w300${selectedScore.poster_path}`}
               alt={selectedScore.movie_title}
@@ -143,7 +146,8 @@ export default function Scores({ userId }: { userId: string }) {
               style={{ flexShrink: 0, width: "200px", height: "auto" }}
               loading="lazy"
             />
-
+            </Link>
+  
             {/* Info */}
             <div className="flex flex-col flex-1 overflow-auto">
               <h4 className="text-2xl font-bold mb-2">{selectedScore.movie_title}</h4>
@@ -152,7 +156,7 @@ export default function Scores({ userId }: { userId: string }) {
                   ? `${selectedScore.puntuacion}⭐`
                   : "No rating"}
               </p>
-
+  
               {selectedScore.comentario && (
                 <p
                   className="whitespace-pre-wrap break-words overflow-auto mb-2"
@@ -165,7 +169,7 @@ export default function Scores({ userId }: { userId: string }) {
                   {selectedScore.comentario}
                 </p>
               )}
-
+  
               <p className="text-xs text-gray-400 mt-auto self-end">
                 {new Date(selectedScore.viewed_at).toLocaleDateString("es-ES", {
                   day: "2-digit",
@@ -178,7 +182,7 @@ export default function Scores({ userId }: { userId: string }) {
                 })}
               </p>
             </div>
-
+  
             {/* Botón cerrar */}
             <button
               onClick={closeModal}
@@ -192,4 +196,6 @@ export default function Scores({ userId }: { userId: string }) {
       )}
     </div>
   );
+  
+  
 }

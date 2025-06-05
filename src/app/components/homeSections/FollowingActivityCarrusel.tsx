@@ -166,7 +166,9 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
                 className="text-sm text-gray-300 font-semibold mb-1"
                 title={selectedActivity.nickName}
               >
-                {selectedActivity.nickName} has watched:
+                <Link href={`/client-profile/${selectedActivity.user_id}`} className="hover:opacity-70">
+                {selectedActivity.nickName}
+                </Link> has watched:
               </p>
 
               <h3 className="text-2xl font-bold mb-2">{selectedActivity.movie_title}</h3>

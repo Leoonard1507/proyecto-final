@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 interface Activity {
   user_id: number;
@@ -41,27 +42,30 @@ const WatchedByFriends = ({ movieId }: { movieId: number }) => {
       {activity.map((entry, idx) => (
         <div key={idx} className="bg-gray-800 p-4 rounded-xl shadow-sm">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              {entry.avatar ? (
-                <img
-                  src={entry.avatar}
-                  alt={`${entry.nickName} avatar`}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-gray-300">
-                  {entry.nickName.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <p className="font-semibold">{entry.nickName}</p>
-            </div>
+
+            <Link href={`/client-profile/${entry.user_id}`} className="hover:opacity-70">
+              <div className="flex items-center gap-3">
+                {entry.avatar ? (
+                  <img
+                    src={entry.avatar}
+                    alt={`${entry.nickName} avatar`}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-gray-300">
+                    {entry.nickName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <p className="font-semibold">{entry.nickName}</p>
+              </div>
+            </Link>
             <p className="text-gray-400 text-sm">{entry.viewed_at.slice(0, 16).replace('T', ' ')}</p>
           </div>
           {entry.puntuacion !== null && (
-            <p className="text-yellow-400">{entry.puntuacion}⭐</p>
+            <p className="text-yellow-400 ml-2 mt-4">{entry.puntuacion}⭐</p>
           )}
           {entry.comentario && (
-            <p className="text-gray-300 italic mt-1">“{entry.comentario}”</p>
+            <p className="text-gray-300 italic mt-2">“{entry.comentario}”</p>
           )}
         </div>
       ))}
