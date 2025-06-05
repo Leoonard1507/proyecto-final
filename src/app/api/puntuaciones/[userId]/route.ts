@@ -5,16 +5,21 @@ import { connectDB } from '@/libs/mysql';
 import { NextResponse } from 'next/server';
 
 export async function GET(_req: Request, { params }: { params: Promise<{ userId: string }> }) {
+  // Extraemos el userId de los parámetros y lo convertimos a número
   const { userId } = await params;
   const userIdNum = Number(userId);
 
+  // Validamos que userId sea un número válido, si no respondemos con error 400
   if (isNaN(userIdNum)) {
     return NextResponse.json({ error: "Invalid userId" }, { status: 400 });
   }
 
   try {
+    // Conectamos a la base de datos
     const db = await connectDB();
 
+    // Ejecutamos la consulta para obtener la actividad del usuario específico,
+    // incluyendo detalles de la película, puntuación y comentario
     const [rows] = await db.execute(
       `SELECT 
         pv.id,
@@ -36,8 +41,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ userId:
       [userIdNum]
     );
 
+    // Retornamos la actividad en formato JSON
     return NextResponse.json(rows);
   } catch (error) {
+    // Si ocurre un error, lo registramos y respondemos con error 500
     console.error("Error getting user activity:", error);
     return NextResponse.json({ error: "Error getting activity" }, { status: 500 });
   }
