@@ -7,9 +7,9 @@ export async function GET(_req: Request, { params }: { params: { userId: string 
   try {
     const db = await connectDB();
     const [rows] = await db.execute(
-      `SELECT u.id, u.name, u.username
+      `SELECT u.id, u.name, u.nickName, u.avatar
        FROM follows f
-       JOIN users u ON f.follower_id = u.id
+       JOIN user u ON f.follower_id = u.id
        WHERE f.followed_id = ?`,
       [userId]
     );

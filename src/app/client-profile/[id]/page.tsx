@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState("");
-  const [activeTab, setActiveTab] = useState("watchlist");
+  const [activeTab, setActiveTab] = useState("diary");
   const [followingCount, setFollowingCount] = useState<number | null>(null);
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);

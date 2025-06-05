@@ -61,7 +61,7 @@ export default function Scores({ userId }: { userId: string }) {
   }
 
   if (!scores.length)
-    return <p className="mt-6 text-gray-300">There are no scores in your diary.</p>;
+    return <p className="mt-6 text-gray-300">There are no entries in your diary yet.</p>;
 
   return (
     <div className="mt-3">
