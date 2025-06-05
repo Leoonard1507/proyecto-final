@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+"use client"; // Indica que este componente se ejecuta del lado del cliente (Client Component)
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import Navbar from "@/app/components/Navbar";
-import { toast } from "react-toastify";
-import FavoriteMoviesList from "../components/profileSections/FavMoviesList";
-import EditProfileModal from "../components/profileSections/EditProfileModal";
-import ChangePasswordModal from "../components/profileSections/ChangePaswordModal";
-import ProfileTabs from "../components/profileSections/ProfileTabs";
-import ProfileDetailsPanel from "../components/profileSections/ProfileDetailsPanel";
-import ProfileCompactCard from "../components/profileSections/ProfileCompactCard";
-import { editUserSchema } from "../schema/editUserSchema";
-import ProfilePageSkeleton from "../skeletons/ProfileSkeleton";
+import { useState, useEffect } from "react"; // Hooks de React
+import { useSession } from "next-auth/react"; // Hook de autenticación
+import Navbar from "@/app/components/Navbar"; // Componente Navbar
+import { toast } from "react-toastify"; // Librería para mostrar notificaciones
+import FavoriteMoviesList from "../components/profileSections/FavMoviesList"; // Lista de películas favoritas
+import EditProfileModal from "../components/profileSections/EditProfileModal"; // Modal para editar perfil
+import ChangePasswordModal from "../components/profileSections/ChangePaswordModal"; // Modal para cambiar contraseña
+import ProfileTabs from "../components/profileSections/ProfileTabs"; // Tabs de perfil (diario, comentarios, etc.)
+import ProfileDetailsPanel from "../components/profileSections/ProfileDetailsPanel"; // Panel con detalles del perfil
+import ProfileCompactCard from "../components/profileSections/ProfileCompactCard"; // Tarjeta compacta del perfil
+import { editUserSchema } from "../schema/editUserSchema"; // Validación con zod
+import ProfilePageSkeleton from "../skeletons/ProfileSkeleton"; // Skeleton de carga
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
+  const { data: session } = useSession(); // Hook para obtener datos del usuario autenticado
+
+  // Estados para datos del perfil
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [usermail, setUsermail] = useState("");
@@ -28,28 +30,33 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+  // Estados para contraseña
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+
+  // Estados para tabs y contadores
   const [activeTab, setActiveTab] = useState("diary");
   const [followingCount, setFollowingCount] = useState<number | null>(null);
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);
   const [diaryCount, setDiaryCount] = useState<number | null>(null);
-  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isLoadingData, setIsLoadingData] = useState(true); // Indica si los datos están cargando
 
-
+  // Carga datos al montar el componente si hay sesión
   useEffect(() => {
     if (session?.user?.id) {
-      setUserId(session.user.id);
-      fetchUserData(session.user.id);
-      fetchFollowingCount(session.user.id);
-      fetchFollowerCount(session.user.id);
-      fetchCommentsCount(session.user.id);
-      fetchDiaryCount(session.user.id);
+      setUserId(session.user.id); // Guarda el ID del usuario
+      fetchUserData(session.user.id); // Carga datos del perfil
+      fetchFollowingCount(session.user.id); // Carga conteo de seguidos
+      fetchFollowerCount(session.user.id); // Carga conteo de seguidores
+      fetchCommentsCount(session.user.id); // Carga conteo de comentarios
+      fetchDiaryCount(session.user.id); // Carga conteo de entradas del diario
     }
   }, [session]);
 
+  // Fetch para obtener cantidad de seguidos
   const fetchFollowingCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/seguidos/${userId}`);
@@ -62,6 +69,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Fetch para obtener cantidad de seguidores
   const fetchFollowerCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/seguidores/${userId}`);
@@ -74,6 +82,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Fetch para obtener cantidad de comentarios
   const fetchCommentsCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/countComments/${userId}`);
@@ -86,6 +95,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Fetch para obtener cantidad de entradas del diario
   const fetchDiaryCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/countDiary/${userId}`);
@@ -98,13 +108,15 @@ export default function ProfilePage() {
     }
   };
 
+  // Fetch para obtener datos del perfil del usuario
   const fetchUserData = async (userId: string) => {
     try {
-      setIsLoadingData(true);
+      setIsLoadingData(true); // Inicia la carga
       const res = await fetch(`/api/user/${userId}`);
       if (!res.ok) throw new Error("Could not get user");
       const user = await res.json();
 
+      // Setea los datos en el estado
       setName(user.name || "");
       setUsermail(user.email || "");
       setRole(user.role || "");
@@ -115,12 +127,13 @@ export default function ProfilePage() {
     } catch (error) {
       console.error("Error al cargar datos del usuario:", error);
     } finally {
-      setIsLoadingData(false);
+      setIsLoadingData(false); // Finaliza la carga
     }
   };
 
+  // Función para actualizar el perfil del usuario
   const updateUserProfile = async () => {
-    setLoading(true);
+    setLoading(true); // Inicia loading
 
     const dataToValidate = {
       nickname,
@@ -129,8 +142,10 @@ export default function ProfilePage() {
     };
 
     try {
+      // Validación con zod
       const validatedData = editUserSchema.parse(dataToValidate);
 
+      // Datos que se enviarán a la API
       const dataToSend = {
         nickname: validatedData.nickname,
         name: validatedData.username,
@@ -142,6 +157,7 @@ export default function ProfilePage() {
         newPassword,
       };
 
+      // POST a la API
       const response = await fetch("/api/user/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -150,19 +166,21 @@ export default function ProfilePage() {
 
       const responseData = await response.json();
 
+      // Validación de error
       if (!response.ok || (responseData.message && responseData.message.toLowerCase().includes("incorrect"))) {
         throw new Error(responseData.message || "Error updating profile");
       }
 
-      toast.success(responseData.message);
-      setIsModalOpen(false);
-      setIsPasswordModalOpen(false);
+      toast.success(responseData.message); // Notifica éxito
+      setIsModalOpen(false); // Cierra modal de edición
+      setIsPasswordModalOpen(false); // Cierra modal de contraseña
       setCurrentPassword("");
       setNewPassword("");
       setRepeatPassword("");
-      await fetchUserData(userId);
+      await fetchUserData(userId); // Recarga datos
 
     } catch (error: any) {
+      // Manejo de errores de validación o de API
       if (error.name === "ZodError") {
         const messages = error.errors.map((e: any) => e.message).join(", ");
         toast.error(messages);
@@ -170,16 +188,17 @@ export default function ProfilePage() {
         toast.error(error.message || "Error updating profile");
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza loading
     }
   };
 
+  // Cierra modal de edición y recarga datos
   const handleCloseEditModal = async () => {
     await fetchUserData(userId);
     setIsModalOpen(false);
   };
 
-
+  // Handler para el submit del formulario de edición
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateUserProfile();
@@ -187,14 +206,15 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen text-white">
-      {/* Navbar */}
+      {/* Navbar superior */}
       <Navbar />
-      {/* Skeleton o contenido real según el estado de carga */}
+
+      {/* Si los datos aún están cargando, muestra skeleton */}
       {isLoadingData ? (
         <ProfilePageSkeleton />
       ) : (
         <div className="max-w-4xl mx-auto mt-10 space-y-6">
-          {/* Perfil compacto */}
+          {/* Tarjeta compacta del perfil */}
           <ProfileCompactCard
             avatar={avatar}
             nickname={nickname}
@@ -206,7 +226,7 @@ export default function ProfilePage() {
             toggleDetails={() => setShowDetails((prev) => !prev)}
           />
 
-          {/* Perfil detallado */}
+          {/* Panel con información detallada */}
           {showDetails && (
             <ProfileDetailsPanel
               name={name}
@@ -220,14 +240,14 @@ export default function ProfilePage() {
             />
           )}
 
-          {/* Mostrar las favoritas */}
+          {/* Lista de películas favoritas */}
           {userId && (
             <div className="border rounded-xl shadow-md p-6 mt-6">
               <FavoriteMoviesList userId={userId} />
             </div>
           )}
 
-          {/* Tabs para mostrar contenido */}
+          {/* Tabs de contenido (diario, comentarios, etc.) */}
           <ProfileTabs
             userId={userId}
             activeTab={activeTab}
@@ -235,7 +255,8 @@ export default function ProfilePage() {
           />
         </div>
       )}
-      {/* Modal cambiar contraseña */}
+
+      {/* Modal para cambiar contraseña */}
       {isPasswordModalOpen && (
         <ChangePasswordModal
           isOpen={isPasswordModalOpen}
@@ -250,7 +271,7 @@ export default function ProfilePage() {
         />
       )}
 
-      {/* Modal editar perfil */}
+      {/* Modal para editar el perfil */}
       {isModalOpen && (
         <EditProfileModal
           isOpen={isModalOpen}
