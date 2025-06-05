@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'; 
-import { connectDB } from "@/libs/mysql";  
+import { NextRequest, NextResponse } from 'next/server';
+import { connectDB } from "@/libs/mysql";
 import { RowDataPacket } from 'mysql2';
 
 // Exporta un manejador específico para GET

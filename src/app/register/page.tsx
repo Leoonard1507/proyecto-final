@@ -6,6 +6,7 @@ import { reisterSchema } from "../schema/registerSchema";
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
+  // Estados para los campos del formulario
   const [username, setUsername] = useState("");
   const [nickname, setNickname] = useState("");
   const [birthdate, setBirthdate] = useState("");
@@ -13,9 +14,11 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
+  // Función que se ejecuta al enviar el formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
+    // Objeto con los datos del formulario
     const formData = {
       username,
       nickname,
@@ -24,14 +27,17 @@ export default function RegisterPage() {
       birthdate,
     };
 
+    // Validación del formulario usando el esquema zod (reisterSchema)
     const result = reisterSchema.safeParse(formData);
 
     if (!result.success) {
+      // Si hay error, mostramos el primer mensaje de error con toast
       const errorMsg = result.error.errors[0].message;
       toast.error(errorMsg);
       return;
     }
 
+    // Comprobar que las contraseñas coincidan
     if(password !== password2){
       toast.error("Passwords do not match");
       return;
@@ -52,7 +58,7 @@ export default function RegisterPage() {
       return;
     }
 
-    // Enviar los datos a la api
+    // Enviar los datos a la API para registrar el usuario
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -67,6 +73,7 @@ export default function RegisterPage() {
 
     const data = await response.json();
     if (response.ok) {
+      // Si registro exitoso, mostrar mensaje y limpiar formulario
       toast.success("Successfully registered user");
       setUsername("");
       setUsermail("");
@@ -75,6 +82,7 @@ export default function RegisterPage() {
       setPassword2("");
       setNickname("");
     } else {
+      // Si error en la API, mostrar mensaje de error
       toast.error(data.error);
     }
   };

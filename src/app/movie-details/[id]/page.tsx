@@ -9,6 +9,7 @@ import WatchedByFriends from '@/app/components/moviePageElements/WatchedByFriend
 import WantsToWatchFriends from '@/app/components/moviePageElements/WantToWatchFriend';
 import { useParams } from 'next/navigation';
 
+// Interfaz para tipar los datos de la película
 export interface Movie {
   id: number;
   title: string;
@@ -22,11 +23,13 @@ export interface Movie {
 const MovieDetailPage = () => {
   const params = useParams();
   const id = params.id as string;
+  // Estados para datos y control de la UI
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'watched' | 'watchlist'>('watched');
 
+  // Obtener detalles de la película
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
@@ -42,6 +45,7 @@ const MovieDetailPage = () => {
     fetchMovieDetails();
   }, [id]);
 
+  // Estados de carga y error
   if (loading) return <div className="text-center text-white py-20">Loading...</div>;
   if (!movie) return <div className="text-center text-white py-20">Movie not found.</div>;
 

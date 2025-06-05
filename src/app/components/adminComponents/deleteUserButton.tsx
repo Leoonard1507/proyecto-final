@@ -1,13 +1,27 @@
+import { toast } from "react-toastify";
+
 type DeleteUserButtonProps = {
     userId: string;
     onDelete?: () => void; // callback opcional para el evento de borrado
   };
   
   export function DeleteUserButton({ userId, onDelete }: DeleteUserButtonProps) {
-    const handleClick = () => {
-      // Aquí pondremos la lógica de la API en el futuro
-      console.log(`Eliminando usuario con ID: ${userId}`);
-      if (onDelete) onDelete();
+    const handleClick = async () => {
+      try {
+        const res = await fetch(`/api/user/${userId}/delete`, {
+          method: 'DELETE',
+        });
+
+        if (!res.ok) {
+          throw new Error('Error deleting user');
+        }
+
+        toast.success(`Successfully deleted user`);
+        if (onDelete) onDelete();
+      } catch (error) {
+        console.error(error);
+        toast.error('The user could not be deleted');
+      }
     };
   
     return (

@@ -8,13 +8,14 @@ import Image from 'next/image';
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [usermail, setUsermail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter(); // Inicializa el enrutador de Next.js para poder navegar programáticamente entre páginas
+  const [usermail, setUsermail] = useState(""); // Estado para el correo electrónico ingresado
+  const [password, setPassword] = useState(""); // Estado para la contraseña ingresada
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Evita que el formulario recargue la página
 
+    // Intento de inicio de sesión con credenciales sin redireccionar automáticamente
     const result = await signIn("credentials", {
       redirect: false,
       email: usermail,
@@ -22,11 +23,11 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      toast.error("Incorrect username or password");
+      toast.error("Incorrect username or password"); // Mostrar mensaje de error si falla la autenticación
       return;
     }
 
-    // Redirigir a la página inicial
+    // Si el inicio de sesión es exitoso, redirige a la página principal
     router.push(`/home-page`);   
   };
 

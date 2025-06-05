@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS comments (
   poster_path VARCHAR(500),
   comentario TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS scores (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS scores (
   poster_path VARCHAR(500),
   puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 10),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS movies_viewed (
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS movies_viewed (
   puntuacion_id INT DEFAULT NULL,
   viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (user_id) REFERENCES user(id),
-  FOREIGN KEY (comment_id) REFERENCES comments(id),
-  FOREIGN KEY (puntuacion_id) REFERENCES scores(id)
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+  FOREIGN KEY (puntuacion_id) REFERENCES scores(id) ON DELETE CASCADE
 );
