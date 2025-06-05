@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 type Movie = {
   movie_id: number;
@@ -10,7 +11,9 @@ type Movie = {
 };
 
 export default function Watchlist({ userId }: { userId: string }) {
+  const { data: session } = useSession();
   const [movies, setMovies] = useState<Movie[]>([]);
+  const isOwnProfile = session?.user?.id === userId;
 
   useEffect(() => {
     if (!userId) return;
@@ -45,7 +48,7 @@ export default function Watchlist({ userId }: { userId: string }) {
   };
 
   if (!movies.length) {
-    return <p className="mt-6 text-gray-300">There are no movies in your watchlist.</p>;
+    return <p className="mt-6 text-gray-300">There are no movies in this watchlist.</p>;
   }
 
   return (
@@ -54,14 +57,15 @@ export default function Watchlist({ userId }: { userId: string }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {movies.map((movie) => (
           <div key={movie.movie_id} className="relative group w-[200px]">
-            {/* Botón visible solo en hover */}
-            <button
-              onClick={() => handleRemove(movie.movie_id)}
-              className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600"
-              aria-label="Remove from watchlist"
-            >
-              ❌
-            </button>
+            {isOwnProfile && (
+              <button
+                onClick={() => handleRemove(movie.movie_id)}
+                className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600"
+                aria-label="Remove from watchlist"
+              >
+                ❌
+              </button>
+            )}
 
             <Link href={`/movie-details/${movie.movie_id}`} className="flex flex-col items-center text-center">
               <div className="rounded-lg overflow-hidden hover:scale-105 transition-transform">
