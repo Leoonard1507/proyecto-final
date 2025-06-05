@@ -74,7 +74,7 @@ export default function FollowingActivityCarousel({ userId }: { userId?: number 
           {activities.map((activity) => (
             <div
               key={activity.id}
-              className="min-w-[150px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative cursor-pointer"
+              className="min-w-[150px] max-w-[150px] flex-shrink-0 bg-gray-900 rounded-lg p-2 text-white relative hover:bg-gray-800 cursor-pointer"
               onClick={() => setSelectedActivity(activity)}
             >
               <div className="mb-1">
