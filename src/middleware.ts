@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-console.log('Middleware ejecutado para:', pathname);
 
   // Rutas públicas
   const publicRoutes = ['/', '/register'];
@@ -36,6 +35,6 @@ export const config = {
      * - archivos estáticos (_next, favicon, etc.)
      * - register y login
      */
-    '/((?!_next/static|_next/image|favicon.ico|register|$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|register|api/auth|$).*)',
   ],
 };

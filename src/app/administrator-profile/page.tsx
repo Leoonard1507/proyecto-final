@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
+// Importación de hooks y componentes necesarios
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react"; // Para obtener la sesión del usuario autenticado
 import Navbar from "@/app/components/Navbar";
 import { toast } from "react-toastify";
 import FavoriteMoviesList from "../components/profileSections/FavMoviesList";
@@ -16,7 +17,9 @@ import ProfilePageSkeleton from "../skeletons/ProfileSkeleton";
 import UserSearch from "../components/adminComponents/searchUser";
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
+  const { data: session } = useSession(); // Obtiene la sesión del usuario logueado
+
+  // Estados para campos del perfil
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [usermail, setUsermail] = useState("");
@@ -33,13 +36,15 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [activeTab, setActiveTab] = useState("diary");
+
+  // Contadores del perfil
   const [followingCount, setFollowingCount] = useState<number | null>(null);
   const [followerCount, setFollowerCount] = useState<number | null>(null);
   const [commentsCount, setCommentsCount] = useState<number | null>(null);
   const [diaryCount, setDiaryCount] = useState<number | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
-
+  // Cuando la sesión está disponible, carga los datos del usuario
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
@@ -51,6 +56,7 @@ export default function ProfilePage() {
     }
   }, [session]);
 
+  // Obtener número de seguidos
   const fetchFollowingCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/seguidos/${userId}`);
@@ -63,6 +69,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Obtener número de seguidores
   const fetchFollowerCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/seguidores/${userId}`);
@@ -75,6 +82,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Obtener número de comentarios
   const fetchCommentsCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/countComments/${userId}`);
@@ -87,6 +95,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Obtener número de entradas en diario
   const fetchDiaryCount = async (userId: string) => {
     try {
       const res = await fetch(`/api/countDiary/${userId}`);
@@ -99,6 +108,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Obtener datos del usuario
   const fetchUserData = async (userId: string) => {
     try {
       setIsLoadingData(true);
@@ -120,6 +130,7 @@ export default function ProfilePage() {
     }
   };
 
+  // Actualizar el perfil del usuario
   const updateUserProfile = async () => {
     setLoading(true);
 
@@ -130,6 +141,7 @@ export default function ProfilePage() {
     };
 
     try {
+      // Validar con Zod
       const validatedData = editUserSchema.parse(dataToValidate);
 
       const dataToSend = {
@@ -161,9 +173,10 @@ export default function ProfilePage() {
       setCurrentPassword("");
       setNewPassword("");
       setRepeatPassword("");
-      await fetchUserData(userId);
+      await fetchUserData(userId); // Refrescar datos tras actualizar
 
     } catch (error: any) {
+      // Manejo de errores de validación o servidor
       if (error.name === "ZodError") {
         const messages = error.errors.map((e: any) => e.message).join(", ");
         toast.error(messages);
@@ -175,107 +188,114 @@ export default function ProfilePage() {
     }
   };
 
+  // Cerrar el modal de edición y refrescar datos
   const handleCloseEditModal = async () => {
     await fetchUserData(userId);
     setIsModalOpen(false);
   };
 
-
+  // Manejo del envío de formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateUserProfile();
   };
 
+  // Renderizado del componente
   return (
-    <><Navbar />
-    <div className="min-h-screen text-white px-6">
+    <>
+      <Navbar />
+      <div className="min-h-screen text-white px-6">
+        {/* Contenedor principal en dos columnas */}
+        <div className="mt-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start lg:space-x-12">
+          {/* Columna izquierda - contenido del perfil */}
+          <div className="flex-1 space-y-6 max-w-5xl">
+            {isLoadingData ? (
+              <ProfilePageSkeleton /> // Skeleton mientras carga
+            ) : (
+              <>
+                {/* Tarjeta compacta del perfil */}
+                <ProfileCompactCard
+                  avatar={avatar}
+                  nickname={nickname}
+                  followingCount={followingCount}
+                  followerCount={followerCount}
+                  commentsCount={commentsCount}
+                  diaryCount={diaryCount}
+                  showDetails={showDetails}
+                  toggleDetails={() => setShowDetails((prev) => !prev)}
+                />
 
-      {/* Contenedor flex para contenido principal y buscador */}
-      <div className="mt-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start lg:space-x-12">
+                {/* Panel detallado del perfil */}
+                {showDetails && (
+                  <ProfileDetailsPanel
+                    name={name}
+                    usermail={usermail}
+                    birthdate={birthdate}
+                    role={role}
+                    description={description}
+                    loading={loading}
+                    onEditProfile={() => setIsModalOpen(true)}
+                    onChangePassword={() => setIsPasswordModalOpen(true)}
+                  />
+                )}
 
-        {/* Contenido principal */}
-        <div className="flex-1 space-y-6 max-w-5xl">
+                {/* Lista de películas favoritas */}
+                {userId && (
+                  <div className="border rounded-xl shadow-md p-6 mt-6">
+                    <FavoriteMoviesList userId={userId} />
+                  </div>
+                )}
+
+                {/* Pestañas del perfil */}
+                <ProfileTabs
+                  userId={userId}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                />
+              </>
+            )}
+          </div>
           {isLoadingData ? (
-            <ProfilePageSkeleton />
+            <div className="w-full h-48 bg-gray-800 rounded-xl animate-pulse mt-8" /> // Si la pagina esta cargando que salga una sombra
           ) : (
-            <>
-              {/* Perfil compacto */}
-              <ProfileCompactCard
-                avatar={avatar}
-                nickname={nickname}
-                followingCount={followingCount}
-                followerCount={followerCount}
-                commentsCount={commentsCount}
-                diaryCount={diaryCount}
-                showDetails={showDetails}
-                toggleDetails={() => setShowDetails((prev) => !prev)} />
-
-              {/* Perfil detallado */}
-              {showDetails && (
-                <ProfileDetailsPanel
-                  name={name}
-                  usermail={usermail}
-                  birthdate={birthdate}
-                  role={role}
-                  description={description}
-                  loading={loading}
-                  onEditProfile={() => setIsModalOpen(true)}
-                  onChangePassword={() => setIsPasswordModalOpen(true)} />
-              )}
-
-              {/* Mostrar las favoritas */}
-              {userId && (
-                <div className="border rounded-xl shadow-md p-6 mt-6">
-                  <FavoriteMoviesList userId={userId} />
-                </div>
-              )}
-
-              {/* Tabs para mostrar contenido */}
-              <ProfileTabs
-                userId={userId}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab} />
-            </>
+            <UserSearch />
           )}
         </div>
 
-        {/* Buscador */}
-        <UserSearch />
+        {/* Modal para cambiar contraseña */}
+        {isPasswordModalOpen && (
+          <ChangePasswordModal
+            isOpen={isPasswordModalOpen}
+            onClose={() => setIsPasswordModalOpen(false)}
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+            repeatPassword={repeatPassword}
+            setRepeatPassword={setRepeatPassword}
+            updateUserProfile={updateUserProfile}
+          />
+        )}
+
+        {/* Modal para editar perfil */}
+        {isModalOpen && (
+          <EditProfileModal
+            isOpen={isModalOpen}
+            onClose={handleCloseEditModal}
+            onSubmit={handleSubmit}
+            loading={loading}
+            avatar={avatar}
+            setAvatar={setAvatar}
+            name={name}
+            setName={setName}
+            nickname={nickname}
+            setNickname={setNickname}
+            description={description}
+            setDescription={setDescription}
+            userId={session?.user?.id}
+          />
+        )}
       </div>
-
-      {/* Modal cambiar contraseña */}
-      {isPasswordModalOpen && (
-        <ChangePasswordModal
-          isOpen={isPasswordModalOpen}
-          onClose={() => setIsPasswordModalOpen(false)}
-          currentPassword={currentPassword}
-          setCurrentPassword={setCurrentPassword}
-          newPassword={newPassword}
-          setNewPassword={setNewPassword}
-          repeatPassword={repeatPassword}
-          setRepeatPassword={setRepeatPassword}
-          updateUserProfile={updateUserProfile} />
-      )}
-
-      {/* Modal editar perfil */}
-      {isModalOpen && (
-        <EditProfileModal
-          isOpen={isModalOpen}
-          onClose={handleCloseEditModal}
-          onSubmit={handleSubmit}
-          loading={loading}
-          avatar={avatar}
-          setAvatar={setAvatar}
-          name={name}
-          setName={setName}
-          nickname={nickname}
-          setNickname={setNickname}
-          description={description}
-          setDescription={setDescription}
-          userId={session?.user?.id} />
-      )}
-    </div></>
+    </>
   );
-  
-  
 }
