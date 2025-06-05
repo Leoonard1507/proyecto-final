@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -24,12 +25,12 @@ export default function Navbar() {
     } else if (role === 'client') {
       router.push('/client-profile');
     } else {
-      router.push('/login'); // fallback por si no está autenticado
+      router.push('/');
     }
   };
 
-  const handleLogout = () => {
-    router.push('/');
+  const handleLogout = async () => {
+    signOut({ callbackUrl: '/' });
   };
 
   return (

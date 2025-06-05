@@ -1,5 +1,5 @@
 interface ProfileFieldProps {
-  label: string;
+  label?: string; // Opcional para que puedas pasar undefined sin error
   value?: string; // Opcional para que puedas pasar undefined sin error
 }
 

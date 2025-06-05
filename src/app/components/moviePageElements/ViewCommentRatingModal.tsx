@@ -17,7 +17,7 @@ export default function ViewCommentRatingModal({ movie, onClose }: Props) {
       puntuacion !== undefined &&
       (puntuacion < 1 || puntuacion > 10 || puntuacion % 0.5 !== 0)
     ) {
-      toast.error("The rating must be between 1 and 10 and can include halves (e.g., 7.5)");
+      toast.error("The rating must be between 1 and 10");
       return;
     }
 
