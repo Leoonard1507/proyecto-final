@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     const db = await connectDB();
     const [rows] = await db.query<RowDataPacket[]>(
-      "SELECT id, nickName, avatar FROM user WHERE nickName LIKE ? LIMIT 50",
+      "SELECT id, nickName, avatar, blocked FROM user WHERE nickName LIKE ? LIMIT 50",
       [`%${nickname}%`]
     );
 
