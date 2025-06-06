@@ -4,27 +4,22 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Rutas públicas
-  const publicRoutes = ['/', '/register'];
+  const publicRoutes = ['/', '/register', '/api/register', '/api/auth'];
 
-  // Permitir acceso libre a rutas públicas
-  if (publicRoutes.includes(pathname)) {
+  if (publicRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
-  // Buscar token de sesión de next-auth
   const token =
     request.cookies.get('next-auth.session-token')?.value ||
     request.cookies.get('__Secure-next-auth.session-token')?.value;
 
-  // Si no hay token => redirige a login
   if (!token) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/';
     return NextResponse.redirect(loginUrl);
   }
 
-  // Si hay token, permite el acceso
   return NextResponse.next();
 }
 
@@ -33,8 +28,8 @@ export const config = {
     /*
      * Protege todas las rutas excepto:
      * - archivos estáticos (_next, favicon, etc.)
-     * - register y login
+     * - register, login y rutas públicas del API
      */
-    '/((?!_next/static|_next/image|favicon.ico|register|api/auth|$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|register|api/register|api/auth|$).*)',
   ],
 };
