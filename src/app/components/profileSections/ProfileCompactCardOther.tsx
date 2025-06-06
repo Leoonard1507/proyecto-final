@@ -76,11 +76,19 @@ export default function ProfileCompactCard({
         </div>
 
         {/* Botón de follow */}
-        {String(sessionUserId) !== String(userId) && (
-          <div className="mt-4 sm:mt-0 sm:ml-4">
+        <div className="mt-4 sm:mt-0 sm:ml-4">
+          {String(sessionUserId) !== String(userId) ? (
             <FollowButton targetUserId={userId} />
-          </div>
-        )}
+          ) : (
+            // Botón invisible: sin pointer, opacidad 0, sin borde, sin interacción
+            <button
+              className="opacity-0 pointer-events-none border-none bg-transparent"
+              disabled
+            >
+              Follow
+            </button>
+          )}
+        </div>
       </div>
 
 
