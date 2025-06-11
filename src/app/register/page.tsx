@@ -93,7 +93,7 @@ export default function RegisterPage() {
       {/* Parte izquierda: Imagen */}
       <div className="relative w-full md:w-2/5 h-full">
         <Image
-          src="/fondo.jpg"
+          src="/film2.jpg"
           alt="Login"
           layout="fill"
           className="object-cover mask-fade"
