@@ -39,7 +39,9 @@ export default function LoginPage() {
         <Image
           src="/fondo.jpg"
           alt="Login"
-          layout="fill"
+          fill={true}
+          priority
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover mask-fade"
         />
       </div>
