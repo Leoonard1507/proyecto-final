@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     // Validar que error es un objeto con propiedad 'code'
     if (error && (error as DatabaseError).code === 'ER_DUP_ENTRY') {
-      return NextResponse.json({ error: "The email or nickname is already in use" }, { status: 409 });
+      return NextResponse.json({ error: "The nickname is already in use" }, { status: 409 });
     }
     
     console.error("User registration error:", error);

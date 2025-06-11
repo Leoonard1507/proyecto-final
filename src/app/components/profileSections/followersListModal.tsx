@@ -29,7 +29,6 @@ export default function FollowersModal({ userId, type, onClose }: Props) {
         // Llama al endpoint correspondiente para obtener los usuarios
         const res = await fetch(`/api/follow/${type}/${userId}`);
         const data = await res.json(); // Intenta convertir la respuesta a JSON
-        console.log('Fetched data:', data); // Muestra en consola los datos obtenidos
         // Guarda los usuarios en el estado, adaptando según el formato de la respuesta
         setUsers(Array.isArray(data) ? data : data.users || []);
       } catch (err) {

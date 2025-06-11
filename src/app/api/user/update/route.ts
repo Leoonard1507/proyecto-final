@@ -19,6 +19,17 @@ export async function POST(req: Request) {
   if (!email) {
     return NextResponse.json({ error: "Email is mandatory" }, { status: 400 });
   }
+    const [existingUser] = await db.query(
+      "SELECT email FROM user WHERE nickName = ? AND email != ?",
+      [nickname, email]
+    ) as any[];
+
+    if (existingUser.length) {
+      return NextResponse.json(
+        { error: "El nombre de usuario ya está en uso." },
+        { status: 400 }
+      );
+    }
 
   // Actualizar perfil
   await db.query(

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react'; // ✅
 import Link from 'next/link';
 import { BlockUserButton } from './blockUserButton';
 import { DeleteUserButton } from './deleteUserButton';
@@ -13,10 +14,13 @@ type UserType = {
 };
 
 export default function UserSearch() {
+  const { data: session } = useSession(); 
+  const currentUserId = session?.user?.id; 
+
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState<UserType[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       const fetchResults = async () => {
         if (!searchTerm) {
@@ -29,13 +33,11 @@ export default function UserSearch() {
           setResults(data);
         } catch (error) {
           console.error('Error searching for users:', error);
-        } finally {
-
         }
       };
 
       fetchResults();
-    }, 300); // 300ms debounce
+    }, 300);
 
     return () => clearTimeout(delayDebounce);
   }, [searchTerm]);
@@ -56,37 +58,36 @@ export default function UserSearch() {
           </div>
 
           <div className="flex flex-col gap-2">
-            {results.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center gap-3 p-3 bg-gray-800 hover:bg-gray-700 rounded cursor-pointer transition-colors"
-              >
-                <Link href={`/client-profile/${user.id}`} className="flex items-center gap-3 flex-grow">
-                  <img
-                    src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
-                    alt={user.nickName}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <span className="text-white font-medium">{user.nickName}</span>
-                </Link>
-
-                {/* Botones fuera del Link */}
-                <div className="flex">
-                  <BlockUserButton
-                    key={`${user.id}-${user.blocked}`} // clave única que cambia si cambia blocked
-                    userId={user.id}
-                    blocked={user.blocked}
-                    onBlock={(newBlocked) => {
-                      setResults((prev) =>
-                        prev.map((u) => (u.id === user.id ? { ...u, blocked: newBlocked } : u))
-                      );
-                    }}
-                  />
-
-                  <DeleteUserButton userId={user.id} />
+            {results
+              .filter((user) => user.id !== currentUserId) // ✅ Filtrado aquí
+              .map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center gap-3 p-3 bg-gray-800 hover:bg-gray-700 rounded cursor-pointer transition-colors"
+                >
+                  <Link href={`/client-profile/${user.id}`} className="flex items-center gap-3 flex-grow">
+                    <img
+                      src={user.avatar || `https://api.dicebear.com/7.x/bottts/png?seed=${user.id}`}
+                      alt={user.nickName}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <span className="text-white font-medium">{user.nickName}</span>
+                  </Link>
+                  <div className="flex">
+                    <BlockUserButton
+                      key={`${user.id}-${user.blocked}`}
+                      userId={user.id}
+                      blocked={user.blocked}
+                      onBlock={(newBlocked) => {
+                        setResults((prev) =>
+                          prev.map((u) => (u.id === user.id ? { ...u, blocked: newBlocked } : u))
+                        );
+                      }}
+                    />
+                    <DeleteUserButton userId={user.id} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

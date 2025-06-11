@@ -63,6 +63,7 @@ const authOptions: NextAuthOptions = {
             role: user.role,
             birthdate: user.birthdate,
             description: user.description ?? "",
+            avatar: user.avatar ?? "",
           };
 
         } finally {
@@ -89,6 +90,7 @@ const authOptions: NextAuthOptions = {
         session.user.email = token.email as string;
         session.user.description = token.description as string;
         session.user.birthdate = token.birthdate as string;
+        session.user.avatar = token.avatar as string;
       }
 
       return session;
@@ -105,6 +107,7 @@ const authOptions: NextAuthOptions = {
         token.birthdate = customUser.birthdate;
         token.role = customUser.role;
         token.description = customUser.description ?? "";
+        token.avatar = customUser.avatar ?? "";
       }
       return token;
     },
