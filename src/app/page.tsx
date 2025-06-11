@@ -37,11 +37,9 @@ export default function LoginPage() {
       {/* Parte izquierda: Imagen */}
       <div className="relative w-full md:w-2/5 h-full">
         <Image
-          src="/fondo.jpg"
+          src="/film2.jpg"
           alt="Login"
-          fill={true}
-          priority
-          sizes="(max-width: 768px) 100vw, 50vw"
+          fill
           className="object-cover mask-fade"
         />
       </div>
