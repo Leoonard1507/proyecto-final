@@ -5,7 +5,7 @@ import { MapPin, Github, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#060613] text-white px-6 py-6">
+    <footer className="bg-[#060613] text-white px-6 py-6 pt-20">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo + Description */}
         <div>
@@ -65,7 +65,7 @@ export default function Footer() {
 
       {/* Credits */}
       <div className="border-t border-gray-700 mt-6 pt-4 text-xs text-gray-500 text-center">
-        Project developed by Cosmin Leonard Vasilescu, Álvaro Bordería, and Jaime.
+        Project developed by Cosmin Leonard Vasilescu, Álvaro Rodríguez Bordería, and Jaime Romero Hernández.
       </div>
     </footer>
   );

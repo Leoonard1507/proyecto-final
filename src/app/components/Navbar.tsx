@@ -82,7 +82,7 @@ export default function Navbar() {
               />
             )}
             {/* Muestra el nickname si existe */}
-            {nickname && <span className="text-base">{nickname}</span>}
+            {nickname && <span className="text-base font-bold">{nickname}</span>}
           </button>
         </li>
 
