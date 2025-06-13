@@ -72,7 +72,7 @@ export default function Scores({ userId }: { userId: string }) {
           <div
             key={`${score.user_id}-${score.movie_id}-${score.id}`}
             onClick={() => openModal(score)}
-            className="w-[140px] bg-gray-900 rounded-lg p-1 text-white relative cursor-pointer hover:bg-gray-800 transition"
+            className="w-[165px] bg-gray-900 rounded-lg p-1 text-white relative cursor-pointer hover:bg-gray-800 transition"
           >
             {/* Fecha */}
             <div className="mb-1">
