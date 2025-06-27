@@ -124,7 +124,7 @@ const PersonMoviesPage = () => {
         {/* Contenido según la pestaña activa */}
         {activeTab === 'acted' && actorMovies.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">Películas en las que actuó</h2>
+            <h2 className="text-2xl font-bold mb-2">Movies this person acted in</h2>
             <div className="flex flex-wrap gap-4">
               {actorMovies.map((movie) => (
                 <Link
@@ -152,7 +152,7 @@ const PersonMoviesPage = () => {
 
         {activeTab === 'directed' && directorMovies.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">Películas dirigidas</h2>
+            <h2 className="text-2xl font-bold mb-2">Films directed by this person</h2>
             <div className="flex flex-wrap gap-4">
               {directorMovies.map((movie) => (
                 <Link
